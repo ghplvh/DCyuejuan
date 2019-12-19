@@ -1,46 +1,135 @@
 <template>
   <el-row id="home">
-    <el-col class="left-bar" :span="19">
-      <el-badge class="task-number" :value="awaitReadList.length" />
-      <el-tabs class="tab-info" v-model="activeName">
-        <el-tab-pane label="考试管理" name="examManager" v-if="this.menuList.includes('examinationManagement')">
+    <el-col
+      class="left-bar"
+      :span="19"
+    >
+      <el-badge
+        class="task-number"
+        :value="awaitReadList.length"
+      />
+      <el-tabs
+        class="tab-info"
+        v-model="activeName"
+      >
+        <el-tab-pane
+          label="考试管理"
+          name="examManager"
+          v-if="this.menuList.includes('examinationManagement')"
+        >
           <el-card v-loading="loading">
             <el-row class="filter-bar">
-              <el-col class="filter-item" :span="5">
+              <el-col
+                class="filter-item"
+                :span="5"
+              >
                 <label>年级：</label>
-                <el-select v-model="filterGrade" placeholder="" size="small" value-key="id" @change="choiceGrade">
-                  <el-option label="全部" :value="{}"></el-option>
-                  <el-option v-for="(item,index) in gradeList" :key="index" :label="item.gradeName" :value="item"></el-option>
+                <el-select
+                  v-model="filterGrade"
+                  placeholder=""
+                  size="small"
+                  value-key="id"
+                  @change="choiceGrade"
+                >
+                  <el-option
+                    label="全部"
+                    :value="{}"
+                  ></el-option>
+                  <el-option
+                    v-for="(item,index) in gradeList"
+                    :key="index"
+                    :label="item.gradeName"
+                    :value="item"
+                  ></el-option>
                 </el-select>
               </el-col>
-              <el-col class="filter-item" :span="8">
+              <el-col
+                class="filter-item"
+                :span="8"
+              >
                 <label>考试开始月份：</label>
-                <el-date-picker v-model="filterMonth" type="month" placeholder="选择月" size="small" @change="choiceMonth"></el-date-picker>
+                <el-date-picker
+                  v-model="filterMonth"
+                  type="month"
+                  placeholder="选择月"
+                  size="small"
+                  @change="choiceMonth"
+                ></el-date-picker>
               </el-col>
-              <el-col class="filter-item" :span="6">
+              <el-col
+                class="filter-item"
+                :span="6"
+              >
                 <label>考试类别：</label>
-                <el-select v-model="filterExamType" placeholder="" size="small" @change="choiceRange">
-                  <el-option v-for="(item,index) in examRangeList" :key="index" :label="item.name" :value="item.id"></el-option>
+                <el-select
+                  v-model="filterExamType"
+                  placeholder=""
+                  size="small"
+                  @change="choiceRange"
+                >
+                  <el-option
+                    v-for="(item,index) in examRangeList"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
                 </el-select>
               </el-col>
-              <el-col class="filter-item" :span="5">
-                <el-input class="search-input" size="small" placeholder="请输入考试名称" suffix-icon="el-icon-search" v-model="filterSearch" @keyup.enter.native="choiceName"></el-input>
+              <el-col
+                class="filter-item"
+                :span="5"
+              >
+                <el-input
+                  class="search-input"
+                  size="small"
+                  placeholder="请输入考试名称"
+                  suffix-icon="el-icon-search"
+                  v-model="filterSearch"
+                  @keyup.enter.native="choiceName"
+                ></el-input>
               </el-col>
             </el-row>
             <template v-for="exam in examList">
-              <el-row class="exam-stage" :key="exam.id">
+              <el-row
+                class="exam-stage"
+                :key="exam.id"
+              >
                 <el-row class="exam-stage-title">
                   <div class="title-logo">
-                    <img v-if="getExamStatus(exam.examDateFrom,exam.examDateTo) === 'before'" src="../assets/icon/exam-before.png" alt="考前">
-                    <img v-if="getExamStatus(exam.examDateFrom,exam.examDateTo) === 'current'" src="../assets/icon/exam-current.png" alt="考中">
-                    <img v-if="getExamStatus(exam.examDateFrom,exam.examDateTo) === 'after'" src="../assets/icon/exam-after.png" alt="考后">
+                    <img
+                      v-if="getExamStatus(exam.examDateFrom,exam.examDateTo) === 'before'"
+                      src="../assets/icon/exam-before.png"
+                      alt="考前"
+                    >
+                    <img
+                      v-if="getExamStatus(exam.examDateFrom,exam.examDateTo) === 'current'"
+                      src="../assets/icon/exam-current.png"
+                      alt="考中"
+                    >
+                    <img
+                      v-if="getExamStatus(exam.examDateFrom,exam.examDateTo) === 'after'"
+                      src="../assets/icon/exam-after.png"
+                      alt="考后"
+                    >
                   </div>
                   <div class="title-detail">
                     <div class="title-name">
                       <router-link :to="{path: '/exam/'+ exam.id}">{{exam.examName}}</router-link>
-                      <el-tag type="" size="mini" v-if="getExamType(exam.examType)">{{getExamType(exam.examType)}}</el-tag>
-                      <el-tag type="success" size="mini" v-if="getExamRange(exam.examRange)">{{getExamRange(exam.examRange)}}</el-tag>
-                      <el-tag type="warning" size="mini" v-if="getYuejuanAway(exam.checkMode)">{{getYuejuanAway(exam.checkMode)}}</el-tag>
+                      <el-tag
+                        type=""
+                        size="mini"
+                        v-if="getExamType(exam.examType)"
+                      >{{getExamType(exam.examType)}}</el-tag>
+                      <el-tag
+                        type="success"
+                        size="mini"
+                        v-if="getExamRange(exam.examRange)"
+                      >{{getExamRange(exam.examRange)}}</el-tag>
+                      <el-tag
+                        type="warning"
+                        size="mini"
+                        v-if="getYuejuanAway(exam.checkMode)"
+                      >{{getYuejuanAway(exam.checkMode)}}</el-tag>
                     </div>
                     <div class="exam-time-create">
                       <p><i class="el-icon-time"></i><span>考试时间: {{exam.dateFrom}}-{{exam.dateTo}}</span></p>
@@ -56,7 +145,11 @@
                         <span class="dot"></span><span class="text">创建阶段</span>
                       </div>
                       <div class="stage-subjects">
-                        <router-link v-for="subject in exam.createList" :key="subject.id" :to="{path: '/subjectMain/'+exam.id+'/'+subject.id}">{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
+                        <router-link
+                          v-for="subject in exam.createList"
+                          :key="subject.id"
+                          :to="{path: '/subjectMain/'+exam.id+'/'+subject.id}"
+                        >{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
                       </div>
                     </div>
                   </template>
@@ -66,7 +159,11 @@
                         <span class="dot"></span><span class="text">阅卷阶段</span>
                       </div>
                       <div class="stage-subjects">
-                        <router-link v-for="subject in exam.seeList" :key="subject.id" :to="{path: '/subjectMain/'+exam.id+'/'+subject.id}">{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
+                        <router-link
+                          v-for="subject in exam.seeList"
+                          :key="subject.id"
+                          :to="{path: '/subjectMain/'+exam.id+'/'+subject.id}"
+                        >{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
                       </div>
                     </div>
                   </template>
@@ -76,7 +173,11 @@
                         <span class="dot"></span><span class="text">已发布阶段</span>
                       </div>
                       <div class="stage-subjects">
-                        <router-link v-for="subject in exam.issueList" :key="subject.id" :to="{path: '/subjectMain/'+exam.id+'/'+subject.id}">{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
+                        <router-link
+                          v-for="subject in exam.issueList"
+                          :key="subject.id"
+                          :to="{path: '/subjectMain/'+exam.id+'/'+subject.id}"
+                        >{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
                       </div>
                     </div>
                   </template>
@@ -84,49 +185,151 @@
               </el-row>
             </template>
             <el-row class="page-row">
-              <el-pagination background @prev-click="prevPage" @next-click="nextPage" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
+              <el-pagination
+                background
+                @prev-click="prevPage"
+                @next-click="nextPage"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-size="pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="total"
+              ></el-pagination>
             </el-row>
           </el-card>
         </el-tab-pane>
-        <el-tab-pane label="阅卷任务" name="seeTask" v-if="this.menuList.includes('readingTasks')">
+        <el-tab-pane
+          label="阅卷任务"
+          name="seeTask"
+          v-if="this.menuList.includes('readingTasks')"
+        >
           <el-card>
             <el-row class="filter-bar">
-              <el-col class="filter-item" :span="5">
+              <el-col
+                class="filter-item"
+                :span="5"
+              >
                 <label>年级：</label>
-                <el-select v-model="filterGrade" placeholder="" size="small" value-key="id" @change="yueChoiceGrade">
-                  <el-option label="全部" :value="{}"></el-option>
-                  <el-option v-for="(item,index) in gradeList" :key="index" :label="item.gradeName" :value="item"></el-option>
+                <el-select
+                  v-model="filterGrade"
+                  placeholder=""
+                  size="small"
+                  value-key="id"
+                  @change="yueChoiceGrade"
+                >
+                  <el-option
+                    label="全部"
+                    :value="{}"
+                  ></el-option>
+                  <el-option
+                    v-for="(item,index) in gradeList"
+                    :key="index"
+                    :label="item.gradeName"
+                    :value="item"
+                  ></el-option>
                 </el-select>
               </el-col>
-              <el-col class="filter-item" :span="8">
+              <el-col
+                class="filter-item"
+                :span="8"
+              >
                 <label>考试开始月份：</label>
-                <el-date-picker v-model="filterMonth" type="month" placeholder="选择月" size="small" @change="yueChoiceMonth"></el-date-picker>
+                <el-date-picker
+                  v-model="filterMonth"
+                  type="month"
+                  placeholder="选择月"
+                  size="small"
+                  @change="yueChoiceMonth"
+                ></el-date-picker>
               </el-col>
-              <el-col class="filter-item" :span="6">
+              <el-col
+                class="filter-item"
+                :span="6"
+              >
                 <label>阅卷状态：</label>
-                <el-select v-model="filterExamType" placeholder="" size="small" @change="yueChoiceRange">
-                  <el-option v-for="(item,index) in status" :key="index" :label="item.name" :value="item.id"></el-option>
+                <el-select
+                  v-model="filterExamType"
+                  placeholder=""
+                  size="small"
+                  @change="yueChoiceRange"
+                >
+                  <el-option
+                    v-for="(item,index) in status"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.id"
+                  ></el-option>
                 </el-select>
               </el-col>
-              <el-col class="filter-item" :span="5">
-                <el-input class="search-input" size="small" placeholder="请输入考试名称" v-model="filterSearch" @keyup.enter.native="yueChoiceName">
-                  <el-button slot="append" icon="el-icon-search" @click="yueChoiceName"></el-button>
+              <el-col
+                class="filter-item"
+                :span="5"
+              >
+                <el-input
+                  class="search-input"
+                  size="small"
+                  placeholder="请输入考试名称"
+                  v-model="filterSearch"
+                  @keyup.enter.native="yueChoiceName"
+                >
+                  <el-button
+                    slot="append"
+                    icon="el-icon-search"
+                    @click="yueChoiceName"
+                  ></el-button>
                 </el-input>
               </el-col>
             </el-row>
-            <el-row class="paper-item" v-for="paper in awaitReadList" :key="paper.id">
-              <el-row type="flex" align="middle" justify="space-between">
-                <el-col :span="14" class="exam-name">{{paper.examName}}</el-col>
-                <el-col :span="9" :offset="1" class="name-right">
-                  <el-tag size="mini" v-if="getExamRange(paper.examRange)">{{getExamRange(paper.examRange)}}</el-tag>
-                  <el-tag size="mini" v-if="getExamType(paper.examType)">{{getExamType(paper.examType)}}</el-tag>
+            <el-row
+              class="paper-item"
+              v-for="paper in awaitReadList"
+              :key="paper.id"
+            >
+              <el-row
+                type="flex"
+                align="middle"
+                justify="space-between"
+              >
+                <el-col
+                  :span="14"
+                  class="exam-name"
+                >{{paper.examName}}</el-col>
+                <el-col
+                  :span="9"
+                  :offset="1"
+                  class="name-right"
+                >
+                  <el-tag
+                    size="mini"
+                    v-if="getExamRange(paper.examRange)"
+                  >{{getExamRange(paper.examRange)}}</el-tag>
+                  <el-tag
+                    size="mini"
+                    v-if="getExamType(paper.examType)"
+                  >{{getExamType(paper.examType)}}</el-tag>
                   <span class="exam-time">{{paper.examDateFrom}}&nbsp;{{paper.examDateTo}}</span>
                 </el-col>
               </el-row>
-              <el-row type="flex" align="middle" justify="space-between">
-                <el-col :span="12" class="subject-name">{{paper.gradeName + paper.examSubjectDesc}}</el-col>
-                <el-col :span="11" :offset="1" class="subject-right">
-                  <el-button type="primary" size="small" @click="toCheckPaperBlock(paper)" :disabled="paper.status">待阅题块</el-button>
+              <el-row
+                type="flex"
+                align="middle"
+                justify="space-between"
+              >
+                <el-col
+                  :span="12"
+                  class="subject-name"
+                >{{paper.gradeName + paper.examSubjectDesc}}</el-col>
+                <el-col
+                  :span="11"
+                  :offset="1"
+                  class="subject-right"
+                >
+                  <el-button
+                    type="primary"
+                    size="small"
+                    @click="toCheckPaperBlock(paper)"
+                    :disabled="paper.status"
+                  >待阅题块</el-button>
                 </el-col>
               </el-row>
             </el-row>
@@ -137,15 +340,27 @@
         </el-tab-pane>
       </el-tabs>
     </el-col>
-    <el-col class="right-bar" :span="5">
+    <el-col
+      class="right-bar"
+      :span="5"
+    >
       <div class="help">
         <div class="pdf">
           <div class="title-box">
             <span class="help-title">文档中心</span>
-            <a href="javascript:void(0)" class="help-more">更多</a>
+            <a
+              href="javascript:void(0)"
+              class="help-more"
+            >更多</a>
           </div>
-          <a href="javascript:void(0)" class="pdf-link">
-            <img src="../assets/icon/pdf.png" alt="">
+          <a
+            href="javascript:void(0)"
+            class="pdf-link"
+          >
+            <img
+              src="../assets/icon/pdf.png"
+              alt=""
+            >
             <span>阅卷产品使用说明书</span>
             <i class="el-icon-download"></i>
           </a>
@@ -153,16 +368,28 @@
         <div class="video">
           <div class="title-box">
             <span class="help-title">操作视频</span>
-            <a href="javascript:void(0)" class="help-more">更多</a>
+            <a
+              href="javascript:void(0)"
+              class="help-more"
+            >更多</a>
           </div>
-          <a href="javascript:void(0)" class="video-link">
-            <img src="../assets/icon/pdf.png" alt="">
+          <a
+            href="javascript:void(0)"
+            class="video-link"
+          >
+            <img
+              src="../assets/icon/pdf.png"
+              alt=""
+            >
           </a>
         </div>
         <div class="question">
           <div class="title-box">
             <span class="help-title">常见问题</span>
-            <a href="javascript:void(0)" class="help-more">更多</a>
+            <a
+              href="javascript:void(0)"
+              class="help-more"
+            >更多</a>
           </div>
           <ul>
             <a href="javascript:void(0)">
@@ -185,7 +412,10 @@
         <div class="video">
           <div class="title-box">
             <span class="help-title">相关动态</span>
-            <a href="#" class="help-more">更多</a>
+            <a
+              href="#"
+              class="help-more"
+            >更多</a>
           </div>
         </div>
       </div>
@@ -198,7 +428,7 @@ import API2 from '../api/api2.js'
 import Utils from '../utils/Utils.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       schoolCode: '',
       activeName: 'examManager',
@@ -262,7 +492,7 @@ export default {
   computed: {
     ...mapState(['adminInfo', 'menuList'])
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     // this.menuDispose(this.adminInfo.dmlist)
     this.getGrades()
@@ -274,11 +504,12 @@ export default {
      *  考试查询
      */
     // 根据下拉框选择年级查找考试
-    choiceGrade (value) {
-      this.queryData.gradeId = value.id || ''
+    // api
+    fetchEXAM_HOMEEXAM(data) {
       this.queryData.schoolCode = this.schoolCode
       this.queryData.pageIndex = this.currentPage
       this.queryData.pageSize = this.pageSize
+      this.queryData = { ...this.queryData, ...data }
       this.loading = true
       this.axios.post(API.EXAM_HOMEEXAM, this.queryData).then(res => {
         let list = res.data.data.list
@@ -304,167 +535,72 @@ export default {
         this.total = res.data.data.total
         this.loading = false
       }).catch(() => { this.loading = false })
+    },
+    choiceGrade(value) {
+      this.queryData.gradeId = value.id || ''
+      this.fetchEXAM_HOMEEXAM({ gradeId: value.id || '' })
     },
     // 根据下拉框选择月份查找考试
-    choiceMonth (value) {
-      this.queryData.examDateFrom = Utils.formatTime(value).substring(0, 10)
-      this.queryData.schoolCode = this.schoolCode
-      this.queryData.pageIndex = this.currentPage
-      this.queryData.pageSize = this.pageSize
-      this.loading = true
-      this.axios.post(API.EXAM_HOMEEXAM, this.queryData).then(res => {
-        let list = res.data.data.list
-        list.map((item, index) => {
-          item.dateFrom = Utils.formatTime(new Date(item.examDateFrom), true, '/')
-          item.dateTo = Utils.formatTime(new Date(item.examDateTo), true, '/')
-          item.createList = []
-          item.seeList = []
-          item.issueList = []
-          item.subjectDtos.forEach(subject => {
-            if (subject.subjectStage === 0) {
-              item.createList.push(subject)
-            }
-            if (subject.subjectStage === 1) {
-              item.seeList.push(subject)
-            }
-            if (subject.subjectStage === 2) {
-              item.issueList.push(subject)
-            }
-          })
-        })
-        this.examList = list
-        this.total = res.data.data.total
-        this.loading = false
-      }).catch(() => { this.loading = false })
+    choiceMonth(value) {
+      this.queryData.examDateFrom = value && Utils.formatTime(value).substring(0, 10) || ''
+      this.fetchEXAM_HOMEEXAM({ examDateFrom: value && Utils.formatTime(value).substring(0, 10) || '' })
     },
     // 根据下拉框选择类别查找考试
-    choiceRange (value) {
+    choiceRange(value) {
       this.queryData.examRange = value || ''
-      this.queryData.schoolCode = this.schoolCode
-      this.queryData.pageIndex = this.currentPage
-      this.queryData.pageSize = this.pageSize
-      this.loading = true
-      this.axios.post(API.EXAM_HOMEEXAM, this.queryData).then(res => {
-        let list = res.data.data.list
-        list.map((item, index) => {
-          item.dateFrom = Utils.formatTime(new Date(item.examDateFrom), true, '/')
-          item.dateTo = Utils.formatTime(new Date(item.examDateTo), true, '/')
-          item.createList = []
-          item.seeList = []
-          item.issueList = []
-          item.subjectDtos.forEach(subject => {
-            if (subject.subjectStage === 0) {
-              item.createList.push(subject)
-            }
-            if (subject.subjectStage === 1) {
-              item.seeList.push(subject)
-            }
-            if (subject.subjectStage === 2) {
-              item.issueList.push(subject)
-            }
-          })
-        })
-        this.examList = list
-        this.total = res.data.data.total
-        this.loading = false
-      }).catch(() => { this.loading = false })
+      this.fetchEXAM_HOMEEXAM({ examRange: value || '' })
     },
     // 根据学校查找考试
-    choiceName (e) {
+    choiceName(e) {
       let keyCode = e.key
       if (keyCode === 'Enter') {
         this.queryData.examName = this.filterSearch
-        this.queryData.schoolCode = this.schoolCode
-        this.queryData.pageIndex = this.currentPage
-        this.queryData.pageSize = this.pageSize
-        this.loading = true
-        this.axios.post(API.EXAM_HOMEEXAM, this.queryData).then(res => {
-          let list = res.data.data.list
-          list.map((item, index) => {
-            item.dateFrom = Utils.formatTime(new Date(item.examDateFrom), true, '/')
-            item.dateTo = Utils.formatTime(new Date(item.examDateTo), true, '/')
-            item.createList = []
-            item.seeList = []
-            item.issueList = []
-            item.subjectDtos.forEach(subject => {
-              if (subject.subjectStage === 0) {
-                item.createList.push(subject)
-              }
-              if (subject.subjectStage === 1) {
-                item.seeList.push(subject)
-              }
-              if (subject.subjectStage === 2) {
-                item.issueList.push(subject)
-              }
-            })
-          })
-          this.examList = list
-          this.total = res.data.data.total
-          this.loading = false
-        }).catch(() => { this.loading = false })
+        this.fetchEXAM_HOMEEXAM({ examName: this.filterSearch })
       }
     },
+
     /**
      *  阅卷查询
      */
     // 根据下拉框选择年级查找考试
-    yueChoiceGrade (value) {
-      this.yueQueryData.gradeId = value.id || ''
+    // api
+    fetchAPPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID(data) {
       this.yueQueryData.schoolCode = this.schoolCode
       this.yueQueryData.pageIndex = this.currentPage
-      this.yueQueryData.pageSize = this.pageSize
       this.yueQueryData.userId = this.adminInfo.teacherInfo.id
+      this.yueQueryData.pageSize = this.pageSize
+      this.yueQueryData = { ...this.yueQueryData, ...data }
       this.loading = true
       this.axios.post(API2.APPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID, this.yueQueryData).then(res => {
         this.awaitReadList = res.data.data || []
         this.loading = false
       }).catch(() => { this.loading = false })
+    },
+    yueChoiceGrade(value) {
+      this.yueQueryData.gradeId = value.id || ''
+      this.fetchAPPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID({ gradeId: value.id || '' })
     },
     // 根据下拉框选择月份查找考试
-    yueChoiceMonth (value) {
-      this.yueQueryData.examDateFrom = Utils.formatTime(value).substring(0, 10)
-      this.yueQueryData.schoolCode = this.schoolCode
-      this.yueQueryData.pageIndex = this.currentPage
-      this.yueQueryData.userId = this.adminInfo.teacherInfo.id
-      this.yueQueryData.pageSize = this.pageSize
-      this.loading = true
-      this.axios.post(API2.APPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID, this.yueQueryData).then(res => {
-        this.awaitReadList = res.data.data || []
-        this.loading = false
-      }).catch(() => { this.loading = false })
+    yueChoiceMonth(value) {
+      this.yueQueryData.examDateFrom = value && Utils.formatTime(value).substring(0, 10) || ''
+      this.fetchAPPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID({ examDateFrom: value && Utils.formatTime(value).substring(0, 10) || '' })
     },
     // 根据下拉框选择类别查找考试
-    yueChoiceRange (value) {
-      console.log(value)
+    yueChoiceRange(value) {
       this.yueQueryData.status = value
-      this.yueQueryData.schoolCode = this.schoolCode
-      this.yueQueryData.userId = this.adminInfo.teacherInfo.id
-      this.yueQueryData.pageIndex = this.currentPage
-      this.yueQueryData.pageSize = this.pageSize
-      this.loading = true
-      this.axios.post(API2.APPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID, this.yueQueryData).then(res => {
-        this.awaitReadList = res.data.data || []
-        this.loading = false
-      }).catch(() => { this.loading = false })
+      this.fetchAPPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID({ status: value })
     },
     // 根据学校查找考试
-    yueChoiceName (e) {
+    yueChoiceName(e) {
       let keyCode = e.key
       if (keyCode === 'Enter') {
         this.yueQueryData.examName = this.filterSearch
-        this.yueQueryData.userId = this.adminInfo.teacherInfo.id
-        this.yueQueryData.schoolCode = this.schoolCode
-        this.yueQueryData.pageIndex = this.currentPage
-        this.yueQueryData.pageSize = this.pageSize
-        this.loading = true
-        this.axios.post(API2.APPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID, this.yueQueryData).then(res => {
-          this.awaitReadList = res.data.data || []
-          this.loading = false
-        }).catch(() => { this.loading = false })
+        this.fetchAPPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID({ examName: this.filterSearch })
       }
     },
+
     // 获取考试列表
-    getExamList () {
+    getExamList() {
       this.loading = true
       this.axios.post(API.EXAM_HOMEEXAM, { schoolCode: this.schoolCode, pageIndex: this.currentPage, pageSize: this.pageSize }).then(res => {
         let list = res.data.data.list
@@ -492,7 +628,7 @@ export default {
       }).catch(() => { this.loading = false })
     },
     // 获取阅卷列表
-    getPaperList () {
+    getPaperList() {
       let data = {
         userId: this.adminInfo.teacherInfo.id,
         status: 0
@@ -503,13 +639,13 @@ export default {
       }).catch(() => { this.loading = false })
     },
     // 获取学校的所有年级
-    getGrades () {
+    getGrades() {
       this.axios.post(`${API.GRADE_FINDBYGRADES}/${this.schoolCode}`).then(res => {
         this.gradeList = res.data.data
       }).catch(() => { })
     },
     // 获取考前、考中、考后状态
-    getExamStatus (dateStart, dateEnd) {
+    getExamStatus(dateStart, dateEnd) {
       let currentTime = new Date().getTime()
       let startTime = new Date(dateStart).getTime()
       let endTime = new Date(dateEnd).getTime()
@@ -524,43 +660,43 @@ export default {
       }
     },
     // 根据年级ID获取年级名称
-    getGradeById (id) {
+    getGradeById(id) {
       let grade = this.gradeList.find(item => {
         return item.id === id
       })
       return grade ? grade.gradeName : ''
     },
-    getExamType (id) {
+    getExamType(id) {
       let obj = this.examTypeList.find(item => {
         return item.id === parseInt(id)
       })
       return obj ? obj.name : ''
     },
-    getYuejuanAway (id) {
+    getYuejuanAway(id) {
       let obj = this.yueJuanWayList.find(item => {
         return item.id === parseInt(id)
       })
       return obj ? obj.name : ''
     },
-    getExamRange (id) {
+    getExamRange(id) {
       let obj = this.examRangeList.find(item => {
         return item.id === parseInt(id)
       })
       return obj ? obj.name : ''
     },
-    handleCurrentChange (page) {
+    handleCurrentChange(page) {
       this.currentPage = page
       this.getExamList()
     },
-    prevPage () {
+    prevPage() {
       this.currentPage = this.currentPage - 1
       this.getExamList()
     },
-    nextPage () {
+    nextPage() {
       this.currentPage = this.currentPage * 1 + 1
       this.getExamList()
     },
-    toCheckPaperBlock (paper) {
+    toCheckPaperBlock(paper) {
       this.$router.push({ path: `/checkPaperBlock/${paper.examId}/${paper.examSubjectId}/${paper.examineId}` })
     }
     // menuDispose (dmlist) {
