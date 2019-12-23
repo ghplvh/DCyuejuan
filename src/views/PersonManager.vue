@@ -1,168 +1,558 @@
 <template>
   <div id="person-manager">
     <el-row class="info-title">
-      <el-col :span="18" class="school-name">{{schoolInfo ? schoolInfo.schoolName : '学校'}}</el-col>
-      <el-col :span="6" class="opra-video"><a href="#"><i class="el-icon-caret-right"></i><span>操作视频</span></a></el-col>
+      <el-col
+        :span="18"
+        class="school-name"
+      >{{schoolInfo ? schoolInfo.schoolName : '学校'}}</el-col>
+      <el-col
+        :span="6"
+        class="opra-video"
+      ><a href="#"><i class="el-icon-caret-right"></i><span>操作视频</span></a></el-col>
     </el-row>
-    <el-tabs class="person-info" v-model="activeName">
-      <el-tab-pane label="学生信息" name="student" v-if="this.menuList.includes('studentContent')">
+    <el-tabs
+      class="person-info"
+      v-model="activeName"
+    >
+      <el-tab-pane
+        label="学生信息"
+        name="student"
+        v-if="this.menuList.includes('studentContent')"
+      >
         <el-row class="opra-row">
-          <el-upload :on-success="uploadSuccessStudent" :on-progress="uploadProgress" :on-error="uploadError" :action="studentUploadUrl" :data="{'schoolNumber': schoolNumber}" accept=".xls,.xlsx" :show-file-list="false">
-            <el-button icon="el-icon-upload2" plain v-if="this.menuList.includes('studentBulkImport')">批量导入</el-button>
+          <el-upload
+            :on-success="uploadSuccessStudent"
+            :on-progress="uploadProgress"
+            :on-error="uploadError"
+            :action="studentUploadUrl"
+            :data="{'schoolNumber': schoolNumber}"
+            accept=".xls,.xlsx"
+            :show-file-list="false"
+          >
+            <el-button
+              icon="el-icon-upload2"
+              plain
+              v-if="this.menuList.includes('studentBulkImport')"
+            >批量导入</el-button>
           </el-upload>
-          <el-button icon="el-icon-plus" plain @click="addStudent" v-if="this.menuList.includes('studentSingleAdd')">单个新增</el-button>
-          <el-button icon="el-icon-download" plain @click="downloadMobanStudent()" v-if="this.menuList.includes('studentDownloadTheTemplate')">下载模板</el-button>
-          <el-button icon="el-icon-download" plain @click="exportStudents()" v-if="this.menuList.includes('deriveStudentInformation')">导出学生信息</el-button>
+          <el-button
+            icon="el-icon-plus"
+            plain
+            @click="addStudent"
+            v-if="this.menuList.includes('studentSingleAdd')"
+          >单个新增</el-button>
+          <el-button
+            icon="el-icon-download"
+            plain
+            @click="downloadMobanStudent()"
+            v-if="this.menuList.includes('studentDownloadTheTemplate')"
+          >下载模板</el-button>
+          <el-button
+            icon="el-icon-download"
+            plain
+            @click="exportStudents()"
+            v-if="this.menuList.includes('deriveStudentInformation')"
+          >导出学生信息</el-button>
           <!-- <el-button icon="el-icon-edit" plain @click="quickEditExamCode()">快速修改考号</el-button> -->
-          <el-button icon="el-icon-delete" plain @click="delSelectionStudent()" v-if="this.menuList.includes('studentMuchChooseDelete')">多选删除</el-button>
+          <el-button
+            icon="el-icon-delete"
+            plain
+            @click="delSelectionStudent()"
+            v-if="this.menuList.includes('studentMuchChooseDelete')"
+          >多选删除</el-button>
         </el-row>
         <el-row class="filter-row">
           <el-col :span="2">筛选：</el-col>
           <el-col :span="7">
-            <el-select size="medium" v-model="filterGradeStudent" value-key="id" @change="getClassByGrade()">
-              <el-option :key="0" label="全部" :value="{}"></el-option>
-              <el-option v-for="gra in gradeList" :key="gra.id" :label="gra.gradeName" :value="gra"></el-option>
+            <el-select
+              size="medium"
+              v-model="filterGradeStudent"
+              value-key="id"
+              @change="getClassByGrade()"
+            >
+              <el-option
+                :key="0"
+                label="全部"
+                :value="{}"
+              ></el-option>
+              <el-option
+                v-for="gra in gradeList"
+                :key="gra.id"
+                :label="gra.gradeName"
+                :value="gra"
+              ></el-option>
             </el-select>
-            <el-select size="medium" :disabled="!filterGradeStudent.id" value-key="id" v-model="filterClassStudent" @change="getStudentByClass()">
-              <el-option :key="0" label="全部" :value="{}"></el-option>
-              <el-option v-for="clazz in classListStu" :key="clazz.id" :label="clazz.className" :value="clazz"></el-option>
+            <el-select
+              size="medium"
+              :disabled="!filterGradeStudent.id"
+              value-key="id"
+              v-model="filterClassStudent"
+              @change="getStudentByClass()"
+            >
+              <el-option
+                :key="0"
+                label="全部"
+                :value="{}"
+              ></el-option>
+              <el-option
+                v-for="clazz in classListStu"
+                :key="clazz.id"
+                :label="clazz.className"
+                :value="clazz"
+              ></el-option>
             </el-select>
           </el-col>
           <el-col :span="2"></el-col>
           <el-col :span="6"></el-col>
-          <el-col :span="7" class="search-box">
+          <el-col
+            :span="7"
+            class="search-box"
+          >
             <span>共{{studentCount}}人</span>
-            <el-input placeholder="请输入姓名/学号/学籍" v-model="searchInputStudent" size="medium">
-              <el-button slot="append" type="primary" icon="el-icon-search" @click="search"></el-button>
+            <el-input
+              placeholder="请输入姓名/学号/学籍"
+              v-model="searchInputStudent"
+              size="medium"
+            >
+              <el-button
+                slot="append"
+                type="primary"
+                icon="el-icon-search"
+                @click="search"
+              ></el-button>
             </el-input>
           </el-col>
         </el-row>
-        <el-table :data="tableDataStudent" @selection-change="selectionStudentChange" v-loading="loading" element-loading-text="拼命加载中..." border>
-          <el-table-column type="selection" align="center" width="50px"></el-table-column>
-          <el-table-column prop="studentName" label="姓名" align="center" min-width="100px"></el-table-column>
-          <el-table-column prop="studentId" label="学号" align="center" min-width="170px"></el-table-column>
-          <el-table-column prop="studentExamId" label="考号" align="center" min-width="150px"></el-table-column>
-          <el-table-column prop="studentEnrollmentYear" label="入学年" align="center" min-width="150px"></el-table-column>
-          <el-table-column prop="gradeNumber" label="年级" align="center" min-width="150"></el-table-column>
-          <el-table-column prop="classNumber" label="班级" align="center" min-width="150"></el-table-column>
-          <el-table-column label="操作" align="center" min-width="120px">
+        <el-table
+          :data="tableDataStudent"
+          @selection-change="selectionStudentChange"
+          v-loading="loading"
+          element-loading-text="拼命加载中..."
+          border
+        >
+          <el-table-column
+            type="selection"
+            align="center"
+            width="50px"
+          ></el-table-column>
+          <el-table-column
+            prop="studentName"
+            label="姓名"
+            align="center"
+            min-width="100px"
+          ></el-table-column>
+          <el-table-column
+            prop="studentId"
+            label="学号"
+            align="center"
+            min-width="170px"
+          ></el-table-column>
+          <el-table-column
+            prop="studentExamId"
+            label="考号"
+            align="center"
+            min-width="150px"
+          ></el-table-column>
+          <el-table-column
+            prop="studentEnrollmentYear"
+            label="入学年"
+            align="center"
+            min-width="150px"
+          ></el-table-column>
+          <el-table-column
+            prop="gradeNumber"
+            label="年级"
+            align="center"
+            min-width="150"
+          ></el-table-column>
+          <el-table-column
+            prop="classNumber"
+            label="班级"
+            align="center"
+            min-width="150"
+          ></el-table-column>
+          <el-table-column
+            label="操作"
+            align="center"
+            min-width="120px"
+          >
             <template slot-scope="scope">
-              <el-button type="text" size="medium" plain @click="editStudentRow(scope.row)">编辑</el-button>
-              <el-button class="danger-text" type="text" size="medium" plain @click="deleteStudentRow(scope.row)">删除</el-button>
+              <el-button
+                type="text"
+                size="medium"
+                plain
+                @click="editStudentRow(scope.row)"
+              >编辑</el-button>
+              <el-button
+                class="danger-text"
+                type="text"
+                size="medium"
+                plain
+                @click="deleteStudentRow(scope.row)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
         <el-row class="page-box">
-          <el-pagination background @prev-click="prevPageStudent" @next-click="nextPageStudent" @size-change="sizeChangeStudent" @current-change="currentChangeStudent" :current-page="currentPage" :page-sizes="[5, 10, 20, 30, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+          <el-pagination
+            background
+            @prev-click="prevPageStudent"
+            @next-click="nextPageStudent"
+            @size-change="sizeChangeStudent"
+            @current-change="currentChangeStudent"
+            :current-page="currentPage"
+            :page-sizes="[5, 10, 20, 30, 50, 100]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+          ></el-pagination>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="教师信息" name="teacher" v-if="this.menuList.includes('teacherContent')">
+      <el-tab-pane
+        label="教师信息"
+        name="teacher"
+        v-if="this.menuList.includes('teacherContent')"
+      >
         <el-row class="opra-row">
-          <el-upload :action="teacherUploadUrl" accept=".xls,.xlsx" :data="{schoolCode: schoolNumber}" :on-progress="uploadProgress" :on-error="uploadError" :on-success="uploadSuccessTeacher" :limit="1" :show-file-list="false">
-            <el-button icon="el-icon-upload2" plain v-if="this.menuList.includes('teacherBulkImport')">批量导入</el-button>
+          <el-upload
+            :action="teacherUploadUrl"
+            accept=".xls,.xlsx"
+            :data="{schoolCode: schoolNumber}"
+            :on-progress="uploadProgress"
+            :on-error="uploadError"
+            :on-success="uploadSuccessTeacher"
+            :limit="1"
+            :show-file-list="false"
+          >
+            <el-button
+              icon="el-icon-upload2"
+              plain
+              v-if="this.menuList.includes('teacherBulkImport')"
+            >批量导入</el-button>
           </el-upload>
-          <el-button icon="el-icon-plus" plain @click="addTeacher" v-if="this.menuList.includes('teacherSingleAdd')">单个新增</el-button>
-          <el-button icon="el-icon-download" plain @click="downloadMobanTeacher()" v-if="this.menuList.includes('teacherDownloadTheTemplate')">下载模板</el-button>
-          <el-button icon="el-icon-download" plain @click="exportTeachers()" v-if="this.menuList.includes('deriveTeacherInformation')">导出教师信息</el-button>
-          <el-button icon="el-icon-delete" plain @click="delPageTeacher()" v-if="this.menuList.includes('deleteAllTeacherInformation')">删除所有老师</el-button>
-          <el-button icon="el-icon-delete" plain @click="delSelectionTeacher()" v-if="this.menuList.includes('teacherMuchChooseDelete')">多选删除</el-button>
+          <el-button
+            icon="el-icon-plus"
+            plain
+            @click="addTeacher"
+            v-if="this.menuList.includes('teacherSingleAdd')"
+          >单个新增</el-button>
+          <el-button
+            icon="el-icon-download"
+            plain
+            @click="downloadMobanTeacher()"
+            v-if="this.menuList.includes('teacherDownloadTheTemplate')"
+          >下载模板</el-button>
+          <el-button
+            icon="el-icon-download"
+            plain
+            @click="exportTeachers()"
+            v-if="this.menuList.includes('deriveTeacherInformation')"
+          >导出教师信息</el-button>
+          <el-button
+            icon="el-icon-delete"
+            plain
+            @click="delPageTeacher()"
+            v-if="this.menuList.includes('deleteAllTeacherInformation')"
+          >删除所有老师</el-button>
+          <el-button
+            icon="el-icon-delete"
+            plain
+            @click="delSelectionTeacher()"
+            v-if="this.menuList.includes('teacherMuchChooseDelete')"
+          >多选删除</el-button>
         </el-row>
         <el-row class="filter-row">
           <el-col :span="2">筛选：</el-col>
           <el-col :span="7">
-            <el-select size="medium" v-model="filterGradeTeacher" value-key="id" @change="getClassByGradeTeacher()">
-              <el-option :key="0" label="全部" :value="{}"></el-option>
-              <el-option v-for="gra in gradeList" :key="gra.id" :label="gra.gradeName" :value="gra"></el-option>
+            <el-select
+              size="medium"
+              v-model="filterGradeTeacher"
+              value-key="id"
+              @change="getClassByGradeTeacher()"
+            >
+              <el-option
+                :key="0"
+                label="全部"
+                :value="{}"
+              ></el-option>
+              <el-option
+                v-for="gra in gradeList"
+                :key="gra.id"
+                :label="gra.gradeName"
+                :value="gra"
+              ></el-option>
             </el-select>
-            <el-select size="medium" :disabled="!filterGradeTeacher.id" value-key="id" v-model="filterClassTeacher" @change="getTeacherByClass()">
-              <el-option :key="0" label="全部" :value="{}"></el-option>
-              <el-option v-for="clazz in classListTea" :key="clazz.id" :label="clazz.className" :value="clazz"></el-option>
+            <el-select
+              size="medium"
+              :disabled="!filterGradeTeacher.id"
+              value-key="id"
+              v-model="filterClassTeacher"
+              @change="getTeacherByClass()"
+            >
+              <el-option
+                :key="0"
+                label="全部"
+                :value="{}"
+              ></el-option>
+              <el-option
+                v-for="clazz in classListTea"
+                :key="clazz.id"
+                :label="clazz.className"
+                :value="clazz"
+              ></el-option>
             </el-select>
           </el-col>
-          <el-col :span="7" class="search-box">
-            <el-input placeholder="请输入姓名/联系电话" v-model="searchInputTeacher" size="medium">
-              <el-button slot="append" type="primary" icon="el-icon-search"></el-button>
+          <el-col
+            :span="7"
+            class="search-box"
+          >
+            <el-input
+              placeholder="请输入姓名/联系电话"
+              v-model="searchInputTeacher"
+              size="medium"
+            >
+              <el-button
+                slot="append"
+                type="primary"
+                icon="el-icon-search"
+              ></el-button>
             </el-input>
           </el-col>
         </el-row>
-        <el-table :data="tableDataTeacher" @selection-change="selectionChange" :span-method="teacherSpanMethod" v-loading="loading" border class="table-teacher">
-          <el-table-column type="selection" align="center" width="50px"></el-table-column>
-          <el-table-column prop="name" label="姓名" align="center" min-width="100px"></el-table-column>
-          <el-table-column label="角色" align="center" min-width="100px">
+        <el-table
+          :data="tableDataTeacher"
+          @selection-change="selectionChange"
+          :span-method="teacherSpanMethod"
+          v-loading="loading"
+          border
+          class="table-teacher"
+        >
+          <el-table-column
+            type="selection"
+            align="center"
+            width="50px"
+          ></el-table-column>
+          <el-table-column
+            prop="name"
+            label="姓名"
+            align="center"
+            min-width="100px"
+          ></el-table-column>
+          <el-table-column
+            label="角色"
+            align="center"
+            min-width="100px"
+          >
             <template slot-scope="scope">{{getRoleName(scope.row)}}</template>
           </el-table-column>
-          <el-table-column prop="gradeName" label="年级" align="center" min-width="100px"></el-table-column>
-          <el-table-column prop="className" label="所教班级" align="center" min-width="120px"></el-table-column>
-          <el-table-column prop="subjectName" label="所教学科" align="center" min-width="120px"></el-table-column>
-          <el-table-column prop="teacherMobile" label="联系电话" align="center" min-width="120px"></el-table-column>
-          <el-table-column prop="teacherEmail" label="邮箱" align="center" min-width="120px"></el-table-column>
+          <el-table-column
+            prop="gradeName"
+            label="年级"
+            align="center"
+            min-width="100px"
+          ></el-table-column>
+          <el-table-column
+            prop="className"
+            label="所教班级"
+            align="center"
+            min-width="120px"
+          ></el-table-column>
+          <el-table-column
+            prop="subjectName"
+            label="所教学科"
+            align="center"
+            min-width="120px"
+          ></el-table-column>
+          <el-table-column
+            prop="teacherMobile"
+            label="联系电话"
+            align="center"
+            min-width="120px"
+          ></el-table-column>
+          <el-table-column
+            prop="teacherEmail"
+            label="邮箱"
+            align="center"
+            min-width="120px"
+          ></el-table-column>
           <!-- <el-table-column prop="col8" label="管理员" align="center" min-width="75px"></el-table-column> -->
-          <el-table-column label="操作" align="center" min-width="180px">
+          <el-table-column
+            label="操作"
+            align="center"
+            min-width="180px"
+          >
             <template slot-scope="scope">
-              <el-button type="text" size="medium" plain @click="editTeacherRow(scope.row)">编辑</el-button>
-              <el-button class="danger-text" type="text" size="medium" plain @click="deleteTeacherRow(scope.row)">删除</el-button>
+              <el-button
+                type="text"
+                size="medium"
+                plain
+                @click="editTeacherRow(scope.row)"
+              >编辑</el-button>
+              <el-button
+                class="danger-text"
+                type="text"
+                size="medium"
+                plain
+                @click="deleteTeacherRow(scope.row)"
+              >删除</el-button>
               <!-- <el-button type="text" size="medium" plain @click="editTeacherRow(scope.row)">设为管理员</el-button> -->
             </template>
           </el-table-column>
         </el-table>
         <el-row class="page-box">
-          <el-pagination background @size-change="sizeChangeTeacher" @current-change="currentChangeTeacher" :current-page="currentPageTeacher" :page-sizes="[5, 10, 20, 30, 50, 100]" :page-size="pageSizeTeacher" layout="total, sizes, prev, pager, next, jumper" :total="totalTeacher"></el-pagination>
+          <el-pagination
+            background
+            @size-change="sizeChangeTeacher"
+            @current-change="currentChangeTeacher"
+            :current-page="currentPageTeacher"
+            :page-sizes="[5, 10, 20, 30, 50, 100]"
+            :page-size="pageSizeTeacher"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalTeacher"
+          ></el-pagination>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="年级管理" name="grade" v-if="this.menuList.includes('gradeManagementContent')">
+      <el-tab-pane
+        label="年级管理"
+        name="grade"
+        v-if="this.menuList.includes('gradeManagementContent')"
+      >
         <div class="grade">
           <el-row>
             <el-col>
-              <el-button class="add-grade" type="primary" size="medium" icon="el-icon-plus" @click="addGradeGroup" v-if="this.menuList.includes('addGrade')">添加年级组</el-button>
+              <el-button
+                class="add-grade"
+                type="primary"
+                size="medium"
+                icon="el-icon-plus"
+                @click="addGradeGroup"
+                v-if="this.menuList.includes('addGrade')"
+              >添加年级组</el-button>
             </el-col>
           </el-row>
-          <el-row class="grade-group" v-loading="loading">
-            <el-row class="item" v-for="(grade,index) in gradeGroupList" :key="index">
-              <el-row class="item-head" type="flex" justify="space-between" align="middle">
+          <el-row
+            class="grade-group"
+            v-loading="loading"
+          >
+            <el-row
+              class="item"
+              v-for="(grade,index) in gradeGroupList"
+              :key="index"
+            >
+              <el-row
+                class="item-head"
+                type="flex"
+                justify="space-between"
+                align="middle"
+              >
                 <el-col :span="3">{{grade.gradeGroupName}}</el-col>
                 <el-col :span="2.5">
-                  <el-button type="text" icon="el-icon-edit" @click="editGradeGroup(index)">编辑</el-button>
-                  <el-button class="danger-text" type="text" icon="el-icon-delete" @click="delGradeGroup(index)">删除</el-button>
+                  <el-button
+                    type="text"
+                    icon="el-icon-edit"
+                    @click="editGradeGroup(index)"
+                  >编辑</el-button>
+                  <el-button
+                    class="danger-text"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click="delGradeGroup(index)"
+                  >删除</el-button>
                 </el-col>
               </el-row>
               <el-row class="item-line"></el-row>
               <el-row class="item-body">
-                <div class="item-body-list" v-for="(item,itemIndex) in grade.gradeList" :key="itemIndex">
+                <div
+                  class="item-body-list"
+                  v-for="(item,itemIndex) in grade.gradeList"
+                  :key="itemIndex"
+                >
                   <span class="grade-number">{{itemIndex + 1}}</span>
                   <span>{{item.gradeName}}</span>
-                  <span class="line" v-if="itemIndex != (grade.gradeList.length - 1)">—————</span>
+                  <span
+                    class="line"
+                    v-if="itemIndex != (grade.gradeList.length - 1)"
+                  >—————</span>
                 </div>
               </el-row>
             </el-row>
           </el-row>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="班级管理" name="class" v-if="this.menuList.includes('classManagementContent')">
+      <el-tab-pane
+        label="班级管理"
+        name="class"
+        v-if="this.menuList.includes('classManagementContent')"
+      >
         <div class="grade">
           <el-row class="classRow">
             <el-col :span="2">
               添加班级：
             </el-col>
             <el-col :span="4">
-              <el-select v-model="classGradeName" size="medium" placeholder="请选择年级">
-                <el-option v-for="grade in gradeList" :key="grade.id" :label="grade.gradeName" :value="grade.gradeName"></el-option>
+              <el-select
+                v-model="classGradeName"
+                size="medium"
+                placeholder="请选择年级"
+              >
+                <el-option
+                  v-for="grade in gradeList"
+                  :key="grade.id"
+                  :label="grade.gradeName"
+                  :value="grade.gradeName"
+                ></el-option>
               </el-select>
             </el-col>
-            <el-col :span="4" :offset="1">
-              <el-input size="medium" v-model="className" placeholder="请输入班级名字"></el-input>
+            <el-col
+              :span="4"
+              :offset="1"
+            >
+              <el-input
+                size="medium"
+                v-model="className"
+                placeholder="请输入班级名字"
+              ></el-input>
             </el-col>
-            <el-col :span="3" :offset="1">
-              <el-button type="primary" size="medium" @click="addClass">添加</el-button>
+            <el-col
+              :span="3"
+              :offset="1"
+            >
+              <el-button
+                type="primary"
+                size="medium"
+                @click="addClass"
+              >添加</el-button>
             </el-col>
           </el-row>
-          <el-row class="grade-group" v-loading="loading">
-            <el-row class="item" v-for="(classs,index) in classList" :key="index">
-              <el-row class="item-head" type="flex" justify="space-between" align="middle">
+          <el-row
+            class="grade-group"
+            v-loading="loading"
+          >
+            <el-row
+              class="item"
+              v-for="(classs,index) in classList"
+              :key="index"
+            >
+              <el-row
+                class="item-head"
+                type="flex"
+                justify="space-between"
+                align="middle"
+              >
                 <el-col :span="3">{{classs.gradeName}}</el-col>
               </el-row>
               <el-row class="item-line"></el-row>
-              <el-row class="item-body rowDiv" type="flex" justify="start">
-                <el-col :span="2" class="item-body-list spanDiv" v-for="(item,itemIndex) in classs.dcList" :key="itemIndex">
+              <el-row
+                class="item-body rowDiv"
+                type="flex"
+                justify="start"
+              >
+                <el-col
+                  :span="2"
+                  class="item-body-list spanDiv"
+                  v-for="(item,itemIndex) in classs.dcList"
+                  :key="itemIndex"
+                >
                   <span class="span">{{item.className}}班</span>
                 </el-col>
               </el-row>
@@ -171,44 +561,124 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-    <el-dialog :title="dialogTitleAdd" :visible.sync="dialogVisibleAdd" width="610px" top="14vh" center>
-      <el-form :model="dialogFormAdd" :rules="dialogFormAddRules" ref="addStudentForm" label-width="120px">
-        <el-form-item label="姓名" prop="studentName">
-          <el-input v-model="dialogFormAdd.studentName" size="medium" placeholder="请输入姓名"></el-input>
+    <el-dialog
+      :title="dialogTitleAdd"
+      :visible.sync="dialogVisibleAdd"
+      width="610px"
+      top="14vh"
+      center
+    >
+      <el-form
+        :model="dialogFormAdd"
+        :rules="dialogFormAddRules"
+        ref="addStudentForm"
+        label-width="120px"
+      >
+        <el-form-item
+          label="姓名"
+          prop="studentName"
+        >
+          <el-input
+            v-model="dialogFormAdd.studentName"
+            size="medium"
+            placeholder="请输入姓名"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="学号" prop="studentId">
-          <el-input v-model="dialogFormAdd.studentId" size="medium" placeholder="请输入学号"></el-input>
+        <el-form-item
+          label="学号"
+          prop="studentId"
+        >
+          <el-input
+            v-model="dialogFormAdd.studentId"
+            size="medium"
+            placeholder="请输入学号"
+          ></el-input>
         </el-form-item>
         <el-form-item label="学籍号">
-          <el-input v-model="dialogFormAdd.studentRegisterId" size="medium" placeholder="请输入学籍号"></el-input>
+          <el-input
+            v-model="dialogFormAdd.studentRegisterId"
+            size="medium"
+            placeholder="请输入学籍号"
+          ></el-input>
         </el-form-item>
         <el-form-item label="考号">
-          <el-input v-model="dialogFormAdd.studentExamId" size="medium" placeholder="请输入考号"></el-input>
+          <el-input
+            v-model="dialogFormAdd.studentExamId"
+            size="medium"
+            placeholder="请输入考号"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="入学年" prop="studentEnrollmentYear">
-          <el-input v-model="dialogFormAdd.studentEnrollmentYear" size="medium" maxlength="4" placeholder="请输入入学年"></el-input>
+        <el-form-item
+          label="入学年"
+          prop="studentEnrollmentYear"
+        >
+          <el-input
+            v-model="dialogFormAdd.studentEnrollmentYear"
+            size="medium"
+            maxlength="4"
+            placeholder="请输入入学年"
+          ></el-input>
         </el-form-item>
         <el-form-item label="学部">
-          <el-input v-model="dialogFormAdd.schoolDivisions" size="medium" placeholder="请输入学部"></el-input>
+          <el-input
+            v-model="dialogFormAdd.schoolDivisions"
+            size="medium"
+            placeholder="请输入学部"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="年级" prop="gradeNumber">
-          <el-select v-model="dialogFormAdd.gradeNumber" size="medium" placeholder="请选择年级">
-            <el-option v-for="grade in gradeList" :key="grade.id" :label="grade.gradeName" :value="grade.gradeName"></el-option>
+        <el-form-item
+          label="年级"
+          prop="gradeNumber"
+        >
+          <el-select
+            v-model="dialogFormAdd.gradeNumber"
+            size="medium"
+            placeholder="请选择年级"
+          >
+            <el-option
+              v-for="grade in gradeList"
+              :key="grade.id"
+              :label="grade.gradeName"
+              :value="grade.gradeName"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="班级" prop="classNumber">
-          <el-input v-model="dialogFormAdd.classNumber" size="medium" placeholder="请输入班级"></el-input>
+        <el-form-item
+          label="班级"
+          prop="classNumber"
+        >
+          <el-input
+            v-model="dialogFormAdd.classNumber"
+            size="medium"
+            placeholder="请输入班级"
+          ></el-input>
         </el-form-item>
         <el-form-item label="家长姓名">
-          <el-input v-model="dialogFormAdd.studentParentsName" size="medium" placeholder="请输入家长姓名"></el-input>
+          <el-input
+            v-model="dialogFormAdd.studentParentsName"
+            size="medium"
+            placeholder="请输入家长姓名"
+          ></el-input>
         </el-form-item>
         <el-form-item label="家长电话">
-          <el-input v-model="dialogFormAdd.studentParentsMobile" size="medium" maxlength="11" placeholder="请输入家长电话"></el-input>
+          <el-input
+            v-model="dialogFormAdd.studentParentsMobile"
+            size="medium"
+            maxlength="11"
+            placeholder="请输入家长电话"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer">
-        <el-button @click="dialogVisibleAdd = false" size="medium">取 消</el-button>
-        <el-button type="primary" @click="submitAddStudent('addStudentForm')" size="medium">添 加</el-button>
+        <el-button
+          @click="dialogVisibleAdd = false"
+          size="medium"
+        >取 消</el-button>
+        <el-button
+          type="primary"
+          @click="submitAddStudent('addStudentForm')"
+          size="medium"
+        >添 加</el-button>
       </span>
     </el-dialog>
     <!-- <el-dialog title="快速修改学号" :visible.sync="dialogVisibleEdit" width="30%" top="14vh" center class="edit-code-dialog">
@@ -223,77 +693,379 @@
         </el-upload>
       </span>
     </el-dialog> -->
-    <el-dialog :title="dialogTitleTeacher" :visible.sync="dialogVisibleTeacher" width="700px" top="14vh" center class="dialog-teacher">
-      <el-form :model="addTeacherForm" :rules="addTeacherFormRules" ref="addTeacherForm" label-width="110px">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addTeacherForm.name" size="medium" placeholder="请输入姓名"></el-input>
+    <!-- `addTeacherForm -->
+    <el-dialog
+      :title="dialogTitleTeacher"
+      :visible.sync="dialogVisibleTeacher"
+      width="700px"
+      top="14vh"
+      center
+      class="dialog-teacher"
+    >
+      <!-- `teacherAddForm -->
+      <el-form
+        :model="teacherAddForm"
+        :rules="teacherAddFormRules"
+        ref="teacherAddForm"
+        label-width="110px"
+      >
+        <el-form-item
+          label="姓名"
+          prop="name"
+        >
+          <el-input
+            v-model="teacherAddForm.name"
+            size="medium"
+            placeholder="请输入姓名"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="电话" prop="teacherMobile">
-          <el-input v-model="addTeacherForm.teacherMobile" size="medium" placeholder="请输入电话" maxlength="11"></el-input>
+        <el-form-item
+          label="电话"
+          prop="teacherMobile"
+        >
+          <el-input
+            v-model="teacherAddForm.teacherMobile"
+            size="medium"
+            placeholder="请输入电话"
+            maxlength="11"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="teacherEmail" :rules="[{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
-          <el-input v-model="addTeacherForm.teacherEmail" size="medium" placeholder="请输入邮箱"></el-input>
+        <el-form-item
+          label="邮箱"
+          prop="teacherEmail"
+          :rules="[{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]"
+        >
+          <el-input
+            v-model="teacherAddForm.teacherEmail"
+            size="medium"
+            placeholder="请输入邮箱"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="角色"
+          :prop="rjrs"
+          :rules="[{required: true, message: '角色不能为空', trigger: ['blur', 'change']}]"
+        >
+          <div class="tags-wrap">
+            <el-tag
+              class="tag"
+              v-for="tag in teacherAddForm.rjrs"
+              :key="tag.roleId"
+              closable
+              @close="removeRole(tag.roleId)"
+            >
+              <template v-for="item in roles">
+                <template v-if="item.id === tag.roleId">{{item.roleName}}</template>
+              </template>
+            </el-tag>
+          </div>
+        </el-form-item>
+      </el-form>
+      <el-form
+        :model="roleAddForm"
+        ref="roleAddForm"
+        label-width="110px"
+      >
+        <el-form-item
+          label="添加角色"
+          :rules="[{required: true, message: '角色不能为空', trigger: ['blur', 'change']}]"
+          prop="roleId"
+        >
+          <el-radio-group v-model="roleAddForm.roleId">
+            <template v-for="rl in roles">
+              <el-radio
+                v-if="rl.id <= 7"
+                :key="rl.id"
+                :label="rl.id"
+              >{{rl.roleName}}</el-radio>
+            </template>
+          </el-radio-group>
+          <i
+            class="el-icon-circle-plus"
+            @click="addRole()"
+          ></i>
+        </el-form-item>
+        <!--  -->
+        <el-form-item
+          v-if="roleAddForm.roleId > 3"
+          label-width="165px"
+          prop="gradeName"
+          label="年级"
+          :rules="[{required: true, message: '年级不能为空', trigger: ['blur', 'change']}]"
+        >
+          <el-select
+            v-model="roleAddForm.gradeName"
+            size="medium"
+            class="grade-select"
+            @change="getGradeClass(roleAddForm.gradeName)"
+          >
+            <el-option
+              v-for="grade in gradeList"
+              :key="grade.id"
+              :label="grade.gradeName"
+              :value="grade.gradeName"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <!--  -->
+        <el-form-item
+          v-if="roleAddForm.roleId > 5"
+          label-width="165px"
+          prop="gradeName"
+          label="班级"
+          :rules="[{required: true, message: '班级不能为空', trigger: ['blur', 'change']}]"
+        >
+          <span
+            style="color:red;"
+            v-if="!roleAddForm.gradeName"
+          >请先选择年级</span>
+          <el-checkbox-group
+            v-model="roleAddForm.className"
+            class="roleAddForm-class"
+            v-else
+          >
+            <el-checkbox
+              v-for="roleClass in teacherClassList"
+              :key="roleClass.id"
+              :label="roleClass.className"
+            >{{roleClass.className}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <!--  -->
+        <el-form-item
+          v-if="roleAddForm.roleId === 7 || roleAddForm.roleId === 5"
+          label-width="165px"
+          label="学科"
+          prop="subjectName"
+          :rules="[{required: true, message: '学科不能为空', trigger: ['blur', 'change']}]"
+        >
+          <el-select
+            v-model="roleAddForm.subjectName"
+            size="medium"
+            class="grade-select"
+          >
+            <el-option
+              v-for="sub in subjectList"
+              :key="sub.id"
+              :label="sub.examSubjectDesc"
+              :value="sub.examSubjectDesc"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <!-- <el-form
+        :model="addTeacherForm"
+        :rules="addTeacherFormRules"
+        ref="addTeacherForm"
+        label-width="110px"
+      >
+        <el-form-item
+          label="姓名"
+          prop="name"
+        >
+          <el-input
+            v-model="addTeacherForm.name"
+            size="medium"
+            placeholder="请输入姓名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="电话"
+          prop="teacherMobile"
+        >
+          <el-input
+            v-model="addTeacherForm.teacherMobile"
+            size="medium"
+            placeholder="请输入电话"
+            maxlength="11"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="邮箱"
+          prop="teacherEmail"
+          :rules="[{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]"
+        >
+          <el-input
+            v-model="addTeacherForm.teacherEmail"
+            size="medium"
+            placeholder="请输入邮箱"
+          ></el-input>
         </el-form-item>
         <template v-for="(role,index) in addTeacherForm.rjrs">
-          <el-form-item :key="index+'role'" label="角色" :prop="'rjrs.' + index + '.roleId'" :rules="[{required: true, message: '角色'+(index+1)+'不能为空', trigger: ['blur', 'change']}]">
+          <el-form-item
+            :key="index+'role'"
+            label="角色"
+            :prop="'rjrs.' + index + '.roleId'"
+            :rules="[{required: true, message: '角色'+(index+1)+'不能为空', trigger: ['blur', 'change']}]"
+          >
             <el-radio-group v-model="role.roleId">
               <template v-for="rl in roles">
-                <el-radio v-if="rl.id <= 7" :key="rl.id" :label="rl.id">{{rl.roleName}}</el-radio>
+                <el-radio
+                  v-if="rl.id <= 7"
+                  :key="rl.id"
+                  :label="rl.id"
+                >{{rl.roleName}}</el-radio>
               </template>
             </el-radio-group>
-            <i class="el-icon-circle-plus" @click="addRole()"></i>
-            <i class="el-icon-remove" v-if="index > 0" @click="removeRole(index)"></i>
+            <i
+              class="el-icon-circle-plus"
+              @click="addRole()"
+            ></i>
+            <i
+              class="el-icon-remove"
+              v-if="index > 0"
+              @click="removeRole(index)"
+            ></i>
           </el-form-item>
-          <!--  -->
-          <el-form-item v-if="role.roleId > 3" :key="index+'grade'" label-width="165px" label="年级" :prop="'rjrs.' + index + '.gradeName'" :rules="[{required: true, message: '角色'+(index+1)+'的年级不能为空', trigger: ['blur', 'change']}]">
-            <el-select v-model="role.gradeName" value-key="id" size="medium" class="grade-select" @change="getGradeClass(index)">
-              <el-option v-for="grade in gradeList" :key="grade.id" :label="grade.gradeName" :value="grade"></el-option>
+          <el-form-item
+            v-if="role.roleId > 3"
+            :key="index+'grade'"
+            label-width="165px"
+            label="年级"
+            :prop="'rjrs.' + index + '.gradeName'"
+            :rules="[{required: true, message: '角色'+(index+1)+'的年级不能为空', trigger: ['blur', 'change']}]"
+          >
+            <el-select
+              v-model="role.gradeName"
+              value-key="id"
+              size="medium"
+              class="grade-select"
+              @change="getGradeClass(index)"
+            >
+              <el-option
+                v-for="grade in gradeList"
+                :key="grade.id"
+                :label="grade.gradeName"
+                :value="grade"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <!--  -->
-          <el-form-item v-if="role.roleId > 5" :key="index+'roleClass'" label-width="165px" label="班级" :prop="'rjrs.' + index + '.className'" :rules="[{required: true, message: '角色'+(index+1)+'的班级不能为空', trigger: ['blur', 'change']}]">
-            <span style="color:red;" v-if="!role.gradeName">请先选择年级</span>
-            <el-checkbox-group v-model="role.className" class="role-class" v-else>
-              <el-checkbox v-for="roleClass in teacherClassList[index]" :key="roleClass.id" :label="roleClass.className">{{roleClass.className}}</el-checkbox>
+          <el-form-item
+            v-if="role.roleId > 5"
+            :key="index+'roleClass'"
+            label-width="165px"
+            label="班级"
+            :prop="'rjrs.' + index + '.className'"
+            :rules="[{required: true, message: '角色'+(index+1)+'的班级不能为空', trigger: ['blur', 'change']}]"
+          >
+            <span
+              style="color:red;"
+              v-if="!role.gradeName"
+            >请先选择年级</span>
+            <el-checkbox-group
+              v-model="role.className"
+              class="role-class"
+              v-else
+            >
+              <el-checkbox
+                v-for="roleClass in teacherClassList[index]"
+                :key="roleClass.id"
+                :label="roleClass.className"
+              >{{roleClass.className}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <!--  -->
-          <el-form-item v-if="role.roleId === 7 || role.roleId === 5" :key="index+'subject'" label-width="165px" label="学科" :prop="'rjrs.' + index + '.subjectName'" :rules="[{required: true, message: '角色'+(index+1)+'的学科不能为空', trigger: ['blur', 'change']}]">
-            <el-select v-model="role.subjectName" size="medium" class="grade-select">
-              <el-option v-for="sub in subjectList" :key="sub.id" :label="sub.examSubjectDesc" :value="sub.examSubjectDesc"></el-option>
+          <el-form-item
+            v-if="role.roleId === 7 || role.roleId === 5"
+            :key="index+'subject'"
+            label-width="165px"
+            label="学科"
+            :prop="'rjrs.' + index + '.subjectName'"
+            :rules="[{required: true, message: '角色'+(index+1)+'的学科不能为空', trigger: ['blur', 'change']}]"
+          >
+            <el-select
+              v-model="role.subjectName"
+              size="medium"
+              class="grade-select"
+            >
+              <el-option
+                v-for="sub in subjectList"
+                :key="sub.id"
+                :label="sub.examSubjectDesc"
+                :value="sub.examSubjectDesc"
+              ></el-option>
             </el-select>
           </el-form-item>
         </template>
-      </el-form>
+      </el-form> -->
       <span slot="footer">
-        <el-button type="primary" size="medium" @click="submitAddTeacherForm('addTeacherForm')">添加</el-button>
-        <el-button size="medium" @click="dialogVisibleTeacher = false">取消</el-button>
+        <el-button
+          type="primary"
+          size="medium"
+          @click="submitAddTeacherForm"
+        >添加</el-button>
+        <el-button
+          size="medium"
+          @click="dialogVisibleTeacher = false"
+        >取消</el-button>
       </span>
     </el-dialog>
-    <el-dialog :title="dialogTitleGrade" :visible.sync="dialogGradeGroupVisible" width="600px" top="14vh" center class="dialog-grade-group">
-      <el-form :model="addGradeGroupForm" :rules="addGradeGroupFormRules" ref="addGradeGroupForm" label-width="120px" label-position="left">
-        <el-form-item label="年级组名称" prop="gradeGroupName">
-          <el-input v-model="addGradeGroupForm.gradeGroupName" size="medium"></el-input>
+    <el-dialog
+      :title="dialogTitleGrade"
+      :visible.sync="dialogGradeGroupVisible"
+      width="600px"
+      top="14vh"
+      center
+      class="dialog-grade-group"
+    >
+      <el-form
+        :model="addGradeGroupForm"
+        :rules="addGradeGroupFormRules"
+        ref="addGradeGroupForm"
+        label-width="120px"
+        label-position="left"
+      >
+        <el-form-item
+          label="年级组名称"
+          prop="gradeGroupName"
+        >
+          <el-input
+            v-model="addGradeGroupForm.gradeGroupName"
+            size="medium"
+          ></el-input>
         </el-form-item>
-        <el-form-item v-for="(grade,index) in addGradeGroupForm.grades" label="年级" :key="index + 'grade'" :prop="'grades.' + index" :rules="[{required:true,message:'年级不能为空',trigger:['blur','change']}]">
+        <el-form-item
+          v-for="(grade,index) in addGradeGroupForm.grades"
+          label="年级"
+          :key="index + 'grade'"
+          :prop="'grades.' + index"
+          :rules="[{required:true,message:'年级不能为空',trigger:['blur','change']}]"
+        >
           <el-row>
             <el-col :span="2">
               <span class="grade-number">{{index + 1}}</span>
             </el-col>
             <el-col :span="15">
-              <el-select v-model="addGradeGroupForm.grades[index]" size="medium">
-                <el-option v-for="item in gradeList" :key="item.id" :label="item.gradeName" :value="item.id"></el-option>
+              <el-select
+                v-model="addGradeGroupForm.grades[index]"
+                size="medium"
+              >
+                <el-option
+                  v-for="item in gradeList"
+                  :key="item.id"
+                  :label="item.gradeName"
+                  :value="item.id"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :span="4">
-              <i class="el-icon-circle-plus" @click="addGrade()"></i>
-              <i class="el-icon-remove" v-if="index > 0" @click="removeGrade(index)"></i>
+              <i
+                class="el-icon-circle-plus"
+                @click="addGrade()"
+              ></i>
+              <i
+                class="el-icon-remove"
+                v-if="index > 0"
+                @click="removeGrade(index)"
+              ></i>
             </el-col>
           </el-row>
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button type="primary" @click="submitGradeGroup('addGradeGroupForm')">添加</el-button>
+        <el-button
+          type="primary"
+          @click="submitGradeGroup('addGradeGroupForm')"
+        >添加</el-button>
         <el-button @click="dialogGradeGroupVisible = false">取消</el-button>
       </div>
     </el-dialog>
@@ -303,7 +1075,7 @@
 import API from '../api/api.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       schoolInfo: {},
       activeName: 'student',
@@ -372,18 +1144,13 @@ export default {
       editGrade: '',
       dialogVisibleTeacher: false,
       dialogTitleTeacher: '',
-      addTeacherForm: {
+      teacherAddForm: {
         name: '',
         teacherMobile: '',
         teacherEmail: '',
-        rjrs: [{
-          roleId: '',
-          gradeName: '',
-          className: [],
-          subjectName: ''
-        }]
+        rjrs: []
       },
-      addTeacherFormRules: {
+      teacherAddFormRules: {
         name: [
           { required: true, message: '老师姓名不能为空', trigger: 'blur' }
         ],
@@ -392,7 +1159,16 @@ export default {
         ],
         teacherEmail: [
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+        rjrs: [
+          { required: true, message: '角色不能为空', trigger: 'blur' }
         ]
+      },
+      roleAddForm: {
+        roleId: null,
+        gradeName: '',
+        className: [],
+        subjectName: ''
       },
       teacherClassList: [],
       dialogGradeGroupVisible: false,
@@ -418,7 +1194,7 @@ export default {
   computed: {
     ...mapState(['adminInfo', 'menuList'])
   },
-  created () {
+  created() {
     this.schoolNumber = this.adminInfo.teacherInfo.schoolCode
     // this.menuDispose(this.adminInfo.dmlist)
     this.getSchoolByCode()
@@ -431,13 +1207,13 @@ export default {
   },
   methods: {
     // 根据用户学校schoolCode获取学校
-    getSchoolByCode () {
+    getSchoolByCode() {
       this.axios.post(API.SCHOOL_FINDBYCOMMON, { schoolCode: this.schoolNumber }).then(res => {
         this.schoolInfo = res.data.data[0]
       }).catch(() => { })
     },
     // 添加班级
-    addClass () {
+    addClass() {
       if (!this.classGradeName) {
         this.$message.error('请选择年级!')
         return false
@@ -465,30 +1241,30 @@ export default {
       })
     },
     // 获取班级列表
-    getClassList () {
+    getClassList() {
       this.axios.post(API.ADMIN_GETCLASSLIST, { schoolId: this.schoolNumber }).then(res => {
         this.classList = res.data.data
         console.log(this.classList)
       })
     },
     // 正在导入
-    uploadProgress (event, file, fileList) {
+    uploadProgress(event, file, fileList) {
       this.loading = true
     },
     // 导入失败
-    uploadError (err, file, fileList) {
+    uploadError(err, file, fileList) {
       this.$message({
         message: err,
         type: 'error'
       })
     },
-    search () {
+    search() {
       console.log(this.filterGradeStudent)
       console.log(this.filterClassStudent)
       console.log(this.searchInputStudent)
     },
     // 学生信息导入成功
-    uploadSuccessStudent (response, file, fileList) {
+    uploadSuccessStudent(response, file, fileList) {
       this.loading = false
       if (response.code === 0) {
         this.$message({
@@ -505,7 +1281,7 @@ export default {
       }
     },
     // 教师信息导入成功
-    uploadSuccessTeacher (response, file, fileList) {
+    uploadSuccessTeacher(response, file, fileList) {
       this.loading = false
       if (response.code === 0) {
         this.$message({
@@ -522,11 +1298,11 @@ export default {
       }
     },
     // 监听学生表格选中
-    selectionStudentChange (val) {
+    selectionStudentChange(val) {
       this.multiStudentSelection = val
     },
     // 删除选中的学生
-    delSelectionStudent () {
+    delSelectionStudent() {
       let h = this.$createElement
       this.$msgbox({
         title: '提示',
@@ -549,26 +1325,26 @@ export default {
       }).catch(() => { })
     },
     // 获取角色信息
-    getRoles () {
+    getRoles() {
       this.axios.get(API.ROLE_GETROLES).then(res => {
         this.roles = res.data.data
       }).catch(() => { })
     },
     // 根据ID获取角色名称
-    getRoleName (row) {
+    getRoleName(row) {
       let role = this.roles.find(role => {
         return role.id === row.roleId
       })
       return role.roleName
     },
     // 获取所有考试科目
-    getExamSubject () {
+    getExamSubject() {
       this.axios.post(API.EXAM_FINDBYSUBJECTCOM, { schoolCode: this.schoolNumber }).then(res => {
         this.subjectList = res.data.data
       }).catch(() => { })
     },
     // 获取老师信息
-    getTeachersBy () {
+    getTeachersBy() {
       this.loading = true
       let data = {
         pageIndex: this.currentPageTeacher,
@@ -606,7 +1382,7 @@ export default {
       }).catch(() => { })
     },
     // 把有相同ID的数据的index放到一起，第一个为需要跨行的行，数组长度为跨行行数
-    getTableSpan () {
+    getTableSpan() {
       this.tableSpan = []
       this.tableDataTeacher.forEach((item, index) => {
         if (this.tableSpan[item.id]) {
@@ -618,7 +1394,7 @@ export default {
       })
     },
     // 删除当前页所有老师
-    delPageTeacher () {
+    delPageTeacher() {
       this.$confirm('确定删除当前表格的所有教师信息吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -637,7 +1413,7 @@ export default {
       }).catch(() => { })
     },
     // 删除选中的老师
-    delSelectionTeacher () {
+    delSelectionTeacher() {
       this.$confirm('确定删除当前选中的所有教师信息吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -653,7 +1429,7 @@ export default {
       }).catch(() => { })
     },
     // 老师表格跨行
-    teacherSpanMethod ({ row, column, rowIndex, columnIndex }) {
+    teacherSpanMethod({ row, column, rowIndex, columnIndex }) {
       if ([0, 1, 6, 7, 8].includes(columnIndex)) {
         if (rowIndex === this.tableSpan[row.id][0]) {
           return { rowspan: this.tableSpan[row.id].length, colspan: 1 }
@@ -663,7 +1439,7 @@ export default {
       }
     },
     // 获取年级组信息
-    getGradeGroup () {
+    getGradeGroup() {
       this.loading = true
       this.axios.post(API.GRADE_GETGRADESGROUP, { schoolCode: this.schoolNumber }).then(async res => {
         this.gradeGroupList = res.data.data
@@ -678,14 +1454,14 @@ export default {
       }).catch(() => { })
     },
     // 获取学校所有年级信息
-    getGrade () {
+    getGrade() {
       this.axios.post(API.GRADE_FINDBYCOMMON, { schoolCode: this.schoolNumber }).then(res => {
         this.gradeList = res.data.data
         this.getGradeGroup()
       }).catch(() => { })
     },
     // 学生筛选获取年级下的班级
-    getClassByGrade () {
+    getClassByGrade() {
       if (!this.filterGradeStudent.id) {
         this.filterClassStudent = {}
       }
@@ -695,12 +1471,12 @@ export default {
         this.getStudentsBy()
       }).catch(() => { })
     },
-    getStudentByClass () {
+    getStudentByClass() {
       this.currentPage = 1
       this.getStudentsBy()
     },
     // 教师筛选获取年级下的班级
-    getClassByGradeTeacher () {
+    getClassByGradeTeacher() {
       if (!this.filterGradeTeacher.id) {
         this.filterClassTeacher = {}
         this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + this.schoolNumber).then(res => {
@@ -716,12 +1492,12 @@ export default {
         }).catch(() => { })
       }
     },
-    getTeacherByClass () {
+    getTeacherByClass() {
       this.currentPageTeacher = 1
       this.getTeachersBy()
     },
     // 根据条件获取学校学生信息
-    getStudentsBy () {
+    getStudentsBy() {
       this.loading = true
       let data = {
         pageIndex: this.currentPage,
@@ -742,21 +1518,25 @@ export default {
       }).catch(() => { })
     },
     // 教师信息获取年级下的班级信息
-    getGradeClass (index) {
-      let grade = this.addTeacherForm.rjrs[index].gradeName
+    getGradeClass(name) {
+      let grade = this.gradeList.filter(i => {
+        return i.gradeName === name
+      })[0]
       this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + grade.id).then(res => {
+        console.log('res', res)
+        this.teacherClassList = res.data.data
         // 直接使用下标插入数组数据不是响应式的双向绑定
-        this.$set(this.teacherClassList, index, res.data.data)
+        // this.$set(this.teacherClassList, index, res.data.data)
       }).catch(() => { })
     },
     // 根据年级ID获取年级信息
-    getGradeById (id) {
+    getGradeById(id) {
       return this.gradeList.find(item => {
         return item.id === id
       })
     },
     // 删除年级组
-    delGradeGroup (index) {
+    delGradeGroup(index) {
       let gradeGroup = this.gradeGroupList[index]
       this.$confirm('此操作将永久删除该年级组, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -773,7 +1553,7 @@ export default {
       })
     },
     // 编辑年级组
-    editGradeGroup (index) {
+    editGradeGroup(index) {
       this.dialogTitleGrade = '编辑年级组'
       this.dialogType = 'edit'
       let gradeGroup = this.gradeGroupList[index]
@@ -786,7 +1566,7 @@ export default {
       this.dialogGradeGroupVisible = true
     },
     // 单个新增学生
-    submitAddStudent (formName) {
+    submitAddStudent(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.dialogType === 'add') {
@@ -823,47 +1603,47 @@ export default {
       })
     },
     // 修改学生每页显示条数
-    sizeChangeStudent (size) {
+    sizeChangeStudent(size) {
       this.pageSize = size
       this.getStudentsBy()
     },
     // 学生直接跳页
-    currentChangeStudent (currentPage) {
+    currentChangeStudent(currentPage) {
       this.currentPage = currentPage
       this.getStudentsBy()
     },
     // 上一页学生
-    prevPageStudent (val) {
+    prevPageStudent(val) {
       this.currentPage = val
       this.getStudentsBy()
     },
     // 下一页学生
-    nextPageStudent (val) {
+    nextPageStudent(val) {
       this.currentPage = val
       this.getStudentsBy()
     },
     // 修改教师每页显示条数
-    sizeChangeTeacher (size) {
+    sizeChangeTeacher(size) {
       this.pageSizeTeacher = size
       this.getTeachersBy()
     },
     // 教师直接跳页
-    currentChangeTeacher (currentPage) {
+    currentChangeTeacher(currentPage) {
       this.currentPageTeacher = currentPage
       this.getTeachersBy()
     },
     // 上一页教师
-    prevPageTeacher (val) {
+    prevPageTeacher(val) {
       this.currentPageTeacher = val
       this.getTeachersBy()
     },
     // 下一页教师
-    nextPageTeacher (val) {
+    nextPageTeacher(val) {
       this.currentPageTeacher = val
       this.getTeachersBy()
     },
     // 显示添加学生的弹窗
-    addStudent () {
+    addStudent() {
       this.dialogTitleAdd = '添加学生'
       this.dialogFormAdd = {
         schoolNumber: this.schoolNumber,
@@ -881,7 +1661,7 @@ export default {
       this.dialogVisibleAdd = true
     },
     // 编辑学生（行）信息
-    editStudentRow (row) {
+    editStudentRow(row) {
       this.dialogTitleAdd = '编辑学生'
       this.dialogType = 'edit'
       this.dialogFormAdd = {
@@ -901,7 +1681,7 @@ export default {
       this.dialogVisibleAdd = true
     },
     // 删除学生（行）信息
-    deleteStudentRow (row) {
+    deleteStudentRow(row) {
       const h = this.$createElement
       this.$msgbox({
         title: '提示',
@@ -924,31 +1704,20 @@ export default {
       }).catch(() => { })
     },
     // 显示快速修改考号弹窗
-    quickEditExamCode () {
+    quickEditExamCode() {
       this.dialogVisibleEdit = true
     },
     // 显示添加老师弹窗
-    addTeacher () {
+    addTeacher() {
       this.dialogTitleTeacher = '添加老师'
       this.dialogVisibleTeacher = true
       this.dialogType = 'add'
-      this.addTeacherForm = {
-        name: '',
-        teacherMobile: '',
-        teacherEmail: '',
-        rjrs: [{
-          roleId: '',
-          gradeName: '',
-          className: [],
-          subjectName: ''
-        }]
-      }
     },
     // 添加老师
-    submitAddTeacherForm (formName) {
-      this.$refs[formName].validate(valid => {
+    submitAddTeacherForm() {
+      this.$refs['teacherAddForm'].validate(valid => {
         if (valid) {
-          let form = Object.assign({}, this.addTeacherForm)
+          let form = Object.assign({}, this.teacherAddForm)
           form.schoolCode = this.schoolNumber
           form.rjrs.forEach(item => {
             delete item.createTime
@@ -984,20 +1753,24 @@ export default {
       })
     },
     // 添加角色
-    addRole () {
-      this.addTeacherForm.rjrs.push({
-        roleId: '',
-        gradeName: '',
-        className: [],
-        subjectName: ''
+    addRole() {
+      this.$refs['roleAddForm'].validate((valid) => {
+        if (!valid) return
+        // fromEntries & entries are used to clone obj
+        this.teacherAddForm.rjrs = [...this.teacherAddForm.rjrs, Object.fromEntries(Object.entries(this.roleAddForm))]
+        this.$refs['roleAddForm'].resetFields()
       })
     },
     // 删除角色
-    removeRole (index) {
-      this.addTeacherForm.rjrs.splice(index, 1)
+    removeRole(id) {
+      this.teacherAddForm.rjrs.forEach((item, index) => {
+        if (id === item.roleId) {
+          this.teacherAddForm.rjrs.splice(index, 1)
+        }
+      })
     },
     // 编辑老师（行）信息
-    editTeacherRow (row) {
+    editTeacherRow(row) {
       this.dialogTitleTeacher = '编辑老师'
       this.dialogType = 'edit'
       let teacher = this.dataTeacher.find(item => {
@@ -1023,7 +1796,7 @@ export default {
       this.dialogVisibleTeacher = true
     },
     // 删除老师（行）信息
-    deleteTeacherRow (row) {
+    deleteTeacherRow(row) {
       this.$confirm('你确定要永久删除当前老师信息吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1039,24 +1812,24 @@ export default {
       }).catch(() => { })
     },
     // 监听教师表格选中
-    selectionChange (val) {
+    selectionChange(val) {
       this.multiTeacherSelection = val
     },
     // 显示添加年级组弹窗
-    addGradeGroup () {
+    addGradeGroup() {
       this.dialogType = 'add'
       this.dialogGradeGroupVisible = true
     },
     // 添加年级
-    addGrade () {
+    addGrade() {
       this.addGradeGroupForm.grades.push('')
     },
     // 删除年级
-    removeGrade (index) {
+    removeGrade(index) {
       this.addGradeGroupForm.grades.splice(index, 1)
     },
     // 添加年级组
-    submitGradeGroup (formName) {
+    submitGradeGroup(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.dialogType === 'add') {
@@ -1096,7 +1869,7 @@ export default {
       })
     },
     // 下载模版
-    downloadMobanStudent () {
+    downloadMobanStudent() {
       this.axios.post(API.ADMIN_STUDENTDOWNLOAD, {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
         console.log(res)
         const url = window.URL.createObjectURL(new Blob([res.data]))
@@ -1108,7 +1881,7 @@ export default {
         link.click()
       })
     },
-    downloadMobanTeacher () {
+    downloadMobanTeacher() {
       this.axios.post(API.ADMIN_TEACHERDOWNLOAD, {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
         console.log(res)
         const url = window.URL.createObjectURL(new Blob([res.data]))
@@ -1121,7 +1894,7 @@ export default {
       })
     },
     // 导出信息
-    exportStudents () {
+    exportStudents() {
       let url = API.STUDENT_EXPORTSTUDENTS + '?schoolNumber=' + this.schoolNumber
       if (this.filterGradeStudent.id) {
         url = API.STUDENT_EXPORTSTUDENTS + '?schoolNumber=' + this.schoolNumber + '&gradeId=' + this.filterGradeStudent.id
@@ -1142,7 +1915,7 @@ export default {
         link.click()
       })
     },
-    exportTeachers () {
+    exportTeachers() {
       let url = API.TEACHER_EXPORTTEACHERS + '?schoolCode=' + this.schoolNumber
       if (this.filterGradeStudent.id) {
         url = API.TEACHER_EXPORTTEACHERS + '?schoolCode=' + this.schoolNumber + '&gradeId=' + this.filterGradeStudent.id
@@ -1163,7 +1936,7 @@ export default {
         link.click()
       })
     },
-    download (apiUrl) {
+    download(apiUrl) {
       const elink = document.createElement('a')
       elink.style.display = 'none'
       elink.target = '_blank'
@@ -1181,7 +1954,7 @@ export default {
   flex-wrap: wrap;
 }
 .spanDiv {
-  border: 1px solid #409EFF;
+  border: 1px solid #409eff;
   padding: 4px;
   border-radius: 5px;
   margin: 2px;
@@ -1484,6 +2257,16 @@ export default {
       height: 34px;
       padding-top: 9px;
     }
+  }
+}
+.tags-wrap {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  width: 83%;
+  padding: 14px;
+  min-height: 28px;
+  .tag {
+    margin-left: 8px;
   }
 }
 </style>

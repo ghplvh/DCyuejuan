@@ -1,3 +1,4 @@
+ /* eslint-disable */
 <template>
   <el-row id="home">
     <el-col

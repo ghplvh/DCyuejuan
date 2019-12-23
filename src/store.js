@@ -12,7 +12,7 @@ export default new Vuex.Store({
     isLogin: false
   },
   mutations: {
-    saveAdminInfo (state) {
+    saveAdminInfo(state) {
       if (!sessionStorage.getItem('adminInfo')) {
         return
       }
@@ -24,19 +24,19 @@ export default new Vuex.Store({
       state.adminInfo = adminInfo
       state.isLogin = !!adminInfo && !!adminInfo.id
     },
-    removeAdminInfo (state) {
+    removeAdminInfo(state) {
       state.adminInfo = {}
       state.isLogin = false
       sessionStorage.removeItem('adminInfo')
     }
   },
   actions: {
-    saveAdminInfo ({
+    saveAdminInfo({
       commit
     }) {
       commit('saveAdminInfo')
     },
-    removeAdminInfo ({
+    removeAdminInfo({
       commit
     }) {
       commit('removeAdminInfo')
