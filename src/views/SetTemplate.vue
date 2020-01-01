@@ -373,7 +373,6 @@ export default {
     }
   },
   created() {
-    console.clear()
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.getExamSubject()
   },
@@ -399,31 +398,32 @@ export default {
     },
     // 获取图片宽高比
     getRatio(refresh = true) {
-      if (this.currentSVGRef !== 'templateInfo') {
-        this.$nextTick(() => {
-          this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
-          let image = document.querySelector('image')
-          let imageWidth = parseInt(image.getAttribute('width'))
-          let img = new Image()
-          img.src = this.svgImages[this.currentPaper]
-          img.onload = () => {
-            this.ratioWH = img.height / img.width
+      // if (this.currentSVGRef !== 'templateInfo') {
+      this.$nextTick(() => {
+        console.log('currentSVGRef', this.currentSVGRef)
+        this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
+        let image = document.querySelector('image')
+        let imageWidth = parseInt(image.getAttribute('width'))
+        let img = new Image()
+        img.src = this.svgImages[this.currentPaper]
+        img.onload = () => {
+          this.ratioWH = img.height / img.width
+        }
+        this.svgImages.forEach((src, index) => {
+          let srcImg = new Image()
+          srcImg.src = src
+          srcImg.onload = () => {
+            // this.ratioWH = srcImg.height / srcImg.width
+            let ratio = srcImg.width / (imageWidth === 0 ? this.svgWidth : imageWidth)
+            this.ratio.splice(index, 1, ratio)
           }
-          this.svgImages.forEach((src, index) => {
-            let srcImg = new Image()
-            srcImg.src = src
-            srcImg.onload = () => {
-              // this.ratioWH = srcImg.height / srcImg.width
-              let ratio = srcImg.width / (imageWidth === 0 ? this.svgWidth : imageWidth)
-              this.ratio.splice(index, 1, ratio)
-            }
-          })
         })
-      }
-      if (refresh) {
-        this.getExamTemplate()
-      }
-      // console.log('getRatio', this.ratio)
+        console.log('getRatio', this.ratio)
+      })
+      // }
+      // if (refresh) {
+      //   this.getExamTemplate()
+      // }
     },
     // 查询模板
     getExamTemplate() {
@@ -537,69 +537,50 @@ export default {
     // },
     // `dev
     async scanAddTemplate() {
-      console.clear()
       // this.globalLoading = true
       const res = {
         data: resOfScan
       }
       let a = JSON.parse(res.data.questionsloc.replace(/↵/g, '\n'))
       console.table({ res, a })
-
-      // obj2arrByIndex :: {} => []
-      const obj2arrByIndex = obj => R.pipe(
+      // obj2arrByIndex :: obj => arr
+      const obj2arrByIndex = R.pipe(
         R.toPairs,
         R.reduce((acc, value) => R.insert(value[0] - 0, value[1], acc), [])
-      )(obj)
-      console.log(',obj2arrByIndex', obj2arrByIndex(
-        {
-          '3': [3, 2, 3, 4],
-          '0': [0, 532, 532, 532],
-          '1': [1, 532, 532, 532],
-          '2': [2, 532, 532, 532]
-        }
-      ))
-      console.log('obj2arrByIndex{}', obj2arrByIndex({}))
-      // addTitle :: [[a]...] => [[first,...a]...]
-      const addTitle = arr => R.insert(0, R.update(0, arr[0][0] - 60), arr[0], arr)
-      console.log('addTitle', addTitle([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]]))
-      console.log('addTitle', addTitle([[]]))
-      console.log('addTitle[', addTitle([]))
-      const result = R.pipe(
-        R.toPairs,
-        R.map((value, index) => [
-          value[0],
-          R.pipe(obj2arrByIndex, addTitle)(value[1])
-        ])
       )
-      console.log('result', result(a))
-      // addKey :: obj => arr
-      const addKey = obj => R.pipe(
+      // addTitleNum :: [[a]...] => [[titleNum,...a]...]
+      const addTitleNum = R.curry((key, index, arr) => {
+        if (arr.length > 0) {
+          return [
+            [
+              ...(function (arr) {
+                if (arr[0].length > 0) {
+                  return R.update(0, arr[0][0] - 60, arr[0])
+                } else {
+                  return []
+                }
+              })(arr),
+              key,
+              index
+            ],
+            ...arr
+          ]
+        }
+      })
+      // formatA :: obj => arr
+      const formatA = R.pipe(
         R.toPairs,
-        R.map((item, index) => R.insertAll(item[1].length, [item[0], index], item[1]))
-      )(obj)
-
-      // obj2arrByIndexWithA
-      console.log('addKey', addKey({}))
-      // // 处理格式
-      // let arr = Object.entries(a).map((item, index) => {
-      //   let result = Object.entries(item[1]).map(item2 => {
-      //     return item2[1]
-      //   })
-      //   // 题号坐标
-      //   let gg = [...result[0]]
-      //   gg[0] = gg[0] - 60
-      //   gg.push(item[0])
-      //   gg.push(index)
-      //   result.unshift(gg)
-      //   return result
-      // })
-      // this.littleBlockRectList = arr
-      // this.scanData = arr // 客观题
-      // this.cnlocation = res.data.cnlocation // cnlocation
-      // this.qalocation = res.data.qalocation
-      // this.qrlocation = res.data.qrlocation
-      // this.filelocation = res.data.filelocation
-      // // 上传扫描结果
+        arr => arr.map((value, index) => R.pipe(obj2arrByIndex, addTitleNum(value[0], index))(value[1]))
+      )
+      const formatedA = formatA(a)
+      console.log('formatA', formatedA)
+      this.littleBlockRectList = formatedA
+      this.scanData = formatedA // 客观题
+      this.cnlocation = res.data.cnlocation // cnlocation
+      this.qalocation = res.data.qalocation
+      this.qrlocation = res.data.qrlocation
+      this.filelocation = res.data.filelocation
+      // 上传扫描结果
       // await this.addExamTemplate()
       // this.globalLoading = false
     },
