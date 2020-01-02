@@ -59,7 +59,7 @@
                 <el-button
                   type="primary"
                   class="add-template"
-                  @click="scanAddTemplate()"
+                  @click="addTemplateVisible = true"
                   :loading="globalLoading"
                 >扫描上传</el-button>
                 <el-button
@@ -292,6 +292,22 @@
         >取消</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      title="请输入模板名称"
+      :visible.sync="addTemplateVisible"
+      width="60%"
+      custom-class="preview-dialog"
+    >
+      <el-input v-model="tempName" />
+      <div slot="footer">
+        <el-button
+          type="primary"
+          size="medium"
+          :loading="globalLoading"
+          @click="scanAddTemplate"
+        >扫描</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -325,26 +341,16 @@ export default {
       currentSVGRef: 'templateInfo',
       examTemplateInfo: [],
       currentTemplate: {},
-      uploadUrl: API.UPLOAD_UPLOADIMG,
       buttonLoading: false,
       addTemplateVisible: false,
+      tempName: '未命名',
       scanData: '',
       qrlocation: {},
       qalocation: {},
       cnlocation: {},
-      answerCardLimit: 4,
       answerCardList: [],
       answerCardData: {
         filedir: ''
-      },
-      addTemplateForm: {
-        examId: this.$route.params.examId,
-        examSubjectId: this.$route.params.examSubjectId,
-        tempName: '',
-        testnumberType: '',
-        objective: 0,
-        testPage: 0,
-        imgUrl: ''
       },
       //  `editForm
       editBlockTitleForm: {
@@ -398,32 +404,32 @@ export default {
     },
     // 获取图片宽高比
     getRatio(refresh = true) {
-      // if (this.currentSVGRef !== 'templateInfo') {
-      this.$nextTick(() => {
-        console.log('currentSVGRef', this.currentSVGRef)
-        this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
-        let image = document.querySelector('image')
-        let imageWidth = parseInt(image.getAttribute('width'))
-        let img = new Image()
-        img.src = this.svgImages[this.currentPaper]
-        img.onload = () => {
-          this.ratioWH = img.height / img.width
-        }
-        this.svgImages.forEach((src, index) => {
-          let srcImg = new Image()
-          srcImg.src = src
-          srcImg.onload = () => {
-            // this.ratioWH = srcImg.height / srcImg.width
-            let ratio = srcImg.width / (imageWidth === 0 ? this.svgWidth : imageWidth)
-            this.ratio.splice(index, 1, ratio)
+      if (this.currentSVGRef !== 'templateInfo') {
+        this.$nextTick(() => {
+          console.log('currentSVGRef', this.currentSVGRef)
+          this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
+          let image = document.querySelector('image')
+          let imageWidth = parseInt(image.getAttribute('width'))
+          let img = new Image()
+          img.src = this.svgImages[this.currentPaper]
+          img.onload = () => {
+            this.ratioWH = img.height / img.width
           }
+          this.svgImages.forEach((src, index) => {
+            let srcImg = new Image()
+            srcImg.src = src
+            srcImg.onload = () => {
+              // this.ratioWH = srcImg.height / srcImg.width
+              let ratio = srcImg.width / (imageWidth === 0 ? this.svgWidth : imageWidth)
+              this.ratio.splice(index, 1, ratio)
+            }
+          })
+          console.log('getRatio', this.ratio)
         })
-        console.log('getRatio', this.ratio)
-      })
-      // }
-      // if (refresh) {
-      //   this.getExamTemplate()
-      // }
+      }
+      if (refresh) {
+        this.getExamTemplate()
+      }
     },
     // 查询模板
     getExamTemplate() {
@@ -546,26 +552,24 @@ export default {
       // obj2arrByIndex :: obj => arr
       const obj2arrByIndex = R.pipe(
         R.toPairs,
-        R.reduce((acc, value) => R.insert(value[0] - 0, value[1], acc), [])
+        R.reduce((acc, value) => {
+          // obj为无序类型, 故要根据prop来确定位置,如{'1':1,'0':0} => [0,1]
+          const res = [...acc]
+          res[value[0] - 0] = value[1]
+          return res
+        }, [])
       )
       // addTitleNum :: [[a]...] => [[titleNum,...a]...]
       const addTitleNum = R.curry((key, index, arr) => {
-        if (arr.length > 0) {
-          return [
-            [
-              ...(function (arr) {
-                if (arr[0].length > 0) {
-                  return R.update(0, arr[0][0] - 60, arr[0])
-                } else {
-                  return []
-                }
-              })(arr),
-              key,
-              index
-            ],
-            ...arr
-          ]
-        }
+        // isEmpty 判断空值, 规避报错
+        return R.ifElse(R.either(R.isEmpty, R.isNil), () => [[]], arr => [
+          [
+            ...R.ifElse(R.either(R.isEmpty, R.isNil), () => [], R.adjust(0, i => i - 60))(arr[0]),
+            key,
+            index
+          ],
+          ...arr
+        ])(arr)
       })
       // formatA :: obj => arr
       const formatA = R.pipe(
@@ -581,8 +585,8 @@ export default {
       this.qrlocation = res.data.qrlocation
       this.filelocation = res.data.filelocation
       // 上传扫描结果
-      // await this.addExamTemplate()
-      // this.globalLoading = false
+      await this.addExamTemplate()
+      this.globalLoading = false
     },
     // `editBlockTitle
     editBlolckTitle(id, key) {
@@ -722,7 +726,6 @@ export default {
     // 操作按钮事件
     async saveBlock() {
       this.setCurrentRectList(this.blockRectList)
-
       let data = {
         id: this.currentTemplate.id,
         examSubjectId: this.$route.params.examSubjectId,
@@ -753,7 +756,7 @@ export default {
     },
     // API
     async addExamTemplate() {
-      const { cnlocation, qalocation, qrlocation, filelocation } = this
+      const { cnlocation, qalocation, qrlocation, filelocation, littleBlockRectList } = this
       const imgUrl = filelocation.file0 + ',' + filelocation.file1
       let data = {
         examSubjectId: this.examSubjectId,
@@ -762,7 +765,9 @@ export default {
         qalocation: JSON.stringify(qalocation),
         qrlocation: JSON.stringify(qrlocation),
         filelocation: JSON.stringify(filelocation),
-        imgUrl
+        imgUrl,
+        questionsloc: JSON.stringify(littleBlockRectList),
+        tempName: this.tempName
       }
       console.table('addExamTemplate', data)
       await this.axios.post(API.EXAMTEMPLATE_ADDEXAMTEMPLATE, data).then(res => {
@@ -774,6 +779,8 @@ export default {
           })
         }
       }).catch(() => { })
+      this.getExamTemplate()
+      this.addTemplateVisible = false
     }
   }
 }
