@@ -286,7 +286,6 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = '阅卷1.0 | ' + to.meta.title
   }
-  console.log(store.state.isLogin, to.path)
   // 是否登录判断
   // if (!store.state.isLogin && to.path !== '/') {
   //   console.log(11)

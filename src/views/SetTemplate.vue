@@ -62,11 +62,11 @@
                   @click="addTemplateVisible = true"
                   :loading="globalLoading"
                 >扫描上传</el-button>
-                <el-button
+                <!-- <el-button
                   type="primary"
                   class="add-template"
                   @click="scanAddShi()"
-                >扫描试卷</el-button>
+                >扫描试卷</el-button> -->
                 <el-button
                   type="danger"
                   class="add-template"
@@ -327,7 +327,7 @@ export default {
       previewVisible: false,
       prevImg: '',
       activeTab: 'templateInfo',
-      ratio: [], // 显示宽度和实际宽度的比例
+      ratio: [2, 2], // 显示宽度和实际宽度的比例
       ratioWH: 1, // A3纸高/宽
       svgWidth: 0,
       scaleSvg: 1,
@@ -406,7 +406,6 @@ export default {
     getRatio(refresh = true) {
       if (this.currentSVGRef !== 'templateInfo') {
         this.$nextTick(() => {
-          console.log('currentSVGRef', this.currentSVGRef)
           this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
           let image = document.querySelector('image')
           let imageWidth = parseInt(image.getAttribute('width'))
@@ -424,7 +423,6 @@ export default {
               this.ratio.splice(index, 1, ratio)
             }
           })
-          console.log('getRatio', this.ratio)
         })
       }
       if (refresh) {
@@ -440,16 +438,15 @@ export default {
       }
       this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
         let list = res.data.data
-        console.log('getExamTemplate,res', res)
         this.examTemplateInfo = list.map(item => {
           item.imgUrl = item.imgUrl.split(',')
           item.optionalTopicTopic = Utils.isJsonString(item.optionalTopicTopic) ? this.convertData(JSON.parse(item.optionalTopicTopic), false) : []
           return item
         })
-        console.log('getExamTemplate,examTemplateInfo', this.examTemplateInfo)
         // this.examTemplateInfo = list
         this.currentTemplate = list[0]
-        this.littleBlockRectList = JSON.parse(list[0].objectiveCoord || '')
+        this.svgImages = list[0].imgUrl
+        this.littleBlockRectList = JSON.parse(list[0].questionsloc || '')
         // this.littleBlock()
         this.globalLoading = false
       }).catch(() => { this.globalLoading = false })
@@ -515,13 +512,11 @@ export default {
     //   }).then(res => {
     //     funDownload(JSON.stringify(res.data), 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
     //     // let a = JSON.parse(res.data.questionsloc.replace(/↵/g, '\n'))
-    //     // console.table({ res, a })
     //     // // 处理格式
     //     // let arr = Object.entries(a).map((item, index) => {
     //     //   let result = Object.entries(item[1]).map(item2 => {
     //     //     return item2[1]
     //     //   })
-    //     //   console.table('res', res)
     //     //   // 题号坐标
     //     //   let gg = [...result[0]]
     //     //   gg[0] = gg[0] - 60
@@ -548,7 +543,6 @@ export default {
         data: resOfScan
       }
       let a = JSON.parse(res.data.questionsloc.replace(/↵/g, '\n'))
-      console.table({ res, a })
       // obj2arrByIndex :: obj => arr
       const obj2arrByIndex = R.pipe(
         R.toPairs,
@@ -577,7 +571,6 @@ export default {
         arr => arr.map((value, index) => R.pipe(obj2arrByIndex, addTitleNum(value[0], index))(value[1]))
       )
       const formatedA = formatA(a)
-      console.log('formatA', formatedA)
       this.littleBlockRectList = formatedA
       this.scanData = formatedA // 客观题
       this.cnlocation = res.data.cnlocation // cnlocation
@@ -769,9 +762,7 @@ export default {
         questionsloc: JSON.stringify(littleBlockRectList),
         tempName: this.tempName
       }
-      console.table('addExamTemplate', data)
       await this.axios.post(API.EXAMTEMPLATE_ADDEXAMTEMPLATE, data).then(res => {
-        console.log('addExamTemplate,res,', res)
         if (res.data.code === 0) {
           this.$message({
             message: '成功',

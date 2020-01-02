@@ -296,12 +296,10 @@ export default {
       this.loading = true
       await this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.examSubjectList = res.data.data
-        console.log(res.data.data)
         this.batchNumber = res.data.data[0].batchNumber
         this.examSubjectInfo = this.examSubjectList.filter(item => {
           return Number(item.id) === Number(this.examSubjectId)
         })[0]
-        console.log(this.examSubjectInfo)
         if (this.examSubjectInfo.structureType === 1) {
           this.activeStep = 2
         }
@@ -332,7 +330,6 @@ export default {
       this.$router.push({ path: router.path })
 
       let routeUrl = this.$router.resolve(router)
-      console.log(routeUrl)
       // window.open(routeUrl.href, '_blank')
     },
     goToProgress() {
@@ -343,7 +340,6 @@ export default {
     '$route'(to, from) {
       this.examId = to.params.examId
       this.examSubjectId = to.params.examSubjectId
-      // console.log(this.$route.matched)
       this.getExamById()
     }
   },
