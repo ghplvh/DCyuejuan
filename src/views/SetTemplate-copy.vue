@@ -1,7 +1,7 @@
 <template>
   <div
     id="set-template"
-    element-loading-text="加载中,请勿操作"
+    :element-loading-text="globalLoadingText"
     v-loading="globalLoading"
   >
     <el-container>
@@ -29,8 +29,8 @@
         </el-row>
       </el-header>
       <el-tabs
-        v-model="tabName"
-        @tab-click="onTab"
+        v-model="activeTab"
+        @tab-click="tabsClick"
       >
         <el-tab-pane
           label="1.模板信息"
@@ -46,33 +46,32 @@
                 <el-select
                   class="select-template"
                   value-key="id"
-                  placeholder="暂时没有"
-                  v-model="tempData.current"
+                  v-model="currentTemplate"
                 >
                   <el-option
-                    v-for="temp in tempData.list"
+                    v-for="temp in examTemplateInfo"
                     :key="temp.id"
                     :label="temp.tempName"
                     :value="temp"
                   ></el-option>
                 </el-select>
+                <!-- <el-button type="primary" class="add-template" @click="showAddTemplate()">新增模版</el-button> -->
                 <el-button
                   type="primary"
                   class="add-template"
-                  @click="addDialog.isVisible = true"
-                  :loading="addDialog.isLoading"
+                  @click="addTemplateVisible = true"
+                  :loading="globalLoading"
                 >扫描上传</el-button>
                 <el-button
                   type="primary"
                   class="add-template"
-                  @click="scanPaper()"
-                  :loading="isScanPaperLoading"
+                  @click="scanAddShi()"
                 >扫描试卷</el-button>
                 <el-button
                   type="danger"
                   class="add-template"
-                  @click="delTemp()"
-                  :loading="isDelTempLoading"
+                  @click="deleteTemplate()"
+                  :loading="buttonLoading"
                 >删除当前模板</el-button>
               </el-col>
             </el-row>
@@ -87,7 +86,7 @@
                     <span class="big-black">暂无</span></div>
                   <div
                     class="sm-pic-div"
-                    v-for="image in tempData.current.imgUrl"
+                    v-for="image in currentTemplate.imgUrl"
                     :key="image"
                     @click="previewImage(image)"
                   >
@@ -143,18 +142,20 @@
                     >
                       <el-button
                         type="primary"
-                        :loading="editForm.isLoading"
-                        @click="updateEdit"
+                        :loading="editBlockTitleForm.isLoading"
+                        @click="saveBlock"
                       >同步题号</el-button>
                     </el-col>
                     <el-col
                       :span="3"
                       class="btn-box"
                     >
-                      <el-checkbox v-model="editForm.isAutoSave">
+                      <el-checkbox v-model="editBlockTitleForm.isAutoSave">
                         自动同步
                       </el-checkbox>
                     </el-col>
+                    <!-- <el-col :span="3" class="icon-box"><i class="iconfont icon-unie039" @click="setScale(-0.05)"></i></el-col>
+                    <el-col :span="3" class="icon-box"><i class="iconfont icon-fangda" @click="setScale(0.05)"></i></el-col> -->
                   </el-row>
                 </el-col>
               </el-row>
@@ -163,46 +164,46 @@
                   class="main-svg"
                   :style="mainSvgHeight"
                   ref="positionObjective"
-                  v-if="this.tempData.list.length > 0"
                 >
                   <svg
                     version="1.1"
                     xmlns="http://www.w3.org/2000/svg"
-                    :width="svg.width"
-                    :height="svg.height"
-                    :viewBox="svg.viewbox"
+                    :width="getSvgWidth()"
+                    :height="getSvgHeight()"
+                    :viewBox="getSvgViewBox()"
                     onload="start()"
                   >
                     <image
-                      :width="svg.width"
-                      :height="svg.height"
-                      :xlink:href="tempData.current.imgUrl[svg.pageNo]"
-                      id="setTemplate-image"
+                      :width="getSvgWidth()"
+                      :height="getSvgHeight()"
+                      :xlink:href="currentTemplate.imgUrl[currentPaper]"
+                      :transform="imageTransform"
                     ></image>
-                    <template v-if="svg.pageNo === 0">
+                    <template v-if="currentPaper === 0">
                       <!-- `block -->
-                      <template v-for="(block,brlIndex) in tempData.current.questionsloc">
+                      <template v-for="(block,brlIndex) in littleBlockRectList">
                         <g
                           :key="brlIndex"
                           :index="brlIndex"
                         >
+                          <!-- <text :x="block.text.x" :y="block.text.y" class="text-center" style="font-size:11px;">{{brlIndex}}</text> -->
                           <template v-for="(item, index) in block">
                             <text
-                              @click=onEdit(item[5],item[4])
+                              @click=editBlolckTitle(item[5],item[4])
                               v-if="index === 0"
                               :key="index"
-                              :x="(parseInt(item[0] / svg.ratio[0]) + parseInt(item[2] / svg.ratio[0]) / 2).toFixed(0)"
-                              :y="parseInt(parseInt(item[1] / svg.ratio[0]) -5 )"
+                              :x="(parseInt(item[0] / ratio[0]) + parseInt(item[2] / ratio[0]) / 2).toFixed(0)"
+                              :y="parseInt(parseInt(item[1] / ratio[0]) -5 )"
                               class="text-center"
                               style="font-size:16px;"
                             >{{item[4]||"#"}}</text>
                             <rect
-                              v-if="index > 0 && item"
+                              v-if="index > 0"
                               class="cut-rect"
-                              :x="parseInt(item[0] / svg.ratio[0])"
-                              :y="parseInt(item[1] / svg.ratio[0])"
-                              :width="parseInt(item[2] / svg.ratio[0])"
-                              :height="parseInt(item[3] / svg.ratio[0])"
+                              :x="parseInt(item[0] / ratio[0])"
+                              :y="parseInt(item[1] / ratio[0])"
+                              :width="parseInt(item[2] / ratio[0])"
+                              :height="parseInt(item[3] / ratio[0])"
                               :index="index"
                               :key="index"
                             ></rect>
@@ -215,43 +216,33 @@
               </el-row>
             </el-col>
             <el-col :span="4">
+              <div class="thumbnail-view">
+                <div
+                  v-for="(img,index) in currentTemplate.imgUrl"
+                  :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'"
+                  :key="img"
+                >
+                  <img
+                    :src="img"
+                    alt=""
+                    @click="selectPaper(index)"
+                  >
+                </div>
+              </div>
             </el-col>
           </el-row>
         </el-tab-pane>
       </el-tabs>
     </el-container>
     <el-dialog
-      title="请输入模板名称"
-      :visible.sync="addDialog.isVisible"
-      width="60%"
-      custom-class="preview-dialog"
-    >
-      <el-input v-model="addDialog.tempName" />
-      <div slot="footer">
-        <el-button
-          type="primary"
-          size="medium"
-          :loading="addDialog.isLoading"
-          @click="scanTemp"
-        >扫描</el-button>
-        <el-button
-          type="primary"
-          size="medium"
-          :loading="addDialog.isLoading"
-          @click="devScanTemp"
-        >dev扫描</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog
       title="查看模板"
-      :visible.sync="preview.isVisible"
+      :visible.sync="previewVisible"
       width="60%"
       custom-class="preview-dialog"
     >
       <div class="img-box">
         <img
-          :src="preview.img"
+          :src="prevImg"
           alt="模板"
         >
       </div>
@@ -259,21 +250,22 @@
         <el-button
           type="primary"
           size="medium"
-          @click="preview.isVisible = false"
+          @click="previewVisible = false"
         >确定</el-button>
       </div>
     </el-dialog>
+    <!-- `edit -->
     <el-dialog
       title="修改题号"
-      :visible.sync="editForm.isVisible"
+      :visible.sync="editBlockTitleForm.isVisible"
       width="500px"
       custom-class="add-template-dialog"
     >
       <el-form
-        :model="editForm"
+        :model="editBlockTitleForm"
         status-icon
-        :rules="editForm"
-        ref="editForm"
+        :rules="editBlockTitleForm"
+        ref="editBlockTitleForm"
         size="medium"
         label-width="100px"
       >
@@ -281,168 +273,227 @@
           label="当前题号"
           prop="key"
         >
-          <el-input v-model="editForm.key"></el-input>
+          <el-input v-model="editBlockTitleForm.key"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button
           type="primary"
           size="medium"
-          @click="saveEdit"
-          :loading="editForm.isLoading"
+          @click="saveBlolckTitle"
+          :loading="editBlockTitleForm.isLoading"
         >确定</el-button>
         <el-button
           size="medium"
-          @click="editForm.isVisible = false"
+          @click="editBlockTitleForm.isVisible = false"
         >取消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="请输入模板名称"
+      :visible.sync="addTemplateVisible"
+      width="60%"
+      custom-class="preview-dialog"
+    >
+      <el-input v-model="tempName" />
+      <div slot="footer">
+        <el-button
+          type="primary"
+          size="medium"
+          :loading="globalLoading"
+          @click="scanAddTemplate"
+        >扫描</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import R from 'ramda'
-import { resOfScan } from '../mock'
+// import { resOfScan } from '../mock'
 import API from '../api/api.js'
+import Utils from '../utils/Utils.js'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode,
+      globalLoadingText: '加载中,请勿操作',
+      schoolCode: '',
       examId: this.$route.params.examId,
       examSubjectId: this.$route.params.examSubjectId,
-      tabName: 'templateInfo',
-      isScanPaperLoading: false,
-      isDelTempLoading: false,
-      tempData: {
-        list: [],
-        current: {},
+      globalLoading: false,
+      previewVisible: false,
+      prevImg: '',
+      activeTab: 'templateInfo',
+      ratio: [2, 2], // 显示宽度和实际宽度的比例
+      ratioWH: 1, // A3纸高/宽
+      svgWidth: 0,
+      scaleSvg: 1,
+      rotateDeg: 0,
+      blockRectList: [],
+      littleBlockRectList: [],
+      currentBlockIndex: 0,
+      currentPaper: 0,
+      currentClickDom: '',
+      currentSVGRef: 'templateInfo',
+      examTemplateInfo: [],
+      currentTemplate: {},
+      buttonLoading: false,
+      addTemplateVisible: false,
+      tempName: '未命名',
+      scanData: '',
+      qrlocation: {},
+      qalocation: {},
+      cnlocation: {},
+      answerCardList: [],
+      answerCardData: {
+        filedir: ''
       },
-      addDialog: {
-        isLoading: false,
-        isVisible: false,
-        tempName: '未命名',
-        qrlocation: [],
-        qalocation: [],
-        cnlocation: [],
-        questionsloc: [],
-        filelocation: []
-      },
-      preview: {
-        img: '',
-        isVisible: false
-      },
-      editForm: {
+      //  `editForm
+      editBlockTitleForm: {
         isVisible: false,
         isLoading: false,
         isAutoSave: true,
         id: -1,
         key: ''
       },
-      svg: {
-        current: 'templateInfo',
-        width: 0,
-        height: 0,
-        scale: 1,
-        viewbox: "0,0,0,0",
-        ratioWH: 1,
-        ratio: [2, 2],
-        pageNo: 0
-      }
+      locationCoord: [],
+      numberCoord: [],
+      objectiveCoord: [],
+      optionalTopicTopic: [],
+      tempList: [],
+      examSubjectList: [],
+      examSubjectInfo: {}
     }
-  },
-  async mounted() {
-    await this.getTemp()
   },
   computed: {
+    ...mapState(['adminInfo']),
     mainSvgHeight() {
       return { height: (window.innerHeight - 145) + 'px' }
+    },
+    imageTransform() {
+      return 'rotate(' + [this.rotateDeg].join(',') + ')'
     }
   },
+  created() {
+    this.schoolCode = this.adminInfo.teacherInfo.schoolCode
+    this.getExamSubject()
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.getRatio(true)
+    })
+  },
   methods: {
-    onTab(tab) {
-      this.svg.current = tab.name
-      this.getRatio()
+    // 查询所有考试科目
+    async getExamSubject() {
+      this.globalLoading = true
+      await this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
+        this.examSubjectList = res.data.data
+        this.examSubjectInfo = this.examSubjectList.filter(item => {
+          if (Number(item.id) === Number(this.examSubjectId)) {
+            return item
+          }
+        })[0]
+      }).catch(() => { this.globalLoading = false })
+    },
+    // 获取图片宽高比
+    getRatio(refresh = false) {
+      if (this.currentSVGRef !== 'templateInfo') {
+        this.$nextTick(() => {
+          this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
+          let image = document.querySelector('image')
+          let imageWidth = parseInt(image.getAttribute('width'))
+          let img = new Image()
+          img.src = this.currentTemplate.imgUrl[this.currentPaper]
+          img.onload = () => {
+            this.ratioWH = img.height / img.width
+          }
+          this.currentTemplate.imgUrl.forEach((src, index) => {
+            let srcImg = new Image()
+            srcImg.src = src
+            srcImg.onload = () => {
+              // this.ratioWH = srcImg.height / srcImg.width
+              let ratio = srcImg.width / (imageWidth === 0 ? this.svgWidth : imageWidth)
+              this.ratio.splice(index, 1, ratio)
+            }
+          })
+        })
+      }
+      if (refresh) {
+        this.getExamTemplate()
+      }
+    },
+    // 查询模板
+    getExamTemplate() {
+      this.globalLoading = true
+      let data = {
+        examId: this.examId,
+        examSubjectId: this.examSubjectId
+      }
+      this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
+        let list = res.data.data
+        this.examTemplateInfo = list.map(item => {
+          item.imgUrl = item.imgUrl.split(',')
+          item.optionalTopicTopic = Utils.isJsonString(item.optionalTopicTopic) ? this.convertData(JSON.parse(item.optionalTopicTopic), false) : []
+          return item
+        })
+        // this.examTemplateInfo = list
+        this.currentTemplate = list[0]
+        this.littleBlockRectList = JSON.parse(list[0].questionsloc || '')
+        // this.littleBlock()
+        this.globalLoading = false
+      }).catch(e => {
+        this.globalLoading = false
+        throw new Error(e)
+      })
     },
     // 图片预览
     previewImage(img) {
-      this.preview.img = img
-      this.preview.isVisible = true
+      this.prevImg = img
+      this.previewVisible = true
     },
-    getRatio() {
-      this.$nextTick(() => {
-        const svgWidth = this.$refs[this.svg.current] ?.clientWidth
-        const image = document.getElementById('setTemplate-image')
-        const imageWidth = parseInt(image.getAttribute('width'))
-        let img = new Image()
-        img.src = this.tempData.current.imgUrl[this.svg.pageNo]
-        img.onload = () => {
-          this.svg.width = svgWidth
-          this.svg.ratioWH = img.height / img.width
-          this.svg.height = svgWidth * this.svg.ratioWH * this.svg.scale
-          this.svg.viewbox = `0, 0,${svgWidth},${this.svg.height}`
-        }
-        this.tempData.current.imgUrl.forEach((src, index) => {
-          let srcImg = new Image()
-          srcImg.src = src
-          srcImg.onload = () => {
-            // this.ratioWH = srcImg.height / srcImg.width
-            const ratio = srcImg.width / (imageWidth === 0 ? svgWidth : imageWidth)
-            this.svg.ratio.splice(index, 1, ratio)
-          }
-        })
-      }
-      )
+    pictureCardPreview(file) {
+      this.prevImg = file.url
+      this.previewVisible = true
     },
-    onEdit(id, key) {
-      this.editForm.id = id
-      this.editForm.key = key
-      this.editForm.isVisible = true
+    // 答题卡上传
+    // 上传前
+    answerCardBeforeUpload(file) {
+      this.answerCardData.filedir = 'model/'
     },
-    async saveEdit() {
-      this.editForm.isLoading = true
-      let { id, key, isAutoSave } = this.editForm
-      this.tempData.current.questionsloc.forEach(item => {
-        if (item[0][5] === id) {
-          item[0][4] = key
-        }
+    // 上传成功
+    answerCardSuccess(response, file, fileList) {
+      let list = []
+      fileList.forEach(item => {
+        list.push(item.response.data.data)
       })
-      this.editForm.isVisible = false
-      if (isAutoSave) {
-        await this.updateEdit()
-      }
-      this.editForm.isLoading = false
+      this.answerCardList = list
     },
-    async updateEdit() {
-      // const debug = R.tap(x => { console.log(x) })
-      // 抽取属性
-      // pickAllFrom :: Object => Object
-      const pickAllFrom = R.pickAll(['cnlocation', 'qalocation', 'qrlocation', 'imgUrl', 'id', 'examSubjectId', 'tempName'])
-      // 添加qustionloc
-      // assocQustionloc :: {...} => {...,qustionloc}
-      const assocQustionloc = R.assoc('questionloc', JSON.stringify(this.tempData.current.questionsloc))
-      const formatImgUrl = x => x.join(',')
-      // 添加filelocation
-      // assocFilelocation :: {...} => {...,filelocation}
-      const assocFilelocation = R.converge(R.assoc('filelocation'), [R.pipe(R.prop('imgUrl'), formatImgUrl), R.identity])
-      // 删除imgUrl
-      // dissocImgUrl :: {...,imgUrl} => {...}
-      const dissocImgUrl = R.dissoc('imgUrl')
-      // getDataFrom :: Object => Object
-      const getDataFrom = R.pipe(pickAllFrom, assocQustionloc, assocFilelocation, dissocImgUrl)
-      // 应用至currentTemplate
-      const data = getDataFrom(this.tempData.current)
-      console.log('data', data)
-      await this.axios.post(API.EXAMTEMPLATE_UPDATEBYID, data).then(res => {
-        this.$message({
-          message: '成功',
-          type: 'success'
-        })
-        this.getTemp()
-      }).catch(() => { })
+    // 超过限制
+    answerCardExceed(file, fileList) {
+      this.$message({
+        message: '上传数量超过限制',
+        type: 'warning'
+      })
     },
     // 扫描上传模板 `scan
-    async scanTemp() {
+    async scanAddTemplate() {
       // `dev
-      this.addDialog.isLoading = true
+      // const funDownload = function (content, filename) {
+      //   // 创建隐藏的可下载链接
+      //   var eleLink = document.createElement('a')
+      //   eleLink.download = filename
+      //   eleLink.style.display = 'none'
+      //   // 字符内容转变成blob地址
+      //   var blob = new Blob([content])
+      //   eleLink.href = URL.createObjectURL(blob)
+      //   // 触发点击
+      //   document.body.appendChild(eleLink)
+      //   eleLink.click()
+      //   // 然后移除
+      //   document.body.removeChild(eleLink)
+      // }
+      this.globalLoading = true
       let param = {
         subjectId: this.examSubjectId,
         examId: this.examId
@@ -484,93 +535,244 @@ export default {
           arr => arr.map((value, index) => R.pipe(obj2arrByIndex, addTitleNum(value[0], index))(value[1]))
         )
         const formatedA = formatA(a)
-        this.addDialog.questionsloc = formatedA
-        // this.scanData = a // 客观题
-        this.addDialog.cnlocation = res.data.cnlocation // cnlocation
-        this.addDialog.qalocation = res.data.qalocation
-        this.addDialog.qrlocation = res.data.qrlocation
-        this.addDialog.filelocation = res.data.filelocation
+        this.littleBlockRectList = formatedA
+        this.scanData = a // 客观题
+        this.cnlocation = res.data.cnlocation // cnlocation
+        this.qalocation = res.data.qalocation
+        this.qrlocation = res.data.qrlocation
+        this.filelocation = res.data.filelocation
       })
       // 上传扫描结果
-      await this.addTemp()
-      this.addDialog.isLoading = false
+      await this.addExamTemplate()
+      this.globalLoading = false
     },
     // `dev
-    async devScanTemp() {
-      this.addDialog.isLoading = true
-      const res = {
-        data: resOfScan
-      }
-      let a = JSON.parse(res.data.questionsloc.replace(/↵/g, '\n'))
-      // obj2arrByIndex :: obj => arr
-      const obj2arrByIndex = R.pipe(
-        R.toPairs,
-        R.reduce((acc, value) => {
-          // obj为无序类型, 故要根据prop来确定位置,如{'1':1,'0':0} => [0,1]
-          const res = [...acc]
-          res[value[0] - 0] = value[1]
-          return res
-        }, [])
-      )
-      // addTitleNum :: [[a]...] => [[titleNum,...a]...]
-      const addTitleNum = R.curry((key, index, arr) => {
-        // isEmpty 判断空值, 规避报错
-        return R.ifElse(R.either(R.isEmpty, R.isNil), () => [[]], arr => [
-          [
-            ...R.ifElse(R.either(R.isEmpty, R.isNil), () => [], R.adjust(0, i => i - 60))(arr[0]),
-            key,
-            index
-          ],
-          ...arr
-        ])(arr)
-      })
-      // formatA :: obj => arr
-      const formatA = R.pipe(
-        R.toPairs,
-        arr => arr.map((value, index) => R.pipe(obj2arrByIndex, addTitleNum(value[0], index))(value[1]))
-      )
-      const formatedA = formatA(a)
-      this.addDialog.questionsloc = formatedA
-      // this.scanData = a // 客观题
-      this.addDialog.cnlocation = res.data.cnlocation // cnlocation
-      this.addDialog.qalocation = res.data.qalocation
-      this.addDialog.qrlocation = res.data.qrlocation
-      this.addDialog.filelocation = res.data.filelocation
-      // 上传扫描结果
-      await this.addTemp()
-      this.addDialog.isLoading = false
+    // async scanAddTemplate() {
+    //   // this.globalLoading = true
+    //   const res = {
+    //     data: resOfScan
+    //   }
+    //   let a = JSON.parse(res.data.questionsloc.replace(/↵/g, '\n'))
+    //   // obj2arrByIndex :: obj => arr
+    //   const obj2arrByIndex = R.pipe(
+    //     R.toPairs,
+    //     R.reduce((acc, value) => {
+    //       // obj为无序类型, 故要根据prop来确定位置,如{'1':1,'0':0} => [0,1]
+    //       const res = [...acc]
+    //       res[value[0] - 0] = value[1]
+    //       return res
+    //     }, [])
+    //   )
+    //   // addTitleNum :: [[a]...] => [[titleNum,...a]...]
+    //   const addTitleNum = R.curry((key, index, arr) => {
+    //     // isEmpty 判断空值, 规避报错
+    //     return R.ifElse(R.either(R.isEmpty, R.isNil), () => [[]], arr => [
+    //       [
+    //         ...R.ifElse(R.either(R.isEmpty, R.isNil), () => [], R.adjust(0, i => i - 60))(arr[0]),
+    //         key,
+    //         index
+    //       ],
+    //       ...arr
+    //     ])(arr)
+    //   })
+    //   // formatA :: obj => arr
+    //   const formatA = R.pipe(
+    //     R.toPairs,
+    //     arr => arr.map((value, index) => R.pipe(obj2arrByIndex, addTitleNum(value[0], index))(value[1]))
+    //   )
+    //   const formatedA = formatA(a)
+    //   this.littleBlockRectList = formatedA
+    //   this.scanData = formatedA // 客观题
+    //   this.cnlocation = res.data.cnlocation // cnlocation
+    //   this.qalocation = res.data.qalocation
+    //   this.qrlocation = res.data.qrlocation
+    //   this.filelocation = res.data.filelocation
+    //   // 上传扫描结果
+    //   await this.addExamTemplate()
+    //   this.globalLoading = false
+    // },
+    // `editBlockTitle
+    editBlolckTitle(id, key) {
+      this.editBlockTitleForm.id = id
+      this.editBlockTitleForm.key = key
+      this.editBlockTitleForm.isVisible = true
     },
-    // api 查询模板
-    async getTemp() {
-      const { examId, examSubjectId } = this
-      const data = {
-        examId,
-        examSubjectId
-      }
-      this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
-        const list = res ?.data ?.data
-        if (list ?.length > 0) {
-          this.tempData.list = list.map(item => {
-            item.imgUrl = item.imgUrl.split(',')
-            item.cnlocation = JSON.parse(item.cnlocation)
-            item.qrlocation = JSON.parse(item.qrlocation)
-            item.qalocation = JSON.parse(item.qalocation)
-            item.questionsloc = JSON.parse(item.questionsloc)
-            return item
-          })
-          this.tempData.current = this.tempData.list[0]
-          console.log('current', this.tempData.current)
-          // this.questionsloc = JSON.parse(list[0].questionsloc || '')
+    // `saveBlockTitle
+    async saveBlolckTitle() {
+      this.editBlockTitleForm.isLoading = true
+      let { id, key, isAutoSave } = this.editBlockTitleForm
+      this.littleBlockRectList.forEach(item => {
+        if (item[0][5] === id) {
+          item[0][4] = key
         }
-      }).catch(e => {
-        throw new Error(e)
+      })
+      this.editBlockTitleForm.isVisible = false
+      if (isAutoSave) {
+        await this.saveBlock()
+      }
+      this.editBlockTitleForm.isLoading = false
+    },
+    // 扫描答题卡
+    scanAddShi() {
+      const { cnlocation, qalocation, qrlocation, questionsloc } = this.currentTemplate
+      let data = {
+        'cnlocation': cnlocation,
+        'qalocation': qalocation,
+        'qrlocation': qrlocation,
+        'ids': { 'subjectId': '203', 'examId': '59' },
+        'options': { 'questionsloc': questionsloc, 'type': 1 }
+      }
+      this.axios({
+        // url: '/api/test',
+        url: 'http://127.0.0.1:8082',
+        method: 'post',
+        // headers: {'Access-Control-Allow-Origin': '*'},
+        data: data
+      }).then(res => {
       })
     },
-    // api
-    async addTemp() {
-      const { cnlocation, qalocation, qrlocation, filelocation, questionsloc, tempName } = this.addDialog
+    // 删除当前模板
+    deleteTemplate() {
+      this.$confirm('确定删除当前模板吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let data = {
+          id: this.currentTemplate.id
+        }
+        this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, data).then(res => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.getExamTemplate()
+        }).catch(() => { })
+      }).catch(() => {
+      })
+    },
+    // tabs切换
+    tabsClick(tab) {
+      this.currentSVGRef = tab.name
+      this.getRatio()
+    },
+    // 试卷切换
+    selectPaper(index) {
+      this.currentPaper = index
+      this.getRatio()
+    },
+    // 旋转
+    changeDeg(deg = 0) {
+      this.rotateDeg += deg
+    },
+    // 计算svg的width，height，viewbox
+    getSvgWidth() {
+      return this.svgWidth * this.scaleSvg
+    },
+    getSvgHeight() {
+      return this.svgWidth * this.ratioWH * this.scaleSvg
+    },
+    getSvgViewBox() {
+      return [0, 0, this.getSvgWidth(), this.getSvgHeight()].join(',')
+    },
+    /**
+   * 数据比例换算
+   * @param data  需要换算的数据
+   * @param isGet true:显示数据换算实际数据; false:实际数据换算显示数据
+   */
+    convertData(data, isGet = false) {
+      if (!Array.isArray(data)) {
+        return data || []
+      }
+      let arr = data.slice(0)
+      arr = arr.map(item => {
+        let ratio = this.ratio[item.page]
+        Object.keys(item.rect).forEach(k => {
+          item.rect[k] = isGet ? item.rect[k] * ratio : item.rect[k] / ratio
+        })
+        Object.keys(item.foreignObject).forEach(k => {
+          item.foreignObject[k] = isGet ? item.foreignObject[k] * ratio : item.foreignObject[k] / ratio
+        })
+        item.circleList = item.circleList.map(c => {
+          c.cx = isGet ? c.cx * ratio : c.cx / ratio
+          c.cy = isGet ? c.cy * ratio : c.cy / ratio
+          return c
+        })
+        item.isActive = false
+        return item
+      })
+      return arr
+    },
+    // 设置缩放等级
+    // setScale(number) {
+    //   if ((this.scaleSvg <= 0.5 && number < 0) || (this.scaleSvg >= 1.5 && number > 0)) {
+    //     return
+    //   }
+    //   this.getRatio(false)
+    //   this.scaleSvg += number
+    //   let data = Utils.deepCopy(this.tempList)
+    //   this.blockRectList = data.map(item => {
+    //     Object.keys(item.rect).forEach(k => {
+    //       item.rect[k] = item.rect[k] * this.scaleSvg
+    //     })
+    //     Object.keys(item.foreignObject).forEach(k => {
+    //       item.foreignObject[k] = item.foreignObject[k] * this.scaleSvg
+    //     })
+    //     item.circleList = item.circleList.map(c => {
+    //       c.cx = c.cx * this.scaleSvg
+    //       c.cy = c.cy * this.scaleSvg
+    //       return c
+    //     })
+    //     item.isActive = false
+    //     return item
+    //   })
+    // },
+    // 操作按钮事件
+    async saveBlock() {
+      // const debug = R.tap(x => { console.log(x) })
+      // 抽取属性
+      // pickAllFrom :: Object => Object
+      const pickAllFrom = R.pickAll(['cnlocation', 'qalocation', 'qrlocation', 'imgUrl', 'id', 'examSubjectId', 'tempName'])
+      // 添加qustionloc
+      // assocQustionloc :: {...} => {...,qustionloc}
+      const assocQustionloc = R.assoc('questionloc', JSON.stringify(this.littleBlockRectList))
+      const formatImgUrl = x => x.join(',')
+      // 添加filelocation
+      // assocFilelocation :: {...} => {...,filelocation}
+      const assocFilelocation = R.converge(R.assoc('filelocation'), [R.pipe(R.prop('imgUrl'), formatImgUrl), R.identity])
+      // 删除imgUrl
+      // dissocImgUrl :: {...,imgUrl} => {...}
+      const dissocImgUrl = R.dissoc('imgUrl')
+      // getDataFrom :: Object => Object
+      const getDataFrom = R.pipe(pickAllFrom, assocQustionloc, assocFilelocation, dissocImgUrl)
+      // 应用至currentTemplate
+      const data = getDataFrom(this.currentTemplate)
+      console.log('data', data)
+      await this.axios.post(API.EXAMTEMPLATE_UPDATEBYID, data).then(res => {
+        this.$message({
+          message: '成功',
+          type: 'success'
+        })
+        this.getExamTemplate()
+      }).catch(() => { })
+    },
+    deleteBlock(index) {
+      this.blockRectList.splice(index, 1)
+      // this.setCurrentRectList(this.blockRectList)
+      this.saveBlock(index)
+    },
+    editBlock(index) {
+      this.blockRectList[index].isActive = true
+      // this.setCurrentRectList(this.blockRectList)
+    },
+    mousedownBlock(e) {
+      e.stopPropagation()
+    },
+    // API
+    async addExamTemplate() {
+      const { cnlocation, qalocation, qrlocation, filelocation, littleBlockRectList, tempName } = this
       const imgUrl = filelocation.file0 + ',' + filelocation.file1
-      const data = {
+      let data = {
         examSubjectId: this.examSubjectId,
         examId: this.examId,
         cnlocation: JSON.stringify(cnlocation),
@@ -578,7 +780,7 @@ export default {
         qrlocation: JSON.stringify(qrlocation),
         filelocation: JSON.stringify(filelocation),
         imgUrl,
-        questionsloc: JSON.stringify(questionsloc),
+        questionsloc: JSON.stringify(littleBlockRectList),
         tempName
       }
       await this.axios.post(API.EXAMTEMPLATE_ADDEXAMTEMPLATE, data).then(res => {
@@ -587,55 +789,11 @@ export default {
             message: '成功',
             type: 'success'
           })
-          this.addDialog.isVisible = false
         }
       }).catch(e => { throw new Error(e) })
-      this.getTemp()
+      this.getExamTemplate()
       this.addTemplateVisible = false
-    },
-    // api 扫描答题卡
-    async scanPaper() {
-      this.isScanPaperLoading = true
-      const { cnlocation, qalocation, qrlocation, questionsloc } = this.tempData.current
-      const data = {
-        'cnlocation': cnlocation,
-        'qalocation': qalocation,
-        'qrlocation': qrlocation,
-        'ids': { 'subjectId': '203', 'examId': '59' },
-        'options': { 'questionsloc': questionsloc, 'type': 1 }
-      }
-      await this.axios({
-        // url: '/api/test',
-        url: 'http://127.0.0.1:8082',
-        method: 'post',
-        // headers: {'Access-Control-Allow-Origin': '*'},
-        data: data
-      }).then(res => {
-      })
-      this.isScanPaperLoading = false
-    },
-    // api 删除当前模板
-    async delTemp() {
-      this.isDelTempLoading = true
-      await this.$confirm('确定删除当前模板吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        const data = {
-          id: this.tempData.current.id
-        }
-        this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, data).then(res => {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-          this.getTemp()
-        }).catch(() => { })
-      }).catch(() => {
-      })
-      this.isDelTempLoading = false
-    },
+    }
   }
 }
 </script>
