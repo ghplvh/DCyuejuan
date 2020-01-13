@@ -715,10 +715,12 @@ export default {
   },
   mounted() {
     // `dev
-    this.nextPage()
-    setTimeout(() => {
-      this.$router.push({ path: '/subjectMain/58/202' })
-    }, 500)
+    if (this.$store.state.dev) {
+      this.nextPage()
+      setTimeout(() => {
+        this.$router.push({ path: '/subjectMain/58/202' })
+      }, 500)
+    }
   }
 }
 </script>

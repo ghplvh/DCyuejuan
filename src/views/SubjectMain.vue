@@ -345,11 +345,12 @@ export default {
   },
   mounted() {
     // `dev
-    setTimeout(() => {
-      this.examSubjectInfo.templateType === 1 && this.openTarget({ path: '/setTemplate/' + this.examId + '/' + this.examSubjectId })
-      this.examSubjectInfo.structureType === 1 && this.openTarget({ path: '/setTemplate/' + this.examId + '/' + this.examSubjectId })
-    }, 500)
-  }
+    if (this.$store.state.dev) {
+      setTimeout(() => {
+        this.examSubjectInfo.templateType === 1 && this.openTarget({ path: '/setTemplate/' + this.examId + '/' + this.examSubjectId })
+        this.examSubjectInfo.structureType === 1 && this.openTarget({ path: '/setTemplate/' + this.examId + '/' + this.examSubjectId })
+      }, 500)
+    }  }
 }
 </script>
 <style lang="scss">

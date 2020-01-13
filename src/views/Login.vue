@@ -106,7 +106,8 @@ export default {
   },
   mounted() {
     // `dev
-    this.login('form')
+    if (this.$store.state.dev) {
+      this.login('form')    }
   }
 }
 </script>

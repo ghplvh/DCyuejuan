@@ -30,6 +30,7 @@
       </el-header>
       <el-tabs
         v-model="tabName"
+        :before-leave="beforeTabLeave"
         @tab-click="onTab"
       >
         <el-tab-pane
@@ -47,13 +48,14 @@
                   class="select-template"
                   value-key="id"
                   placeholder="暂时没有"
-                  v-model="tempData.current"
+                  v-model="tempData.id"
+                  @change="changeTemp"
                 >
                   <el-option
                     v-for="temp in tempData.list"
                     :key="temp.id"
                     :label="temp.tempName"
-                    :value="temp"
+                    :value="temp.id"
                   ></el-option>
                 </el-select>
                 <el-button
@@ -119,26 +121,35 @@
               <el-row
                 type="flex"
                 align="middle"
-                justify="space-between"
+                justify="flex-start"
                 class="main-header opration"
               >
-                <el-col
-                  :span="12"
-                  :offset="1"
-                >
-                  操作提示： 请框选试卷上客观题区，完成后点击保存将跳到下一页；若多张试卷上有客观题区，请注意都需要框选。
+                <el-col>
+                  <p style="color:blue;margin-left:12px">
+                    tip：点击错误题号可以进行修改，完成修改后点击同步按钮上传。
+                  </p>
                 </el-col>
-                <el-col
-                  :span="6"
-                  class="zoom"
-                >
+                <el-col class="zoom">
                   <el-row
                     type="flex"
                     align="middle"
                     justify="start"
+                    style="width:400px;margin-left:-200px;"
                   >
                     <el-col
-                      :span="10"
+                      :span="8"
+                      class="btn-box"
+                    >
+                      <el-button
+                        type="primary"
+                        @click="()=> {
+                          this.svg.hasRatio = false
+                          this.getRatio()
+                        }"
+                      >错位修复</el-button>
+                    </el-col>
+                    <el-col
+                      :span="8"
                       class="btn-box"
                     >
                       <el-button
@@ -147,14 +158,17 @@
                         @click="updateEdit"
                       >同步题号</el-button>
                     </el-col>
-                    <el-col
-                      :span="3"
-                      class="btn-box"
-                    >
+                    <diev>
                       <el-checkbox v-model="editForm.isAutoSave">
                         自动同步
                       </el-checkbox>
-                    </el-col>
+                      <el-checkbox
+                        style="margin:0;"
+                        v-model="addDialog.canChangeXY"
+                      >
+                        可修改选框坐标
+                      </el-checkbox>
+                    </diev>
                   </el-row>
                 </el-col>
               </el-row>
@@ -188,15 +202,16 @@
                         >
                           <template v-for="(item, index) in block">
                             <text
-                              @click=onEdit(item[5],item[4])
+                              @click=onEdit(block[0][5],block[0][4],item[0],item[1],item[2],item[3],index)
                               v-if="index === 0"
                               :key="index"
-                              :x="(parseInt(item[0] / svg.ratio[0]) + parseInt(item[2] / svg.ratio[0]) / 2).toFixed(0)"
-                              :y="parseInt(parseInt(item[1] / svg.ratio[0]) -5 )"
+                              :x="(parseInt(item[0] / svg.ratio[0]) + parseInt(item[2] / svg.ratio[0]) / 2 - 30).toFixed(0)"
+                              :y="parseInt(parseInt(item[1] / svg.ratio[0]))"
                               class="text-center"
                               style="font-size:16px;"
                             >{{item[4]||"#"}}</text>
                             <rect
+                              @click=onEdit(block[0][5],block[0][4],item[0],item[1],item[2],item[3],index)
                               v-if="index > 0 && item"
                               class="cut-rect"
                               :x="parseInt(item[0] / svg.ratio[0])"
@@ -215,6 +230,19 @@
               </el-row>
             </el-col>
             <el-col :span="4">
+              <div class="thumbnail-view">
+                <div
+                  v-for="(img,index) in tempData.current.imgUrl"
+                  :class="index === svg.pageNo ? 'img-wrapper selected' : 'img-wrapper'"
+                  :key="img"
+                >
+                  <img
+                    :src="img"
+                    alt=""
+                    @click="selectPaper(index)"
+                  >
+                </div>
+              </div>
             </el-col>
           </el-row>
         </el-tab-pane>
@@ -223,10 +251,18 @@
     <el-dialog
       title="请输入模板名称"
       :visible.sync="addDialog.isVisible"
-      width="60%"
+      width="40%"
       custom-class="preview-dialog"
     >
-      <el-input v-model="addDialog.tempName" />
+      <el-input
+        v-model="addDialog.tempName"
+        placeholder="请输入模板名称"
+        :maxlength="8"
+        :show-word-limit='true'
+        style="width: 300px;"
+      />
+      <p style="color:blue;margin-top:12px;">tip1：扫描过程大概为1-3分钟，请耐心等待，勿进行其他操作。</p>
+      <p style="color:blue">tip2：扫描后，请核对模板的选框位置和题号是否正确，如不正确则会影响扫描。</p>
       <div slot="footer">
         <el-button
           type="primary"
@@ -283,6 +319,32 @@
         >
           <el-input v-model="editForm.key"></el-input>
         </el-form-item>
+        <template v-if="addDialog.canChangeXY">
+          <el-form-item
+            label="x坐标"
+            prop="key"
+          >
+            <el-input v-model="editForm.x"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="y坐标"
+            prop="key"
+          >
+            <el-input v-model="editForm.y"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="width宽度"
+            prop="key"
+          >
+            <el-input v-model="editForm.width"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="height高度"
+            prop="key"
+          >
+            <el-input v-model="editForm.height"></el-input>
+          </el-form-item>
+        </template>
       </el-form>
       <div slot="footer">
         <el-button
@@ -297,6 +359,7 @@
         >取消</el-button>
       </div>
     </el-dialog>
+    <div v-loading.fullscreen.lock="!svg.hasRatio && tabName === 'positionObjective'"></div>
   </div>
 </template>
 <script>
@@ -306,7 +369,6 @@ import API from '../api/api.js'
 export default {
   data() {
     return {
-      schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode,
       examId: this.$route.params.examId,
       examSubjectId: this.$route.params.examSubjectId,
       tabName: 'templateInfo',
@@ -315,11 +377,13 @@ export default {
       tempData: {
         list: [],
         current: {},
+        id: '暂无'
       },
       addDialog: {
         isLoading: false,
         isVisible: false,
-        tempName: '未命名',
+        canChangeXY: false,
+        tempName: '',
         qrlocation: [],
         qalocation: [],
         cnlocation: [],
@@ -335,7 +399,12 @@ export default {
         isLoading: false,
         isAutoSave: true,
         id: -1,
-        key: ''
+        key: '',
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        index: 0,
       },
       svg: {
         current: 'templateInfo',
@@ -345,12 +414,17 @@ export default {
         viewbox: "0,0,0,0",
         ratioWH: 1,
         ratio: [2, 2],
-        pageNo: 0
+        pageNo: 0,
+        hasRatio: false
       }
     }
   },
   async mounted() {
     await this.getTemp()
+    if (this.tempData.list.length > 0) {
+      this.tempData.id = this.tempData.list[0].id
+    }
+    this.changeTemp(this.tempData.id)
   },
   computed: {
     mainSvgHeight() {
@@ -359,8 +433,19 @@ export default {
   },
   methods: {
     onTab(tab) {
+
       this.svg.current = tab.name
       this.getRatio()
+    },
+    beforeTabLeave(tab) {
+      console.log('cur', Object.keys(this.tempData.current).length)
+      if (Object.keys(this.tempData.current).length === 0) {
+        this.$message({
+          message: '请先扫描上传答题卡模板',
+          type: 'info'
+        })
+        return false
+      }
     },
     // 图片预览
     previewImage(img) {
@@ -368,7 +453,10 @@ export default {
       this.preview.isVisible = true
     },
     getRatio() {
-      this.$nextTick(() => {
+      if (this.tempData.list.length <= 0) return
+      if (this.svg.hasRatio) return
+      console.log('getratioid', this.tempData.id)
+      this.$nextTick(setTimeout(() => {
         const svgWidth = this.$refs[this.svg.current] ?.clientWidth
         const image = document.getElementById('setTemplate-image')
         const imageWidth = parseInt(image.getAttribute('width'))
@@ -389,20 +477,40 @@ export default {
             this.svg.ratio.splice(index, 1, ratio)
           }
         })
-      }
+        this.svg.hasRatio = true
+      }, 666)
       )
     },
-    onEdit(id, key) {
+    changeTemp(value) {
+      const list = this.tempData.list.filter(item => item.id === value)
+      list.length > 0 ? this.tempData.current = list[0] : this.tempData.current = {}
+      console.log('curre', this.tempData.current)
+      this.svg.hasRatio = false
+    },
+    // 试卷切换
+    selectPaper(index) {
+      this.svg.pageNo = index
+    },
+    onEdit(id, key, x, y, width, height, index) {
       this.editForm.id = id
       this.editForm.key = key
+      this.editForm.x = x
+      this.editForm.y = y
+      this.editForm.width = width
+      this.editForm.height = height
+      this.editForm.index = index
       this.editForm.isVisible = true
     },
     async saveEdit() {
       this.editForm.isLoading = true
-      let { id, key, isAutoSave } = this.editForm
+      let { index, id, key, x, y, width, height, isAutoSave } = this.editForm
       this.tempData.current.questionsloc.forEach(item => {
         if (item[0][5] === id) {
           item[0][4] = key
+          item[index][0] = x
+          item[index][1] = y
+          item[index][2] = width
+          item[index][3] = height
         }
       })
       this.editForm.isVisible = false
@@ -411,6 +519,7 @@ export default {
       }
       this.editForm.isLoading = false
     },
+    // api
     async updateEdit() {
       // const debug = R.tap(x => { console.log(x) })
       // 抽取属性
@@ -418,26 +527,40 @@ export default {
       const pickAllFrom = R.pickAll(['cnlocation', 'qalocation', 'qrlocation', 'imgUrl', 'id', 'examSubjectId', 'tempName'])
       // 添加qustionloc
       // assocQustionloc :: {...} => {...,qustionloc}
-      const assocQustionloc = R.assoc('questionloc', JSON.stringify(this.tempData.current.questionsloc))
+      const assocQustionloc = R.assoc('questionsloc', JSON.stringify(this.tempData.current.questionsloc))
       const formatImgUrl = x => x.join(',')
       // 添加filelocation
       // assocFilelocation :: {...} => {...,filelocation}
-      const assocFilelocation = R.converge(R.assoc('filelocation'), [R.pipe(R.prop('imgUrl'), formatImgUrl), R.identity])
-      // 删除imgUrl
-      // dissocImgUrl :: {...,imgUrl} => {...}
-      const dissocImgUrl = R.dissoc('imgUrl')
+      const assocImgUrl = R.converge(R.assoc('imgUrl'), [R.pipe(R.prop('imgUrl'), formatImgUrl), R.identity])
+      const stringify = n => JSON.stringify(n)
+      // stringifyWith :: string => Function
+      const stringifyWith = prop => R.converge(R.assoc(prop), [R.pipe(R.prop(prop), stringify), R.identity])
       // getDataFrom :: Object => Object
-      const getDataFrom = R.pipe(pickAllFrom, assocQustionloc, assocFilelocation, dissocImgUrl)
+      const getDataFrom = R.pipe(
+        pickAllFrom,
+        assocQustionloc,
+        assocImgUrl,
+        stringifyWith('cnlocation'),
+        stringifyWith('qalocation'),
+        stringifyWith('qrlocation')
+      )
       // 应用至currentTemplate
       const data = getDataFrom(this.tempData.current)
-      console.log('data', data)
+      const callback = async () => {
+        await this.getTemp()
+        await this.changeTemp(this.tempData.id)
+        this.svg.hasRatio = true
+      }
       await this.axios.post(API.EXAMTEMPLATE_UPDATEBYID, data).then(res => {
         this.$message({
           message: '成功',
           type: 'success'
         })
-        this.getTemp()
+        callback()
       }).catch(() => { })
+      // await this.getTemp()
+      // await this.changeTemp(this.tempData.id)
+      // this.svg.hasRatio = true
     },
     // 扫描上传模板 `scan
     async scanTemp() {
@@ -490,7 +613,7 @@ export default {
         this.addDialog.qalocation = res.data.qalocation
         this.addDialog.qrlocation = res.data.qrlocation
         this.addDialog.filelocation = res.data.filelocation
-      })
+      }).catch(() => { })
       // 上传扫描结果
       await this.addTemp()
       this.addDialog.isLoading = false
@@ -547,7 +670,7 @@ export default {
         examId,
         examSubjectId
       }
-      this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
+      await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
         const list = res ?.data ?.data
         if (list ?.length > 0) {
           this.tempData.list = list.map(item => {
@@ -558,9 +681,8 @@ export default {
             item.questionsloc = JSON.parse(item.questionsloc)
             return item
           })
-          this.tempData.current = this.tempData.list[0]
-          console.log('current', this.tempData.current)
-          // this.questionsloc = JSON.parse(list[0].questionsloc || '')
+        } else {
+          this.tempData.list = []
         }
       }).catch(e => {
         throw new Error(e)
@@ -581,6 +703,11 @@ export default {
         questionsloc: JSON.stringify(questionsloc),
         tempName
       }
+      const callback = async () => {
+        await this.getTemp()
+        this.tempData.id = this.tempData.list[0].id
+        this.changeTemp(this.tempData.id)
+      }
       await this.axios.post(API.EXAMTEMPLATE_ADDEXAMTEMPLATE, data).then(res => {
         if (res.data.code === 0) {
           this.$message({
@@ -588,22 +715,26 @@ export default {
             type: 'success'
           })
           this.addDialog.isVisible = false
+          callback()
         }
       }).catch(e => { throw new Error(e) })
-      this.getTemp()
-      this.addTemplateVisible = false
+      // await this.getTemp()
+      // this.tempData.id = this.tempData.list[0].id
+      // this.changeTemp(this.tempData.id)
     },
     // api 扫描答题卡
     async scanPaper() {
       this.isScanPaperLoading = true
       const { cnlocation, qalocation, qrlocation, questionsloc } = this.tempData.current
+      const json = n => JSON.stringify(n)
       const data = {
-        'cnlocation': cnlocation,
-        'qalocation': qalocation,
-        'qrlocation': qrlocation,
-        'ids': { 'subjectId': '203', 'examId': '59' },
-        'options': { 'questionsloc': questionsloc, 'type': 1 }
+        'cnlocation': (cnlocation),
+        'qalocation': (qalocation),
+        'qrlocation': (qrlocation),
+        'ids': ({ "subjectId": "203", "examId": "59" }),
+        'options': ({ "questionsloc": json(questionsloc), "type": 1 })
       }
+      console.log('data', data)
       await this.axios({
         // url: '/api/test',
         url: 'http://127.0.0.1:8082',
@@ -617,24 +748,31 @@ export default {
     // api 删除当前模板
     async delTemp() {
       this.isDelTempLoading = true
+      const callback = async () => {
+        const data = {
+          id: this.tempData.current.id
+        }
+        await this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, data).then(res => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.tempName = ''
+        }).catch(() => { })
+        await this.getTemp()
+        if (this.tempData.list.length > 0) { this.tempData.id = this.tempData.list[0].id }
+        this.changeTemp(this.tempData.id)
+      }
       await this.$confirm('确定删除当前模板吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const data = {
-          id: this.tempData.current.id
-        }
-        this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, data).then(res => {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-          this.getTemp()
-        }).catch(() => { })
+        this.isDelTempLoading = false
+        callback()
       }).catch(() => {
+        this.isDelTempLoading = false
       })
-      this.isDelTempLoading = false
     },
   }
 }

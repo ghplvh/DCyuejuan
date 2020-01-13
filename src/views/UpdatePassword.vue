@@ -3,18 +3,54 @@
     <div slot="header">
       <span>修改密码</span>
     </div>
-    <el-form :model="form" :rules="rules" ref="form" label-width="110px">
-      <el-form-item label="旧密码" prop="oldPassword">
-        <el-input v-model="form.oldPassword" type="password" size="medium" placeholder="请输入新密码" style="width: 45%"></el-input>
+    <el-form
+      :model="form"
+      :rules="rules"
+      ref="form"
+      label-width="110px"
+    >
+      <el-form-item
+        label="旧密码"
+        prop="oldPassword"
+      >
+        <el-input
+          v-model="form.oldPassword"
+          type="password"
+          size="medium"
+          placeholder="请输入新密码"
+          style="width: 45%"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="新密码" prop="password">
-        <el-input v-model="form.password" type="password" size="medium" placeholder="请输入新密码" style="width: 45%"></el-input>
+      <el-form-item
+        label="新密码"
+        prop="password"
+      >
+        <el-input
+          v-model="form.password"
+          type="password"
+          size="medium"
+          placeholder="请输入新密码"
+          style="width: 45%"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="newPassword" :rules="rules2.re_password">
-        <el-input v-model="form.newPassword" type="password" size="medium" placeholder="请确认新密码" style="width: 45%"></el-input>
+      <el-form-item
+        label="确认密码"
+        prop="newPassword"
+        :rules="rules2.re_password"
+      >
+        <el-input
+          v-model="form.newPassword"
+          type="password"
+          size="medium"
+          placeholder="请确认新密码"
+          style="width: 45%"
+        ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('form')">确认修改</el-button>
+        <el-button
+          type="primary"
+          @click="submitForm('form')"
+        >确认修改</el-button>
         <el-button @click="resetForm('form')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -25,7 +61,7 @@
 import API from '../api/api.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     var valPwd = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入新密码'))
@@ -63,7 +99,7 @@ export default {
   },
   methods: {
     // ...mapActions(['saveAdminInfo']),
-    submitForm (form) {
+    submitForm(form) {
       console.log(this.adminInfo.id)
       this.$refs[form].validate(valid => {
         if (valid) {
@@ -93,7 +129,7 @@ export default {
         }
       })
     },
-    resetForm (form) {
+    resetForm(form) {
       this.$refs[form].resetFields()
     }
   }

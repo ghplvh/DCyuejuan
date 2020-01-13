@@ -9,7 +9,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     adminInfo: {},
-    isLogin: false
+    isLogin: false,
+    // `dev
+    dev: 1
   },
   mutations: {
     saveAdminInfo(state) {

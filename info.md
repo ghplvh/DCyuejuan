@@ -5,7 +5,10 @@
 - [bug][on] api的res没有进行res存在判定, 导致数据为空时, 出现cant read property 'xxx' of undefined错误
 - [bug][on] /personManager http://120.24.181.77:10003/web/teacher/addTeacher 名称已存在造成api 500
 - [dev][done] /personMananger 单个新增老师, 角色列表添加优化
-
+# xshell
+120.24.181.77
+cd /data/files/dc_test/dckj-ec-exam/target
+tail -f nohup.out
 
 ### 
 - #/home
