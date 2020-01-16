@@ -11,7 +11,7 @@ export default new Vuex.Store({
     adminInfo: {},
     isLogin: false,
     // `dev
-    dev: 1
+    dev: 0
   },
   mutations: {
     saveAdminInfo(state) {

@@ -63,13 +63,13 @@
                   class="add-template"
                   @click="addDialog.isVisible = true"
                   :loading="addDialog.isLoading"
-                >扫描上传</el-button>
+                >上传模板</el-button>
                 <el-button
                   type="primary"
                   class="add-template"
                   @click="scanPaper()"
                   :loading="isScanPaperLoading"
-                >扫描试卷</el-button>
+                >扫描答题卡</el-button>
                 <el-button
                   type="danger"
                   class="add-template"
