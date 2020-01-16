@@ -731,7 +731,7 @@ export default {
         'cnlocation': (cnlocation),
         'qalocation': (qalocation),
         'qrlocation': (qrlocation),
-        'ids': ({ "subjectId": "203", "examId": "59" }),
+        'ids': ({ "subjectId": this.examSubjectId, "examId": this.examId }),
         'options': ({ "questionsloc": json(questionsloc), "type": 1 })
       }
       console.log('data', data)
