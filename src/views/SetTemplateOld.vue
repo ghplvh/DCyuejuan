@@ -16,7 +16,7 @@
             <el-row class="template-info-select">
               <el-col :span="16" :offset="6">
                 <span class="select-text">当前模板：</span>
-                <el-select class="select-template" value-key="id" v-model="currentTemplate">
+                <el-select class="select-template" value-key="id" v-model="currentTemplate" @change="changeTemplate">
                   <el-option v-for="temp in examTemplateInfo" :key="temp.id" :label="temp.tempName" :value="temp"></el-option>
                 </el-select>
                 <!-- <el-button type="primary" class="add-template" @click="showAddTemplate()">新增模版</el-button> -->
@@ -25,7 +25,22 @@
                 <el-button type="danger" class="add-template" @click="deleteTemplate()" :loading="buttonLoading">删除当前模板</el-button>
               </el-col>
             </el-row>
-
+            <el-row>
+              <el-col :span="16" :offset="6">
+                <el-col :span="8">
+                  <span>试卷页数：</span>
+                  <span class="big-black">{{currentTemplate.testPage || 0}}页</span>
+                </el-col>
+                <el-col :span="8">
+                  <span>考号：</span>
+                  <span class="big-black">{{getTestnumberType(currentTemplate.testnumberType)}}</span>
+                </el-col>
+                <el-col :span="8">
+                  <span>客观题：</span>
+                  <span class="big-black">{{currentTemplate.objective || 0}}道</span>
+                </el-col>
+              </el-col>
+            </el-row>
             <el-row class="available-row">
               <el-col :span="16" :offset="6">
                 <el-row>
@@ -71,6 +86,21 @@
                 <div class="main-svg" :style="mainSvgHeight" ref="positionObjective">
                   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :width="getSvgWidth()" :height="getSvgHeight()" :viewBox="getSvgViewBox()" onload="start()">
                     <image :width="getSvgWidth()" :height="getSvgHeight()" :xlink:href="svgImages[currentPaper]" :transform="imageTransform"></image>
+                    <template v-for="(block,brlIndex) in blockRectList">
+                      <g :key="brlIndex" v-if="block.page === currentPaper" :class="block.isActive ? 'is-active' : ''">
+                        <rect class="cut-rect" :x="block.rect.x" :y="block.rect.y" :width="block.rect.width" :height="block.rect.height" :index="brlIndex" @mousedown="rectMousedown"></rect>
+                        <template v-if="block.isActive">
+                          <circle v-for="(circle,cIndex) in block.circleList" :key="cIndex" :class="'point ' + circle.className" :brl-index="brlIndex" :index="cIndex" :cx="circle.cx" :cy="circle.cy" :r="circle.r" :fill="circle.fill" @mousedown="circleMouseDown"></circle>
+                        </template>
+                        <!-- <foreignObject v-if="block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height" :style="{display: block.foreignObject.display}">
+                          <span class="save-button" @click="saveBlock(brlIndex)" @mousedown="mousedownBlock">保存</span>
+                          <span class="delete-button" @click="deleteBlock(brlIndex)" @mousedown="mousedownBlock">删除</span>
+                        </foreignObject>
+                        <foreignObject v-if="!block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height">
+                          <span class="edit-button" @click="editBlock(brlIndex)" @mousedown="mousedownBlock">编辑</span>
+                        </foreignObject> -->
+                      </g>
+                    </template>
                     <template v-if="currentPaper === 0">
                       <!-- `block -->
                       <template v-for="(block,brlIndex) in littleBlockRectList">
@@ -99,6 +129,14 @@
                   </svg>
                 </div>
               </el-row>
+              <!-- <el-row class="paper-img">
+                <div class="main-svg" :style="mainSvgHeight" ref="positionObjective">
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :width="getSvgWidth()" :height="getSvgHeight()" :viewBox="getSvgViewBox()">
+                    <image :width="getSvgWidth()" :height="getSvgHeight()" :xlink:href="svgImages[currentPaper]" :transform="imageTransform"></image>
+
+                  </svg>
+                </div>
+              </el-row> -->
             </el-col>
             <el-col :span="4">
               <div class="thumbnail-view">
@@ -139,6 +177,40 @@ import Utils from '../utils/Utils.js'
 import { mapState } from 'vuex'
 export default {
   data () {
+    let checkNumber = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('客观题数不能为0'))
+      }
+      setTimeout(() => {
+        if (!Number.isInteger(value)) {
+          callback(new Error('请输入数字值'))
+        } else {
+          callback()
+        }
+      }, 500)
+    }
+    let checkTestpage = (rule, value, callback) => {
+      if (value === 0 || value === '') {
+        return callback(new Error('请上传至少一张答题卡图片'))
+      } else {
+        callback()
+      }
+    }
+    let checkName = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入模板名称'))
+      } else {
+        if (this.examTemplateInfo.length > 0) {
+          let temp = this.examTemplateInfo.find(item => {
+            return item.tempName === value
+          })
+          if (temp) {
+            callback(new Error('模板名称重复'))
+          }
+        }
+        callback()
+      }
+    }
     return {
       schoolCode: '',
       examId: this.$route.params.examId,
@@ -168,6 +240,25 @@ export default {
       qrlocation: {},
       qalocation: {},
       cnlocation: {},
+      testnumberTypes: [
+        { id: 0, name: '条形码' },
+        { id: 1, name: '填涂1位' },
+        { id: 2, name: '填涂2位' },
+        { id: 3, name: '填涂3位' },
+        { id: 4, name: '填涂4位' },
+        { id: 5, name: '填涂5位' },
+        { id: 6, name: '填涂6位' },
+        { id: 7, name: '填涂7位' },
+        { id: 8, name: '填涂8位' },
+        { id: 9, name: '填涂9位' },
+        { id: 10, name: '填涂10位' },
+        { id: 11, name: '填涂11位' },
+        { id: 12, name: '填涂12位' },
+        { id: 13, name: '填涂13位' },
+        { id: 14, name: '填涂14位' },
+        { id: 15, name: '填涂15位' },
+        { id: 16, name: '填涂16位' }
+      ],
       answerCardLimit: 4,
       answerCardList: [],
       answerCardData: {
@@ -181,6 +272,23 @@ export default {
         objective: 0,
         testPage: 0,
         imgUrl: ''
+      },
+      addTemplateFormRules: {
+        tempName: [
+          { required: true, validator: checkName, trigger: ['blur', 'change'] }
+        ],
+        testnumberType: [
+          { required: true, message: '请选择考号形式', trigger: ['blur', 'change'] }
+        ],
+        objective: [
+          { required: true, validator: checkNumber, trigger: ['blur', 'change'] }
+        ],
+        testPage: [
+          { required: true, validator: checkTestpage, trigger: ['blur', 'change'] }
+        ],
+        imgUrl: [
+          { required: true, message: '请上传答题卡图片', trigger: ['blur', 'change'] }
+        ]
       },
       //  `editForm
       editBlockTitleForm: {
@@ -239,29 +347,32 @@ export default {
     getRatio (refresh = true) {
       console.log(this.currentSVGRef)
       console.log(this.svgImages)
-      if (this.currentSVGRef !== 'templateInfo') {
-        this.$nextTick(() => {
-          this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
-          let image = document.querySelector('image')
-          let imageWidth = parseInt(image.getAttribute('width'))
-          let img = new Image()
-          img.src = this.svgImages[this.currentPaper]
-          console.log(img.src)
-          img.onload = () => {
-            this.ratioWH = img.height / img.width
-          }
-          this.svgImages.forEach((src, index) => {
-            let srcImg = new Image()
-            srcImg.src = src
-            srcImg.onload = () => {
+      // if (this.currentSVGRef !== 'templateInfo') {
+      this.$nextTick(() => {
+        this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
+        let image = document.querySelector('image')
+        let imageWidth = parseInt(image.getAttribute('width'))
+        let img = new Image()
+        img.src = this.svgImages[this.currentPaper]
+        console.log(img.src)
+        img.onload = () => {
+          this.ratioWH = img.height / img.width
+        }
+        this.svgImages.forEach((src, index) => {
+          let srcImg = new Image()
+          srcImg.src = src
+          srcImg.onload = () => {
             // this.ratioWH = srcImg.height / srcImg.width
-              let ratio = srcImg.width / (imageWidth === 0 ? this.svgWidth : imageWidth)
-              this.ratio.splice(index, 1, ratio)
+            let ratio = srcImg.width / (imageWidth === 0 ? this.svgWidth : imageWidth)
+            this.ratio.splice(index, 1, ratio)
             // console.log(this.ratio, 'ratio')
+            if (index === this.svgImages.length - 1) {
+              this.addEvent()
             }
-          })
+          }
         })
-      }
+      })
+      // }
       if (refresh) {
         this.getExamTemplate()
       }
@@ -287,9 +398,24 @@ export default {
         this.currentTemplate = list[0]
         this.littleBlockRectList = JSON.parse(list[0].objectiveCoord || '')
         console.log('currentTemplate', this.currentTemplate)
+        this.changeTemplate()
+        this.tempList = this.getCurrentRectList()
+        this.blockRectList = this.getCurrentRectList()
         // this.littleBlock()
         this.loading = false
       }).catch(() => { this.loading = false })
+    },
+    // 模板切换
+    changeTemplate () {
+      this.svgImages = this.currentTemplate.imgUrl
+      console.log(this.svgImages)
+    },
+    // 获取考号形式
+    getTestnumberType (id) {
+      let type = this.testnumberTypes.find(item => {
+        return item.id === id
+      })
+      return type ? type.name : '暂未设置'
     },
     // 图片预览
     previewImage (img) {
@@ -299,6 +425,19 @@ export default {
     pictureCardPreview (file) {
       this.prevImg = file.url
       this.previewVisible = true
+    },
+    // 显示新增模板弹窗
+    showAddTemplate () {
+      this.addTemplateForm = {
+        examId: this.$route.params.examId,
+        examSubjectId: this.$route.params.examSubjectId,
+        tempName: this.examTemplateInfo.length === 0 ? '主模板' : '',
+        testnumberType: '',
+        objective: 0,
+        testPage: 0,
+        imgUrl: ''
+      }
+      this.addTemplateVisible = true
     },
     // 答题卡上传
     // 上传前
@@ -312,12 +451,46 @@ export default {
         list.push(item.response.data.data)
       })
       this.answerCardList = list
+      this.addTemplateForm.testPage = list.length
+      this.addTemplateForm.imgUrl = list.join(',')
+    },
+    // 删除图片
+    answerCardRemove (file, fileList) {
+      let list = []
+      fileList.forEach(item => {
+        list.push(item.response.data)
+      })
+      this.answerCardList = list
+      this.addTemplateForm.testPage = list.length
+      this.addTemplateForm.imgUrl = list.join(',')
     },
     // 超过限制
     answerCardExceed (file, fileList) {
       this.$message({
         message: '上传数量超过限制',
         type: 'warning'
+      })
+    },
+    // 新增模板
+    addTemplate (formName) {
+      this.buttonLoading = true
+      this.addTemplateForm.userId = this.adminInfo.id
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // console.log(this.addTemplateForm)
+          this.axios.post(API.EXAMTEMPLATE_ADDEXAMTEMPLATE, this.addTemplateForm).then(res => {
+            this.$message({
+              message: '新增模板成功',
+              type: 'success'
+            })
+            this.addTemplateVisible = false
+            this.buttonLoading = false
+            this.getExamTemplate()
+          }).catch(() => { this.buttonLoading = false })
+        } else {
+          this.buttonLoading = false
+          return false
+        }
       })
     },
     // 扫描上传模板 `scan
@@ -346,11 +519,14 @@ export default {
           gg[0] = gg[0] - 60
           gg.push(item[0])
           gg.push(index)
-          console.log(gg)
           res.unshift(gg)
           console.log('arr,res', res)
           return res
         })
+        this.svgImages = []
+        this.svgImages.push(res.data.filelocation.file0)
+        this.svgImages.push(res.data.filelocation.file1)
+        this.getRatio()
         this.littleBlockRectList = arr
         console.log('littleBlockRectList', this.littleBlockRectList)
         this.scanData = arr // 客观题
@@ -498,6 +674,133 @@ export default {
         return item
       })
     },
+    // 获取当前选框数据
+    getCurrentRectList () {
+      let data = []
+      switch (this.currentSVGRef) {
+        case 'positionArea':
+          data = this.locationCoord
+          break
+        case 'positionExamCode':
+          data = this.numberCoord
+          break
+        case 'positionObjective':
+          data = this.objectiveCoord
+          break
+      }
+      return data
+    },
+    // 设置当前选框数据
+    setCurrentRectList (data) {
+      switch (this.currentSVGRef) {
+        case 'positionArea':
+          this.locationCoord = data
+          break
+        case 'positionExamCode':
+          this.numberCoord = data
+          break
+        case 'positionObjective':
+          this.objectiveCoord = data
+          break
+      }
+    },
+    // 给svg添加鼠标事件，画矩形
+    addEvent () {
+      if (this.activeTab === 'positionObjective') {
+        return false
+      }
+      if (['templateInfo', 'horPosition'].includes(this.currentSVGRef)) {
+        return false
+      }
+      let svg = this.$refs[this.currentSVGRef]
+      // this.blockRectList = this.getCurrentRectList()
+      svg.onmousedown = (ed) => {
+        console.log(ed)
+        // console.log(this.blockRectList)
+        let x = ed.offsetX
+        let y = ed.offsetY
+        // 添加题块和矩形框
+        this.blockRectList.push({
+          page: this.currentPaper,
+          rect: { x: x, y: y, width: 0, height: 0 },
+          circleList: [],
+          foreignObject: {},
+          isActive: true
+        })
+        // 禁止冒泡
+        ed.stopPropagation()
+        svg.onmousemove = (em) => {
+          let lastBlock = this.blockRectList[this.blockRectList.length - 1]
+          // 计算矩形起始坐标和宽高
+          let newX = Math.min(em.offsetX, x)
+          let newY = Math.min(em.offsetY, y)
+          let width = Math.abs(x - em.offsetX)
+          let height = Math.abs(y - em.offsetY)
+          // 更新矩形框
+          lastBlock.rect = {
+            x: newX,
+            y: newY,
+            width: width,
+            height: height
+          }
+          svg.onmouseup = (eu) => {
+            // 移除鼠标移动事件和鼠标松开事件
+            svg.onmousemove = null
+            svg.onmouseup = null
+            // 创建8个矩形缩放点，位置分别在拐点和中点，添加圆点列表
+            for (let i = 0; i < 8; i++) {
+              let cx = newX
+              let cy = newY
+              if (i < 3) {
+                cx += width / 2 * i
+                cy += 0
+              }
+              if (i >= 3 && i < 5) {
+                cx += width
+                cy += height / 2 * (i - 3 + 1)
+              }
+              if (i >= 5 && i < 7) {
+                cx += width / 2 * (7 - i - 1)
+                cy += height
+              }
+              if (i >= 7) {
+                cx += 0
+                cy += height / 2
+              }
+              // 鼠标指针改变
+              let className = ''
+              if (i === 0 || i === 4) {
+                className = 'nw-resize'
+              }
+              if (i === 1 || i === 5) {
+                className = 's-resize'
+              }
+              if (i === 2 || i === 6) {
+                className = 'ne-resize'
+              }
+              if (i === 3 || i === 7) {
+                className = 'e-resize'
+              }
+              lastBlock.circleList.push({
+                className: className,
+                cx: cx,
+                cy: cy,
+                r: 4
+              })
+            }
+            // 添加外部对象框
+            lastBlock.foreignObject = {
+              x: newX * 1 + width - 90,
+              y: newY * 1 + height + 5,
+              width: 90,
+              height: 30,
+              display: 'block'
+            }
+            // this.setCurrentRectList(this.blockRectList)
+          }
+        }
+      }
+    },
     // 操作按钮事件
     async saveBlock () {
       this.setCurrentRectList(this.blockRectList)
@@ -534,6 +837,316 @@ export default {
     },
     mousedownBlock (e) {
       e.stopPropagation()
+    },
+    // 矩形移动
+    rectMousedown (e) {
+      e.stopPropagation()
+      let rectDom = e.target
+      // this.blockRectList = this.getCurrentRectList()
+      let index = rectDom.attributes.index.value * 1
+      if (!this.blockRectList[index].isActive) {
+        return
+      }
+      let { circleList } = this.blockRectList[index]
+      let svg = this.$refs[this.currentSVGRef]
+      // 获取相关元素移动前的位置坐标与属性
+      let oldX = rectDom.attributes.x.value * 1
+      let oldY = rectDom.attributes.y.value * 1
+      let width = rectDom.attributes.width.value * 1
+      let height = rectDom.attributes.height.value * 1
+      let ox = this.blockRectList[index].foreignObject.x
+      let oy = this.blockRectList[index].foreignObject.y
+      let x = e.offsetX
+      let y = e.offsetY
+      // 获取圆点移动前的位置坐标
+      let circleXYList = []
+      circleList.forEach(circle => {
+        circleXYList.push({
+          cx: circle.cx,
+          cy: circle.cy
+        })
+      })
+      e.stopPropagation()
+      svg.onmousemove = (em) => {
+        // 获取移动距离
+        let detaX = em.offsetX - x
+        let detaY = em.offsetY - y
+        // 修改矩形的坐标
+        this.blockRectList[index].rect = {
+          x: oldX + detaX,
+          y: oldY + detaY,
+          width: width,
+          height: height
+        }
+        // 修改圆点的坐标
+        circleList.forEach((circle, index) => {
+          circle.cx = circleXYList[index].cx + detaX
+          circle.cy = circleXYList[index].cy + detaY
+        })
+        // 修改外部对象的坐标
+        this.blockRectList[index].foreignObject = {
+          x: ox + detaX,
+          y: oy + detaY,
+          width: 90,
+          height: 30
+        }
+        svg.onmouseup = (eu) => {
+          // 移除监听函数
+          svg.onmousemove = null
+          svg.onmouseup = null
+        }
+      }
+    },
+    // 矩形缩放
+    circleMouseDown (e) {
+      e.stopPropagation()
+      let circle = e.target
+      // this.blockRectList = this.getCurrentRectList()
+      let brlIndex = circle.attributes['brl-index'].value * 1
+      if (!this.blockRectList[brlIndex].isActive) {
+        return
+      }
+      let index = circle.attributes.index.value * 1
+      let className = this.blockRectList[brlIndex].circleList[index].className
+      let rect = this.blockRectList[brlIndex].rect
+      let svg = this.$refs[this.currentSVGRef]
+      let oldX = rect.x
+      let oldY = rect.y
+      let oldWidth = rect.width
+      let oldHeight = rect.height
+      let x = e.offsetX
+      let y = e.offsetY
+      switch (className) {
+        // 左上和右下
+        case 'nw-resize':
+          svg.onmousemove = (em) => {
+            // 获取移动距离
+            let detaX = em.offsetX - x
+            let detaY = em.offsetY - y
+            // 修改矩形和圆点的坐标
+            let newX = oldX + detaX
+            let newY = oldY + detaY
+            let newWidth = Math.abs(oldWidth - detaX)
+            let newHeight = Math.abs(oldHeight - detaY)
+            // 左上角圆点
+            if (index === 0) {
+              if (oldWidth - detaX < 0) {
+                newX = oldX + oldWidth
+              }
+              if (oldHeight - detaY < 0) {
+                newY = oldY + oldHeight
+              }
+            }
+            // 右下角圆点
+            if (index === 4) {
+              newX = oldX
+              newY = oldY
+              newWidth = Math.abs(oldWidth + detaX)
+              newHeight = Math.abs(oldHeight + detaY)
+              if (oldWidth + detaX < 0) {
+                newX = oldX - newWidth
+              }
+              if (oldHeight + detaY < 0) {
+                newY = oldY - newHeight
+              }
+            }
+            this.blockRectList[brlIndex].rect = {
+              x: newX,
+              y: newY,
+              width: newWidth,
+              height: newHeight
+            }
+            this.blockRectList[brlIndex].foreignObject = {
+              x: newX + newWidth - 90,
+              y: newY + newHeight + 5,
+              width: 90,
+              height: 30,
+              display: 'none'
+            }
+            this.setCirclePosition(brlIndex, newX, newY, newWidth, newHeight)
+            svg.onmouseup = (eu) => {
+              this.blockRectList[brlIndex].foreignObject.display = 'block'
+              svg.onmousemove = null
+              svg.onmouseup = null
+            }
+          }
+          break
+        // 上和下
+        case 's-resize':
+          svg.onmousemove = (em) => {
+            // 获取移动距离
+            let detaY = em.offsetY - y
+            // 修改矩形和圆点的坐标
+            let newX = oldX
+            let newY = oldY + detaY
+            let newWidth = oldWidth
+            let newHeight = Math.abs(oldHeight - detaY)
+            // 上圆点
+            if (index === 1) {
+              if (oldHeight - detaY < 0) {
+                newY = oldY + oldHeight
+              }
+            }
+            // 下圆点
+            if (index === 5) {
+              newY = oldY
+              newHeight = Math.abs(oldHeight + detaY)
+              if (oldHeight + detaY < 0) {
+                newY = oldY - newHeight
+              }
+            }
+            this.blockRectList[brlIndex].rect = {
+              x: newX,
+              y: newY,
+              width: newWidth,
+              height: newHeight
+            }
+            this.blockRectList[brlIndex].foreignObject = {
+              x: newX + newWidth - 90,
+              y: newY + newHeight + 5,
+              width: 90,
+              height: 30,
+              display: 'none'
+            }
+            this.setCirclePosition(brlIndex, newX, newY, newWidth, newHeight)
+            svg.onmouseup = (eu) => {
+              this.blockRectList[brlIndex].foreignObject.display = 'block'
+              svg.onmousemove = null
+              svg.onmouseup = null
+            }
+          }
+          break
+        // 右上和左下
+        case 'ne-resize':
+          svg.onmousemove = (em) => {
+            // 获取移动距离
+            let detaX = em.offsetX - x
+            let detaY = em.offsetY - y
+            // 修改矩形和圆点的坐标
+            let newX = oldX
+            let newY = oldY + detaY
+            let newWidth = Math.abs(oldWidth + detaX)
+            let newHeight = Math.abs(oldHeight - detaY)
+            // 右上角圆点
+            if (index === 2) {
+              if (oldWidth + detaX < 0) {
+                newX = oldX - newWidth
+              }
+              if (oldHeight - detaY < 0) {
+                newY = oldY + oldHeight
+              }
+            }
+            // 左下角圆点
+            if (index === 6) {
+              newX = oldX + detaX
+              newY = oldY
+              newWidth = Math.abs(oldWidth - detaX)
+              newHeight = Math.abs(oldHeight + detaY)
+              if (oldWidth - detaX < 0) {
+                newX = oldX + oldWidth
+              }
+              if (oldHeight + detaY < 0) {
+                newY = oldY - newHeight
+              }
+            }
+            this.blockRectList[brlIndex].rect = {
+              x: newX,
+              y: newY,
+              width: newWidth,
+              height: newHeight
+            }
+            this.blockRectList[brlIndex].foreignObject = {
+              x: newX + newWidth - 90,
+              y: newY + newHeight + 5,
+              width: 90,
+              height: 30,
+              display: 'none'
+            }
+            this.setCirclePosition(brlIndex, newX, newY, newWidth, newHeight)
+            svg.onmouseup = (eu) => {
+              this.blockRectList[brlIndex].foreignObject.display = 'block'
+              svg.onmousemove = null
+              svg.onmouseup = null
+            }
+          }
+          break
+        // 右和左
+        case 'e-resize':
+          svg.onmousemove = (em) => {
+            // 获取移动距离
+            let detaX = em.offsetX - x
+            // 修改矩形和圆点的坐标
+            let newX = oldX
+            let newY = oldY
+            let newWidth = Math.abs(oldWidth + detaX)
+            let newHeight = oldHeight
+            // 右圆点
+            if (index === 3) {
+              if (oldWidth + detaX < 0) {
+                newX = oldX - newWidth
+              }
+            }
+            // 左圆点
+            if (index === 7) {
+              newX = oldX + detaX
+              newWidth = Math.abs(oldWidth - detaX)
+              if (oldWidth - detaX < 0) {
+                newX = oldX + oldWidth
+              }
+            }
+            this.blockRectList[brlIndex].rect = {
+              x: newX,
+              y: newY,
+              width: newWidth,
+              height: newHeight
+            }
+            this.blockRectList[brlIndex].foreignObject = {
+              x: newX + newWidth - 90,
+              y: newY + newHeight + 5,
+              width: 90,
+              height: 30,
+              display: 'none'
+            }
+            this.setCirclePosition(brlIndex, newX, newY, newWidth, newHeight)
+            svg.onmouseup = (eu) => {
+              this.blockRectList[brlIndex].foreignObject.display = 'block'
+              svg.onmousemove = null
+              svg.onmouseup = null
+            }
+          }
+          break
+      }
+    },
+    // 矩形圆点位置计算
+    setCirclePosition (index, x, y, w, h) {
+      // this.blockRectList = this.getCurrentRectList()
+      let circleList = this.blockRectList[index].circleList
+      for (let i = 0; i < circleList.length; i++) {
+        let cx = x
+        let cy = y
+        if (i < 3) {
+          cx += w / 2 * i
+          cy += 0
+        }
+        if (i >= 3 && i < 5) {
+          cx += w
+          cy += h / 2 * (i - 3 + 1)
+        }
+        if (i >= 5 && i < 7) {
+          cx += w / 2 * (7 - i - 1)
+          cy += h
+        }
+        if (i >= 7) {
+          cx += 0
+          cy += h / 2
+        }
+        circleList[i] = {
+          className: circleList[i].className,
+          cx: cx,
+          cy: cy,
+          r: 4
+        }
+      }
     }
   }
 }
