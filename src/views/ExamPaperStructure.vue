@@ -1,7 +1,11 @@
 <template>
   <el-row id="exam-paper-structure">
     <!-- <bread-crumb></bread-crumb> -->
-    <el-row class="bread-crumb" type="flex" align="middle">
+    <el-row
+      class="bread-crumb"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
@@ -10,11 +14,18 @@
             <span>{{`${examGrade.gradeName}${examSubjectInfo.subjectName}(${examSubjectId})`}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
-                <i class="el-icon-caret-bottom el-icon--right" style="color:#409EFF;"></i>
+                <i
+                  class="el-icon-caret-bottom el-icon--right"
+                  style="color:#409EFF;"
+                ></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <template v-for="sub in examSubjectList">
-                  <router-link :to="{ path: '/subjectMain/' + examId + '/' + sub.id}" :key="sub.id" v-if="sub.id !== examSubjectInfo.id">
+                  <router-link
+                    :to="{ path: '/subjectMain/' + examId + '/' + sub.id}"
+                    :key="sub.id"
+                    v-if="sub.id !== examSubjectInfo.id"
+                  >
                     <el-dropdown-item>{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
                   </router-link>
                 </template>
@@ -24,19 +35,43 @@
           <el-breadcrumb-item>设置试卷结构</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
-        <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
+        <router-link
+          to=""
+          target="_blank"
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
       </el-col>
     </el-row>
     <el-row>
-      <el-row class="tabs" type="flex" align="middle">
+      <el-row
+        class="tabs"
+        type="flex"
+        align="middle"
+      >
         <el-col :span="16">
-          <span class="active-bar" :style="activeBarStyle"></span>
-          <span class="tab" ref="tab1" @click="checkTab('tab1',0)">客观题</span>
-          <span class="tab" ref="tab2" @click="checkTab('tab2',1)">主观题</span>
+          <span
+            class="active-bar"
+            :style="activeBarStyle"
+          ></span>
+          <span
+            class="tab"
+            ref="tab1"
+            @click="checkTab('tab1',0)"
+          >客观题</span>
+          <span
+            class="tab"
+            ref="tab2"
+            @click="checkTab('tab2',1)"
+          >主观题</span>
         </el-col>
         <el-col :span="8">
-          <span class="text" v-if="scoreList.length > 0">总分:
+          <span
+            class="text"
+            v-if="scoreList.length > 0"
+          >总分:
             <font class="font-orange">{{scoreList[1].sumscorek*1 + scoreList[2].sumscorez*1}}</font>=
             <font class="font-orange">{{scoreList[1].sumscorek}}</font>
             <font class="font-12">「客」</font>+
@@ -47,59 +82,162 @@
         </el-col>
       </el-row>
       <div style="width:100%;height:2px;"></div>
-      <el-card v-if="activeTab === 0" class="kg-question" key="0">
-        <el-row type="flex" align="middle" class="opra-row">
+      <el-card
+        v-if="activeTab === 0"
+        class="kg-question"
+        key="0"
+      >
+        <el-row
+          type="flex"
+          align="middle"
+          class="opra-row"
+        >
           <el-col :span="21">
-            <el-button type="text" icon="el-icon-plus" @click="addKgQuestion()">新增客观题</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-plus"
+              @click="addKgQuestion()"
+            >新增客观题</el-button>
+            <!-- ------------------------------------------------------------ -->
+            <!-- `dev -->
+            <el-button
+              type="text"
+              icon="el-icon-plus"
+              @click="devAddyingyu()"
+            >dev新增英语卷书卷结构</el-button>
+            <!-- `dev -->
+            <!-- ------------------------------------------------------------ -->
             <router-link :to="{path: '/settingAnswer/'+ examId + '/' + examSubjectId }">
-              <el-button type="text" icon="el-icon-edit">设置答案</el-button>
+              <el-button
+                type="text"
+                icon="el-icon-edit"
+              >设置答案</el-button>
             </router-link>
             <!-- <el-button type="text" icon="el-icon-plus" @click="subjectSettingReuse()">科目设置复用</el-button> -->
           </el-col>
-          <el-col :span="3" class="right">
+          <el-col
+            :span="3"
+            class="right"
+          >
             <!-- <el-checkbox v-model="isAB" disabled>AB卷两套答案</el-checkbox> -->
           </el-col>
         </el-row>
-        <el-table :data="kgTableData" border v-loading="loading" :span-method="kgSpanMethod">
-          <el-table-column prop="tnumber" label="题号" align="left"></el-table-column>
-          <el-table-column prop="score" label="分数" align="center"></el-table-column>
-          <el-table-column prop="optionCount" label="选项数" align="center"></el-table-column>
-          <el-table-column label="题型" align="center">
+        <el-table
+          :data="kgTableData"
+          border
+          v-loading="loading"
+          :span-method="kgSpanMethod"
+        >
+          <el-table-column
+            prop="tnumber"
+            label="题号"
+            align="left"
+          ></el-table-column>
+          <el-table-column
+            prop="score"
+            label="分数"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="optionCount"
+            label="选项数"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="题型"
+            align="center"
+          >
             <template slot-scope="scope">{{getTopicName(scope.row.topicType)}}</template>
           </el-table-column>
-          <el-table-column prop="answer" label="答案" align="center"></el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column
+            prop="answer"
+            label="答案"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="操作"
+            align="center"
+          >
             <template slot-scope="scope">
-              <el-button type="text" @click="editRow(scope.row)">修改</el-button>
-              <el-button type="text" @click="deleteRow(scope.row,0)">
+              <el-button
+                type="text"
+                @click="editRow(scope.row)"
+              >修改</el-button>
+              <el-button
+                type="text"
+                @click="deleteRow(scope.row,0)"
+              >
                 <font class="delete-text">删除</font>
               </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
-      <el-card v-if="activeTab === 1" class="kg-question" key="1">
-        <el-row type="flex" align="middle" class="opra-row">
+      <el-card
+        v-if="activeTab === 1"
+        class="kg-question"
+        key="1"
+      >
+        <el-row
+          type="flex"
+          align="middle"
+          class="opra-row"
+        >
           <el-col :span="21">
-            <el-button type="text" icon="el-icon-plus" @click="addZgQuestion()">新增主观题</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-plus"
+              @click="addZgQuestion()"
+            >新增主观题</el-button>
             <!-- <el-button type="text" icon="el-icon-edit">设置附加题</el-button> -->
             <router-link :to="{path: '/settingAnswer/' + examId + '/' + examSubjectId, query: {tabname: 'subAnswer'}}">
-              <el-button type="text" icon="el-icon-tickets">上传主观题答案</el-button>
+              <el-button
+                type="text"
+                icon="el-icon-tickets"
+              >上传主观题答案</el-button>
             </router-link>
             <!-- <el-button type="text" icon="el-icon-plus" @click="subjectSettingReuse()">科目设置复用</el-button> -->
           </el-col>
-          <el-col :span="3" class="right"></el-col>
+          <el-col
+            :span="3"
+            class="right"
+          ></el-col>
         </el-row>
-        <el-table :data="zgTableData" border v-loading="loading" :span-method="zgSpanMethod">
-          <el-table-column prop="tnumber" label="题号" align="left"></el-table-column>
-          <el-table-column prop="score" label="分数" align="center"></el-table-column>
-          <el-table-column label="是否附加题" align="center">
+        <el-table
+          :data="zgTableData"
+          border
+          v-loading="loading"
+          :span-method="zgSpanMethod"
+        >
+          <el-table-column
+            prop="tnumber"
+            label="题号"
+            align="left"
+          ></el-table-column>
+          <el-table-column
+            prop="score"
+            label="分数"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="是否附加题"
+            align="center"
+          >
             <template slot-scope="scope">{{(scope.row.ttype === '0' || scope.row.ttype === '') ? '否' : '是'}}</template>
           </el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column
+            label="操作"
+            align="center"
+          >
             <template slot-scope="scope">
-              <el-button type="text" @click="editRowZg(scope.row)">修改</el-button>
-              <el-button type="text" @click="deleteRow(scope.row,1)">
+              <el-button
+                type="text"
+                @click="editRowZg(scope.row)"
+              >修改</el-button>
+              <el-button
+                type="text"
+                @click="deleteRow(scope.row,1)"
+              >
                 <font class="delete-text">删除</font>
               </el-button>
             </template>
@@ -107,40 +245,96 @@
         </el-table>
       </el-card>
     </el-row>
-    <el-dialog :title="kgTitle" :visible.sync="addKgVisible" width="900px" custom-class="add-kg-dialog question-dialog">
-      <el-row type="flex" align="middle" class="big-question-no">
+    <el-dialog
+      :title="kgTitle"
+      :visible.sync="addKgVisible"
+      width="900px"
+      custom-class="add-kg-dialog question-dialog"
+    >
+      <el-row
+        type="flex"
+        align="middle"
+        class="big-question-no"
+      >
         <el-col :span="2"><span>大题号</span></el-col>
         <el-col :span="22">
           <!-- <el-select size="mini" v-model="kgBigQuestionNo" value-key="id" @focus="currentBigNo = kgBigQuestionNo" @change="bigNoChange"> -->
-          <el-select size="mini" v-model="kgBigQuestionNo" value-key="id" @focus="currentBigNo = kgBigQuestionNo">
-            <el-option v-for="(item,bqIndex) in bigQuestionNoList" :key="bqIndex" :value="item" :label="item.bigNo"></el-option>
+          <el-select
+            size="mini"
+            v-model="kgBigQuestionNo"
+            value-key="id"
+            @focus="currentBigNo = kgBigQuestionNo"
+          >
+            <el-option
+              v-for="(item,bqIndex) in bigQuestionNoList"
+              :key="bqIndex"
+              :value="item"
+              :label="item.bigNo"
+            ></el-option>
           </el-select>
         </el-col>
       </el-row>
       <el-row class="question-box">
         <template v-for="(kgq,index) in kgQuestionList">
-          <el-row :key="index" type="flex" align="middle" class="question-item">
+          <el-row
+            :key="index"
+            type="flex"
+            align="middle"
+            class="question-item"
+          >
             <el-col :span="3">
-              <el-select size="mini" v-model="kgq.questionType" @change="calculateKgQuestion(kgq)">
-                <el-option v-for="(item,kgqIndex) in kgQuestionTypeList" :key="kgqIndex" :value="item.id" :label="item.name"></el-option>
+              <el-select
+                size="mini"
+                v-model="kgq.questionType"
+                @change="calculateKgQuestion(kgq)"
+              >
+                <el-option
+                  v-for="(item,kgqIndex) in kgQuestionTypeList"
+                  :key="kgqIndex"
+                  :value="item.id"
+                  :label="item.name"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :span="1">从</el-col>
             <el-col :span="2">
-              <el-input v-model="kgq.startNo" size="mini" maxlength="3" @blur="calculateKgQuestion(kgq);verifyQuestionNo(kgQuestionList,index)"></el-input>
+              <el-input
+                v-model="kgq.startNo"
+                size="mini"
+                maxlength="3"
+                @blur="calculateKgQuestion(kgq);verifyQuestionNo(kgQuestionList,index)"
+              ></el-input>
             </el-col>
             <el-col :span="1">到</el-col>
             <el-col :span="2">
-              <el-input v-model="kgq.endNo" size="mini" maxlength="3" @blur="calculateKgQuestion(kgq);verifyQuestionNo(kgQuestionList,index)"></el-input>
+              <el-input
+                v-model="kgq.endNo"
+                size="mini"
+                maxlength="3"
+                @blur="calculateKgQuestion(kgq);verifyQuestionNo(kgQuestionList,index)"
+              ></el-input>
             </el-col>
             <el-col :span="3">题，每题</el-col>
             <el-col :span="2">
-              <el-input v-model="kgq.optionCount" size="mini" maxlength="3" @blur="calculateKgQuestion(kgq)" :disabled="kgq.questionType === 3"></el-input>
+              <el-input
+                v-model="kgq.optionCount"
+                size="mini"
+                maxlength="3"
+                @blur="calculateKgQuestion(kgq)"
+                :disabled="kgq.questionType === 3"
+              ></el-input>
             </el-col>
             <el-col :span="3">个选项，每题</el-col>
             <el-col :span="2">
               <div class="el-input el-input--mini">
-                <input type="number" autocomplete="off" maxlength="4" v-model.number="kgq.score" @blur="calculateKgQuestion(kgq);verifyScore(kgq.score)" class="el-input__inner">
+                <input
+                  type="number"
+                  autocomplete="off"
+                  maxlength="4"
+                  v-model.number="kgq.score"
+                  @blur="calculateKgQuestion(kgq);verifyScore(kgq.score)"
+                  class="el-input__inner"
+                >
               </div>
             </el-col>
             <el-col :span="1">分</el-col>
@@ -148,14 +342,28 @@
               <el-col :span="1.5">，少选得</el-col>
               <el-col :span="2">
                 <div class="el-input el-input--mini">
-                  <input type="number" autocomplete="off" maxlength="4" v-model.number="kgq.minscore" @blur="calculateKgQuestion(kgq);verifyScore(kgq.minscore)" class="el-input__inner">
+                  <input
+                    type="number"
+                    autocomplete="off"
+                    maxlength="4"
+                    v-model.number="kgq.minscore"
+                    @blur="calculateKgQuestion(kgq);verifyScore(kgq.minscore)"
+                    class="el-input__inner"
+                  >
                 </div>
               </el-col>
               <el-col :span="1">分</el-col>
             </template>
             <el-col :span="1.5">
-              <i class="el-icon-circle-plus-outline opra-icon" @click="addQuestion()"></i>
-              <i class="el-icon-remove-outline opra-icon" v-if="kgQuestionList.length > 1" @click="deleteQuestion(index)"></i>
+              <i
+                class="el-icon-circle-plus-outline opra-icon"
+                @click="addQuestion()"
+              ></i>
+              <i
+                class="el-icon-remove-outline opra-icon"
+                v-if="kgQuestionList.length > 1"
+                @click="deleteQuestion(index)"
+              ></i>
             </el-col>
           </el-row>
         </template>
@@ -163,29 +371,68 @@
       <el-row class="mini-question-list">
         <ol class="kgq-mini-ol">
           <template v-for="(kgq,index) in kgQuestionList">
-            <li v-for="(kgqMini,miniIndex) in kgq.miniQuestionList" :key="index + miniIndex" class="border-bottom">
-              <el-row type="flex" align="middle">
+            <li
+              v-for="(kgqMini,miniIndex) in kgq.miniQuestionList"
+              :key="index + miniIndex"
+              class="border-bottom"
+            >
+              <el-row
+                type="flex"
+                align="middle"
+              >
                 <el-col :span="1">&nbsp;&nbsp;{{kgqMini.tnumber}}</el-col>
-                <el-col :span="1.5" :offset="7" v-if="kgq.questionType === 2">答案：</el-col>
-                <el-col :span="1.5" :offset="12" v-else>答案：</el-col>
+                <el-col
+                  :span="1.5"
+                  :offset="7"
+                  v-if="kgq.questionType === 2"
+                >答案：</el-col>
+                <el-col
+                  :span="1.5"
+                  :offset="12"
+                  v-else
+                >答案：</el-col>
                 <el-col :span="3">
-                  <el-input v-model="kgqMini.answer" size="mini" placeholder="非必填" @focus="saveAnswerTemp = kgqMini.answer" @blur="verifyAnswer(kgq.questionType,kgqMini)"></el-input>
+                  <el-input
+                    v-model="kgqMini.answer"
+                    size="mini"
+                    placeholder="非必填"
+                    @focus="saveAnswerTemp = kgqMini.answer"
+                    @blur="verifyAnswer(kgq.questionType,kgqMini)"
+                  ></el-input>
                 </el-col>
                 <el-col :span="1.5">选项数：</el-col>
                 <el-col :span="2">
-                  <el-input v-model="kgqMini.optionCount" size="mini" :disabled="kgq.questionType === 3"></el-input>
+                  <el-input
+                    v-model="kgqMini.optionCount"
+                    size="mini"
+                    :disabled="kgq.questionType === 3"
+                  ></el-input>
                 </el-col>
                 <el-col :span="1.5">分数：</el-col>
                 <el-col :span="2">
                   <div class="el-input el-input--mini">
-                    <input type="number" autocomplete="off" maxlength="4" v-model.number="kgqMini.score" @blur="verifyScore(kgqMini.score)" class="el-input__inner">
+                    <input
+                      type="number"
+                      autocomplete="off"
+                      maxlength="4"
+                      v-model.number="kgqMini.score"
+                      @blur="verifyScore(kgqMini.score)"
+                      class="el-input__inner"
+                    >
                   </div>
                 </el-col>
                 <template v-if="kgq.questionType === 2">
                   <el-col :span="1.5">少选得：</el-col>
                   <el-col :span="2">
                     <div class="el-input el-input--mini">
-                      <input type="number" autocomplete="off" maxlength="4" v-model="kgqMini.minscore" @blur="verifyScore(kgqMini.minscore)" class="el-input__inner">
+                      <input
+                        type="number"
+                        autocomplete="off"
+                        maxlength="4"
+                        v-model="kgqMini.minscore"
+                        @blur="verifyScore(kgqMini.minscore)"
+                        class="el-input__inner"
+                      >
                     </div>
                   </el-col>
                   <el-col :span="1">分</el-col>
@@ -196,29 +443,65 @@
         </ol>
       </el-row>
       <div slot="footer">
-        <el-button size="mini" @click="addKgVisible = false">取消</el-button>
-        <el-button type="primary" size="mini" @click="submitKgQuestion()" :loading="buttonLoading">确定</el-button>
+        <el-button
+          size="mini"
+          @click="addKgVisible = false"
+        >取消</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="submitKgQuestion()"
+          :loading="buttonLoading"
+        >确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="科目设置复用" center :visible.sync="reuseVisible" width="720px" custom-class="reuse-dialog">
+    <el-dialog
+      title="科目设置复用"
+      center
+      :visible.sync="reuseVisible"
+      width="720px"
+      custom-class="reuse-dialog"
+    >
       <el-row>提示：选择考试科目后,可将该科目试卷结构,模板等复制到本科目。</el-row>
-      <el-row type="flex" align="middle">
+      <el-row
+        type="flex"
+        align="middle"
+      >
         <el-col :span="3">选择考试</el-col>
         <el-col :span="19">
-          <el-select v-model="reuseExam" size="mini"></el-select>
+          <el-select
+            v-model="reuseExam"
+            size="mini"
+          ></el-select>
         </el-col>
       </el-row>
-      <el-row type="flex" align="middle">
+      <el-row
+        type="flex"
+        align="middle"
+      >
         <el-col :span="3">选择科目</el-col>
         <el-col :span="19">
-          <el-select v-model="reuseSubject" size="mini"></el-select>
+          <el-select
+            v-model="reuseSubject"
+            size="mini"
+          ></el-select>
         </el-col>
       </el-row>
-      <el-row type="flex" align="middle">
+      <el-row
+        type="flex"
+        align="middle"
+      >
         <el-col :span="3">复用内容</el-col>
         <el-col :span="19">
-          <el-checkbox-group size="mini" v-model="reuseList">
-            <el-checkbox :label="1" checked disabled>结构和模板</el-checkbox>
+          <el-checkbox-group
+            size="mini"
+            v-model="reuseList"
+          >
+            <el-checkbox
+              :label="1"
+              checked
+              disabled
+            >结构和模板</el-checkbox>
             <el-checkbox :label="2">题块框选</el-checkbox>
             <el-checkbox :label="3">客观题答案</el-checkbox>
             <el-checkbox :label="4">原卷和主观题答案</el-checkbox>
@@ -226,116 +509,277 @@
         </el-col>
       </el-row>
       <div slot="footer">
-        <el-button size="mini" @click="reuseVisible = false">取消</el-button>
-        <el-button type="primary" size="mini">确定</el-button>
+        <el-button
+          size="mini"
+          @click="reuseVisible = false"
+        >取消</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+        >确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="zgTitle" :visible.sync="addZgVisible" width="900px" custom-class="add-zg-dialog question-dialog">
+    <el-dialog
+      :title="zgTitle"
+      :visible.sync="addZgVisible"
+      width="900px"
+      custom-class="add-zg-dialog question-dialog"
+    >
       <el-card>
-        <el-row type="flex" align="middle">
+        <el-row
+          type="flex"
+          align="middle"
+        >
           <el-col :span="2">大题号</el-col>
           <el-col :span="3">
             <!-- <el-select size="mini" v-model="zgBigQuestionNo" value-key="id" @focus="currentBigNo = zgBigQuestionNo" @change="bigNoChange"> -->
-            <el-select size="mini" v-model="zgBigQuestionNo" value-key="id" @focus="currentBigNo = zgBigQuestionNo">
-              <el-option v-for="(item,bqIndex) in bigQuestionNoList" :key="bqIndex" :value="item" :label="item.bigNo"></el-option>
+            <el-select
+              size="mini"
+              v-model="zgBigQuestionNo"
+              value-key="id"
+              @focus="currentBigNo = zgBigQuestionNo"
+            >
+              <el-option
+                v-for="(item,bqIndex) in bigQuestionNoList"
+                :key="bqIndex"
+                :value="item"
+                :label="item.bigNo"
+              ></el-option>
             </el-select>
           </el-col>
           <el-col :span="1"></el-col>
           <el-col :span="1">总分</el-col>
-          <el-col :span="1" v-if="zgQuestionList.length > 0">
+          <el-col
+            :span="1"
+            v-if="zgQuestionList.length > 0"
+          >
             <span>{{zgScoreCount}}</span>
           </el-col>
-          <el-col :span="2" v-else>
+          <el-col
+            :span="2"
+            v-else
+          >
             <div class="el-input el-input--mini">
-              <input type="number" autocomplete="off" maxlength="4" v-model="zgScoreCount" class="el-input__inner">
+              <input
+                type="number"
+                autocomplete="off"
+                maxlength="4"
+                v-model="zgScoreCount"
+                class="el-input__inner"
+              >
             </div>
           </el-col>
           <el-col :span="1.5">&nbsp;分&nbsp;</el-col>
           <el-col :span="2">
-            <el-button type="text" @click="addMiniQuestion()" v-if="zgQuestionList.length === 0">添加小题</el-button>
+            <el-button
+              type="text"
+              @click="addMiniQuestion()"
+              v-if="zgQuestionList.length === 0"
+            >添加小题</el-button>
           </el-col>
         </el-row>
         <el-row class="question-box">
           <template v-for="(zgq,index) in zgQuestionList">
-            <el-row :key="index" type="flex" align="middle" class="question-item">
+            <el-row
+              :key="index"
+              type="flex"
+              align="middle"
+              class="question-item"
+            >
               <el-col :span="3">
-                <el-select size="mini" v-model="zgq.questionType" disabled>
-                  <el-option v-for="(item,zgqIndex) in zgQuestionTypeList" :key="zgqIndex" :value="item"></el-option>
+                <el-select
+                  size="mini"
+                  v-model="zgq.questionType"
+                  disabled
+                >
+                  <el-option
+                    v-for="(item,zgqIndex) in zgQuestionTypeList"
+                    :key="zgqIndex"
+                    :value="item"
+                  ></el-option>
                 </el-select>
               </el-col>
               <el-col :span="1">从</el-col>
               <el-col :span="2">
-                <el-input v-model="zgq.startNo" size="mini" maxlength="3" @blur="calculateZgQuestion(zgq);verifyQuestionNo(zgQuestionList,index)"></el-input>
+                <el-input
+                  v-model="zgq.startNo"
+                  size="mini"
+                  maxlength="3"
+                  @blur="calculateZgQuestion(zgq);verifyQuestionNo(zgQuestionList,index)"
+                ></el-input>
               </el-col>
               <el-col :span="1">到</el-col>
               <el-col :span="2">
-                <el-input v-model="zgq.endNo" size="mini" maxlength="3" @blur="calculateZgQuestion(zgq);verifyQuestionNo(zgQuestionList,index)"></el-input>
+                <el-input
+                  v-model="zgq.endNo"
+                  size="mini"
+                  maxlength="3"
+                  @blur="calculateZgQuestion(zgq);verifyQuestionNo(zgQuestionList,index)"
+                ></el-input>
               </el-col>
               <el-col :span="3">题，每题</el-col>
               <el-col :span="2">
                 <div class="el-input el-input--mini">
-                  <input type="number" autocomplete="off" maxlength="4" v-model="zgq.score" @blur="calculateZgQuestion(zgq);verifyScore(zgq.score)" class="el-input__inner">
+                  <input
+                    type="number"
+                    autocomplete="off"
+                    maxlength="4"
+                    v-model="zgq.score"
+                    @blur="calculateZgQuestion(zgq);verifyScore(zgq.score)"
+                    class="el-input__inner"
+                  >
                 </div>
               </el-col>
               <el-col :span="1">分</el-col>
               <el-col :span="1.5">
-                <i class="el-icon-circle-plus-outline opra-icon" @click="addMiniQuestion()"></i>
-                <i class="el-icon-remove-outline opra-icon" @click="deleteMiniQuestion(index)"></i>
+                <i
+                  class="el-icon-circle-plus-outline opra-icon"
+                  @click="addMiniQuestion()"
+                ></i>
+                <i
+                  class="el-icon-remove-outline opra-icon"
+                  @click="deleteMiniQuestion(index)"
+                ></i>
               </el-col>
             </el-row>
           </template>
         </el-row>
-        <el-row class="mini-question-list" v-if="zgQuestionList.length > 0">
+        <el-row
+          class="mini-question-list"
+          v-if="zgQuestionList.length > 0"
+        >
           <ol>
             <template v-for="(zgq,index) in zgQuestionList">
-              <li v-for="(zgqMini,miniIndex) in zgq.miniQuestionList" :key="index + miniIndex" class="border-bottom">
+              <li
+                v-for="(zgqMini,miniIndex) in zgq.miniQuestionList"
+                :key="index + miniIndex"
+                class="border-bottom"
+              >
                 <el-row>
                   <el-col :span="1">{{zgqMini.tnumber}}</el-col>
-                  <el-col :span="2" :offset="12" v-if="zgqMini.miniQuestionList.length > 0" class="score-col">
+                  <el-col
+                    :span="2"
+                    :offset="12"
+                    v-if="zgqMini.miniQuestionList.length > 0"
+                    class="score-col"
+                  >
                     <span>{{zgqMini.score}}</span>
                   </el-col>
-                  <el-col :span="2" :offset="12" v-else>
+                  <el-col
+                    :span="2"
+                    :offset="12"
+                    v-else
+                  >
                     <div class="el-input el-input--mini">
-                      <input type="number" autocomplete="off" maxlength="4" v-model="zgqMini.score" @blur="calculateScore();verifyScore(zgqMini.score)" class="el-input__inner">
+                      <input
+                        type="number"
+                        autocomplete="off"
+                        maxlength="4"
+                        v-model="zgqMini.score"
+                        @blur="calculateScore();verifyScore(zgqMini.score)"
+                        class="el-input__inner"
+                      >
                     </div>
                     <!-- <el-input v-model="zgqMini.score" size="mini" @blur="calculateScore()"></el-input> -->
                   </el-col>
                   <el-col :span="1">分</el-col>
                   <el-col :span="3">
-                    <el-button type="text" icon="el-icon-plus" size="mini" @click="addMiniQ(zgqMini)">添加小题</el-button>
+                    <el-button
+                      type="text"
+                      icon="el-icon-plus"
+                      size="mini"
+                      @click="addMiniQ(zgqMini)"
+                    >添加小题</el-button>
                   </el-col>
                 </el-row>
                 <ol>
-                  <li v-for="(zgqMM,mmIndex) in zgqMini.miniQuestionList" :key="index + miniIndex + mmIndex" class="border-top">
+                  <li
+                    v-for="(zgqMM,mmIndex) in zgqMini.miniQuestionList"
+                    :key="index + miniIndex + mmIndex"
+                    class="border-top"
+                  >
                     <el-row>
-                      <el-col :span="1" :offset="1">{{zgqMM.tnumber}}</el-col>
-                      <el-col :span="2" :offset="11" v-if="zgqMM.miniQuestionList.length > 0" class="score-col">
+                      <el-col
+                        :span="1"
+                        :offset="1"
+                      >{{zgqMM.tnumber}}</el-col>
+                      <el-col
+                        :span="2"
+                        :offset="11"
+                        v-if="zgqMM.miniQuestionList.length > 0"
+                        class="score-col"
+                      >
                         <span>{{zgqMM.score}}</span>
                       </el-col>
-                      <el-col :span="2" :offset="11" v-else>
+                      <el-col
+                        :span="2"
+                        :offset="11"
+                        v-else
+                      >
                         <div class="el-input el-input--mini">
-                          <input type="number" autocomplete="off" maxlength="4" v-model="zgqMM.score" @blur="calculateScore();verifyScore(zgqMM.score)" class="el-input__inner">
+                          <input
+                            type="number"
+                            autocomplete="off"
+                            maxlength="4"
+                            v-model="zgqMM.score"
+                            @blur="calculateScore();verifyScore(zgqMM.score)"
+                            class="el-input__inner"
+                          >
                         </div>
                         <!-- <el-input v-model="zgqMM.score" size="mini" @blur="calculateScore()"></el-input> -->
                       </el-col>
                       <el-col :span="1">分</el-col>
                       <el-col :span="3">
-                        <el-button type="text" icon="el-icon-plus" size="mini" @click="addMiniQ(zgqMM)">添加小题</el-button>
+                        <el-button
+                          type="text"
+                          icon="el-icon-plus"
+                          size="mini"
+                          @click="addMiniQ(zgqMM)"
+                        >添加小题</el-button>
                       </el-col>
-                      <el-col :span="1" :offset="2"><i class="el-icon-remove-outline opra-icon" @click="deleteMiniQ(zgqMini.miniQuestionList,mmIndex)"></i></el-col>
+                      <el-col
+                        :span="1"
+                        :offset="2"
+                      ><i
+                          class="el-icon-remove-outline opra-icon"
+                          @click="deleteMiniQ(zgqMini.miniQuestionList,mmIndex)"
+                        ></i></el-col>
                     </el-row>
                     <ol>
-                      <li v-for="(zgqMMM,mmmIndex) in zgqMM.miniQuestionList" :key="index + miniIndex + mmIndex + mmmIndex" class="border-top">
+                      <li
+                        v-for="(zgqMMM,mmmIndex) in zgqMM.miniQuestionList"
+                        :key="index + miniIndex + mmIndex + mmmIndex"
+                        class="border-top"
+                      >
                         <el-row>
-                          <el-col :span="1" :offset="2">{{zgqMMM.tnumber}}</el-col>
-                          <el-col :span="2" :offset="10">
+                          <el-col
+                            :span="1"
+                            :offset="2"
+                          >{{zgqMMM.tnumber}}</el-col>
+                          <el-col
+                            :span="2"
+                            :offset="10"
+                          >
                             <div class="el-input el-input--mini">
-                              <input type="number" autocomplete="off" maxlength="4" v-model="zgqMMM.score" @blur="calculateScore();verifyScore(zgqMMM.score)" class="el-input__inner">
+                              <input
+                                type="number"
+                                autocomplete="off"
+                                maxlength="4"
+                                v-model="zgqMMM.score"
+                                @blur="calculateScore();verifyScore(zgqMMM.score)"
+                                class="el-input__inner"
+                              >
                             </div>
                             <!-- <el-input v-model="zgqMMM.score" size="mini" @blur="calculateScore()"></el-input> -->
                           </el-col>
                           <el-col :span="1">分</el-col>
-                          <el-col :span="1" :offset="5"><i class="el-icon-remove-outline opra-icon" @click="deleteMiniQ(zgqMM.miniQuestionList,mmmIndex)"></i></el-col>
+                          <el-col
+                            :span="1"
+                            :offset="5"
+                          ><i
+                              class="el-icon-remove-outline opra-icon"
+                              @click="deleteMiniQ(zgqMM.miniQuestionList,mmmIndex)"
+                            ></i></el-col>
                         </el-row>
                       </li>
                     </ol>
@@ -347,8 +791,16 @@
         </el-row>
       </el-card>
       <div slot="footer">
-        <el-button size="mini" @click="addZgVisible = false">取消</el-button>
-        <el-button type="primary" size="mini" @click="submitZgQuestion()" :loading="buttonLoading">确定</el-button>
+        <el-button
+          size="mini"
+          @click="addZgVisible = false"
+        >取消</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="submitZgQuestion()"
+          :loading="buttonLoading"
+        >确定</el-button>
       </div>
     </el-dialog>
   </el-row>
@@ -358,9 +810,14 @@
 import API from '../api/api.js'
 import Utils from '../utils/Utils.js'
 import { mapState } from 'vuex'
+// ————————————————————————————————————————————————————————————————————
+// `dev
+import { edit_yingyu_keguan_1, edit_yingyu_zhuguan_2, edit_yingyu_zhuguan_3, edit_yingyu_zhuguan_4, add_yingyu_keguan_1, add_yingyu_zhuguan_2, add_yingyu_zhuguan_3, add_yingyu_zhuguan_4 } from '../mock'
+// ————————————————————————————————————————————————————————————————————
+
 // import TreeUtil from '../utils/TreeUtil.js'
 export default {
-  data () {
+  data() {
     return {
       schoolCode: '',
       examId: this.$route.params.examId,
@@ -420,7 +877,7 @@ export default {
       return { width: this.activeBarWidth + 'px', transform: 'translateX(' + this.activeBarTranslateX + 'px)' }
     }
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.initBigQuestionNoList()
     this.getExamById()
@@ -428,14 +885,14 @@ export default {
   },
   methods: {
     // 切换tab
-    checkTab (tabRef, index) {
+    checkTab(tabRef, index) {
       let tabDom = this.$refs[tabRef]
       this.activeBarWidth = tabDom.clientWidth
       this.activeBarTranslateX = tabDom.offsetLeft
       this.activeTab = index
     },
     // 获取考试信息
-    getExamById () {
+    getExamById() {
       this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
         this.getGradeById()
@@ -446,7 +903,7 @@ export default {
       }).catch(() => { })
     },
     // 查询所有考试科目
-    getExamSubject () {
+    getExamSubject() {
       this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         // this.examSubjectList = res.data.data
         // this.examSubjectInfo = this.examSubjectList.find(item => {
@@ -460,13 +917,13 @@ export default {
       }).catch(() => { })
     },
     // 获取考试的年级
-    getGradeById () {
+    getGradeById() {
       this.axios.post(API.GRADE_FINDBYCOMMON, { id: this.examInfo.gradeId }).then(res => {
         this.examGrade = res.data.data[0]
       }).catch(() => { })
     },
     // 查询试卷结构(科目id/题型类型(0客观题，1主观题)
-    getExamStructureKg () {
+    getExamStructureKg() {
       this.loading = true
       this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 0, {}).then(res => {
         let list = res.data.data
@@ -485,7 +942,7 @@ export default {
         this.loading = false
       }).catch(() => { this.loading = false })
     },
-    getExamStructureZg () {
+    getExamStructureZg() {
       this.loading = true
       this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 1, {}).then(res => {
         let list = res.data.data
@@ -526,13 +983,13 @@ export default {
       }).catch(() => { this.loading = false })
     },
     // 查询试卷总分
-    getSumScore () {
+    getSumScore() {
       this.axios.post(API.EXAMSTRUCTURE_QUERYSUMSCORE + '/' + this.examSubjectId).then(res => {
         this.scoreList = res.data.data
       }).catch(() => { })
     },
     // 初始化大题题号到80
-    initBigQuestionNoList () {
+    initBigQuestionNoList() {
       for (let i = 1; i <= 80; i++) {
         let bigNo = ''
         if (i <= 10) {
@@ -546,7 +1003,7 @@ export default {
       }
     },
     // 数字转汉字大写
-    getNumberUpper (number = 0) {
+    getNumberUpper(number = 0) {
       let numberStr = ''
       switch (number) {
         case 1:
@@ -583,7 +1040,7 @@ export default {
       return numberStr
     },
     // 根据汉字大题号获取对应的数字
-    getNumberByTnumber (tnumber) {
+    getNumberByTnumber(tnumber) {
       let bigNo = this.bigQuestionNoList.find(item => {
         return item.bigNo === tnumber
       })
@@ -594,13 +1051,13 @@ export default {
       }
     },
     // 根据题型id获取题型名称
-    getTopicName (topicType) {
+    getTopicName(topicType) {
       return this.kgQuestionTypeList.find(item => {
         return item.id === parseInt(topicType)
       }).name
     },
     // 把有相同ID的数据的index放到一起，第一个为需要跨行的行，数组长度为跨行行数
-    getTableSpan () {
+    getTableSpan() {
       this.tableSpan = []
       this.kgTableData.forEach((item, index) => {
         if (this.tableSpan[item.structureId]) {
@@ -611,7 +1068,7 @@ export default {
         }
       })
     },
-    getTableSpanZg () {
+    getTableSpanZg() {
       this.tableSpanZg = []
       this.zgTableData.forEach((item, index) => {
         if (this.tableSpanZg[item.ssid]) {
@@ -623,7 +1080,7 @@ export default {
       })
     },
     // 客观题表格跨行
-    kgSpanMethod ({ row, column, rowIndex, columnIndex }) {
+    kgSpanMethod({ row, column, rowIndex, columnIndex }) {
       // console.log(columnIndex, rowIndex)
       if ([5].includes(columnIndex)) {
         // console.log(row, this.tableSpan)
@@ -635,7 +1092,7 @@ export default {
       }
     },
     // 主观题表格跨行
-    zgSpanMethod ({ row, column, rowIndex, columnIndex }) {
+    zgSpanMethod({ row, column, rowIndex, columnIndex }) {
       if ([3].includes(columnIndex)) {
         if (rowIndex === this.tableSpanZg[row.ssid][0]) {
           return { rowspan: this.tableSpanZg[row.ssid].length, colspan: 1 }
@@ -645,7 +1102,7 @@ export default {
       }
     },
     // 编辑客观题行
-    editRow (row) {
+    editRow(row) {
       let rows = {}
       this.kgBigQuestionNo = { id: this.getNumberByTnumber(row.tnumber.split('.')[0]), bigNo: row.tnumber.split('.')[0] }
       this.kgTableData.filter(item => {
@@ -676,7 +1133,7 @@ export default {
       this.addKgVisible = true
     },
     // 编辑主观题行
-    editRowZg (row) {
+    editRowZg(row) {
       let rows = {}
       this.zgBigQuestionNo = { id: this.getNumberByTnumber(row.tnumber.split('.')[0]), bigNo: row.tnumber.split('.')[0] }
       this.zgTableData.filter(item => {
@@ -729,7 +1186,7 @@ export default {
       this.addZgVisible = true
     },
     // 删除行
-    deleteRow (row, type = 0) {
+    deleteRow(row, type = 0) {
       let bigNo = row.tnumber.split('.')[0]
       this.$confirm('确定删除' + bigNo + '大题吗？', '提示', {
         confirmButtonText: '确定',
@@ -768,7 +1225,7 @@ export default {
     },
     /* ----------------新增客观题开始---------------- */
     // 显示新增弹窗
-    addKgQuestion () {
+    addKgQuestion() {
       let bigNo = {}
       for (let j = 0; j < this.bigQuestionNoList.length; j++) {
         let hasBigNo = false
@@ -797,7 +1254,27 @@ export default {
       this.dialogType = 'add'
       this.addKgVisible = true
     },
-    bigNoChange (val) {
+    // ————————————————————————————————————————————————————————————————————
+    // `dev
+    async devAddyingyu() {
+      if (!this.$store.state.devAddshijuan) return
+      const add_yingyu_keguan_1data = edit_yingyu_keguan_1.map((item, index) => ({ ...item, examId: this.examId, examSubjectId: this.examSubjectId, tid: index }))
+      const edit_yingyu_zhuguan_2data = edit_yingyu_zhuguan_2.map((item, index) => ({ ...item, examId: this.examId, examSubjectId: this.examSubjectId, tid: index + 61 }))
+      const edit_yingyu_zhuguan_3data = edit_yingyu_zhuguan_3.map((item, index) => ({ ...item, examId: this.examId, examSubjectId: this.examSubjectId, tid: index + 72 }))
+      const edit_yingyu_zhuguan_4data = edit_yingyu_zhuguan_4.map((item, index) => ({ ...item, examId: this.examId, examSubjectId: this.examSubjectId, tid: index + 74 }))
+      this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, add_yingyu_keguan_1data).then(res => {
+      }).catch(() => { })
+      this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, edit_yingyu_zhuguan_2data).then(res => {
+      }).catch(() => { })
+      this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, edit_yingyu_zhuguan_3data).then(res => {
+      }).catch(() => { })
+      this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, edit_yingyu_zhuguan_4data).then(res => {
+      }).catch(() => { })
+      // this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHKE + '/' + this.editId, edit_yingyu_keguan_1data).then(res => {
+      // }).catch(() => { })
+    },
+    // ————————————————————————————————————————————————————————————————————
+    bigNoChange(val) {
       let qu = this.questionList.find(question => {
         return val.bigNo === question.tnumber
       })
@@ -811,7 +1288,7 @@ export default {
       }
     },
     // 大题新增小题
-    addQuestion () {
+    addQuestion() {
       this.kgQuestionList.push({
         questionType: 1,
         startNo: '',
@@ -823,7 +1300,7 @@ export default {
       })
     },
     // 大题重新生成小题
-    calculateKgQuestion (question) {
+    calculateKgQuestion(question) {
       let score = 0
       this.kgQuestionList.forEach(item => {
         score += item.score * 1
@@ -850,7 +1327,7 @@ export default {
       }
     },
     // 校验题号
-    verifyQuestionNo (questionList, index) {
+    verifyQuestionNo(questionList, index) {
       let miniQ = questionList[index]
       if (isNaN(miniQ.startNo) || isNaN(miniQ.endNo)) {
         this.$message({
@@ -887,7 +1364,7 @@ export default {
       }
     },
     // 校验分数是否为数字
-    verifyScore (score) {
+    verifyScore(score) {
       if (isNaN(score) || score <= 0) {
         this.$message({
           message: '题目的分数不能为0',
@@ -896,7 +1373,7 @@ export default {
       }
     },
     // 校验答案
-    verifyAnswer (questionType = '', kgqMini = {}) {
+    verifyAnswer(questionType = '', kgqMini = {}) {
       if (!kgqMini.answer) {
         return
       }
@@ -954,11 +1431,11 @@ export default {
       }
     },
     // 删除问题
-    deleteQuestion (index) {
+    deleteQuestion(index) {
       this.kgQuestionList.splice(index, 1)
     },
     // 获取当前最大题目排序编号
-    getMaxTid () {
+    getMaxTid() {
       let kgTids = this.kgTableData.map(item => {
         return item.tid
       })
@@ -972,7 +1449,7 @@ export default {
       return tid < 0 ? 0 : tid + 1
     },
     // 提交客观题
-    async submitKgQuestion () {
+    async submitKgQuestion() {
       let data = []
       this.buttonLoading = true
       let hasEmptyMini = false
@@ -1024,6 +1501,25 @@ export default {
         return false
       }
       if (this.dialogType === 'add') {
+        // ——————————————————————————————————————————————————————
+        // `dev 
+        if (this.$store.state.download) {
+          function download(content, filename) {
+            // 创建隐藏的可下载链接
+            var eleLink = document.createElement('a');
+            eleLink.download = filename;
+            eleLink.style.display = 'none';
+            // 字符内容转变成blob地址
+            var blob = new Blob([content]);
+            eleLink.href = URL.createObjectURL(blob);
+            // 触发点击
+            document.body.appendChild(eleLink);
+            eleLink.click();
+            // 然后移除
+            document.body.removeChild(eleLink);
+          };
+          download(JSON.stringify(data), '新增客观题')        }
+        // ——————————————————————————————————————————————————————
         await this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, data).then(res => {
           this.$message({
             message: '新增客观题成功',
@@ -1037,6 +1533,25 @@ export default {
         }).catch(() => { })
       }
       if (this.dialogType === 'edit') {
+        // —————————————————————————————————————————————  —————————
+        // `dev 
+        if (this.$store.state.download) {
+          function download(content, filename) {
+            // 创建隐藏的可下载链接
+            var eleLink = document.createElement('a');
+            eleLink.download = filename;
+            eleLink.style.display = 'none';
+            // 字符内容转变成blob地址
+            var blob = new Blob([content]);
+            eleLink.href = URL.createObjectURL(blob);
+            // 触发点击
+            document.body.appendChild(eleLink);
+            eleLink.click();
+            // 然后移除
+            document.body.removeChild(eleLink);
+          };
+          download(JSON.stringify(data), '修改客观题')        }
+        // ——————————————————————————————————————————————————————
         await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHKE + '/' + this.editId, data).then(res => {
           this.$message({
             message: '修改客观题成功',
@@ -1053,12 +1568,12 @@ export default {
     },
     /* ----------------新增客观题结束---------------- */
     // 科目设置复用
-    subjectSettingReuse () {
+    subjectSettingReuse() {
       this.reuseVisible = true
     },
     /* ----------------新增主观题开始---------------- */
     // 显示弹窗
-    addZgQuestion () {
+    addZgQuestion() {
       let bigNo = {}
       for (let j = 0; j < this.bigQuestionNoList.length; j++) {
         let hasBigNo = false
@@ -1080,7 +1595,7 @@ export default {
       this.zgScoreCount = 0
     },
     // 大题新增小题
-    addMiniQuestion () {
+    addMiniQuestion() {
       this.zgQuestionList.push({
         questionType: '普通题',
         startNo: '',
@@ -1090,11 +1605,11 @@ export default {
       })
     },
     // 大题删除小题
-    deleteMiniQuestion (index) {
+    deleteMiniQuestion(index) {
       this.zgQuestionList.splice(index, 1)
     },
     // 大题重新生成小题
-    calculateZgQuestion (question) {
+    calculateZgQuestion(question) {
       let score = 0
       question.miniQuestionList = []
       if (!question.startNo || !question.endNo) {
@@ -1112,25 +1627,25 @@ export default {
       this.zgScoreCount = score
     },
     // 小题新增小题
-    addMiniQ (zgqMini) {
+    addMiniQ(zgqMini) {
       zgqMini.score = 0
       let i = zgqMini.miniQuestionList.length + 1
       zgqMini.miniQuestionList.push({ tnumber: zgqMini.tnumber + '.' + i, score: '', miniQuestionList: [] })
       this.calculateScore()
     },
     // 小题删除小题
-    deleteMiniQ (list, index) {
+    deleteMiniQ(list, index) {
       list.splice(index, 1)
       this.calculateScore()
     },
     // 计算分数
-    calculateScore () {
+    calculateScore() {
       console.log(111)
       this.zgScoreCount = 0
       this.recursiveScore(this.zgQuestionList)
     },
     // 递归计算总分数
-    recursiveScore (questionList) {
+    recursiveScore(questionList) {
       console.log(questionList)
       questionList.forEach(item => {
         console.log(item)
@@ -1146,7 +1661,7 @@ export default {
       })
     },
     // 提交主观题
-    async submitZgQuestion () {
+    async submitZgQuestion() {
       this.buttonLoading = true
       let data = []
       let id = 0
@@ -1256,6 +1771,25 @@ export default {
       }
       if (this.dialogType === 'add') {
         await this.axios.post(API.EXAMSTRUCTURE_ADDEXAMS, data).then(res => {
+          // ——————————————————————————————————————————————————————
+          // `dev 
+          if (this.$store.state.download) {
+            function download(content, filename) {
+              // 创建隐藏的可下载链接
+              var eleLink = document.createElement('a');
+              eleLink.download = filename;
+              eleLink.style.display = 'none';
+              // 字符内容转变成blob地址
+              var blob = new Blob([content]);
+              eleLink.href = URL.createObjectURL(blob);
+              // 触发点击
+              document.body.appendChild(eleLink);
+              eleLink.click();
+              // 然后移除
+              document.body.removeChild(eleLink);
+            };
+            download(JSON.stringify(data), '新增主观题')          }
+          // ——————————————————————————————————————————————————————
           this.$message({
             message: '新增主观题成功',
             type: 'success'
@@ -1268,6 +1802,26 @@ export default {
         }).catch(() => { })
       }
       if (this.dialogType === 'edit') {
+        // ——————————————————————————————————————————————————————
+        // `dev 
+        if (this.$store.state.download) {
+          function download(content, filename) {
+            // 创建隐藏的可下载链接
+            var eleLink = document.createElement('a');
+            eleLink.download = filename;
+            eleLink.style.display = 'none';
+            // 字符内容转变成blob地址
+            var blob = new Blob([content]);
+            eleLink.href = URL.createObjectURL(blob);
+            // 触发点击
+            document.body.appendChild(eleLink);
+            eleLink.click();
+            // 然后移除
+            document.body.removeChild(eleLink);
+          };
+          download(JSON.stringify(data), '修改主观题')
+        }
+        // ——————————————————————————————————————————————————————
         await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHZHU + '/' + this.editId, data).then(res => {
           this.$message({
             message: '修改主观题成功',

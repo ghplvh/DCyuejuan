@@ -256,7 +256,7 @@ const API = {
   // 根据文件夹名字获取图片列表
   ADMIN_GETIMAGE: 'web/upload/GetFileAllContent',
   // 主观题切图
-  ADMIN_SLICING: '/web/examTemplate1/subjectSlicing',
+  ADMIN_SLICING: 'web/examTemplate1/subjectSlicing',
   // 根据文件夹名字获取图片列表
   ADMIN_GETPUBLISHSUBJECTLIST: '/web/exam/getPublishSubjectList/',
   // 单个修改考生信息/web/examinee/updateSingleExaminee

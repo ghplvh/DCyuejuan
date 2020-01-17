@@ -1315,7 +1315,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.axios.post(API.STUDENT_DELSTUDENTS, this.multiStudentSelection).then(res => {
+        this.axios.post(API.STUDENT_DELSTUDENTS, { ...this.multiStudentSelection, schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -1403,7 +1403,7 @@ export default {
         let ids = this.dataTeacher.map(item => {
           return { id: item.id }
         })
-        this.axios.post(API.TEACHER_DELTEACHERS, ids).then(res => {
+        this.axios.post(API.TEACHER_DELTEACHERS, { ...ids, schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -1419,7 +1419,7 @@ export default {
         cancelButtonText: '取消',
         type: 'error'
       }).then(() => {
-        this.axios.post(API.TEACHER_DELTEACHERS, this.multiTeacherSelection).then(res => {
+        this.axios.post(API.TEACHER_DELTEACHERS, { schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode, ...this.multiTeacherSelection }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'

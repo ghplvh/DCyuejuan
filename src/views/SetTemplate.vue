@@ -457,7 +457,7 @@ export default {
       if (this.svg.hasRatio) return
       console.log('getratioid', this.tempData.id)
       this.$nextTick(setTimeout(() => {
-        const svgWidth = this.$refs[this.svg.current] ?.clientWidth
+        const svgWidth = this.$refs[this.svg.current]?.clientWidth
         const image = document.getElementById('setTemplate-image')
         const imageWidth = parseInt(image.getAttribute('width'))
         let img = new Image()
@@ -671,8 +671,8 @@ export default {
         examSubjectId
       }
       await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
-        const list = res ?.data ?.data
-        if (list ?.length > 0) {
+        const list = res?.data?.data
+        if (list?.length > 0) {
           this.tempData.list = list.map(item => {
             item.imgUrl = item.imgUrl.split(',')
             item.cnlocation = JSON.parse(item.cnlocation)

@@ -1,25 +1,43 @@
 <template>
   <div id="manager">
     <el-tabs type="border-card">
-      <el-tab-pane label="设置Banner" v-if="this.menuList.includes('setBannerContent')">
+      <el-tab-pane
+        label="设置Banner"
+        v-if="this.menuList.includes('setBannerContent')"
+      >
         <banner></banner>
       </el-tab-pane>
-      <el-tab-pane label="设置新闻" v-if="this.menuList.includes('setNewsContent')">
+      <el-tab-pane
+        label="设置新闻"
+        v-if="this.menuList.includes('setNewsContent')"
+      >
         <news></news>
       </el-tab-pane>
-      <el-tab-pane label="设置学校" v-if="this.menuList.includes('setSchoolContent')">
+      <el-tab-pane
+        label="设置学校"
+        v-if="this.menuList.includes('setSchoolContent')"
+      >
         <school></school>
       </el-tab-pane>
-      <el-tab-pane label="设置角色权限" v-if="this.menuList.includes('setRolePermissions')">
+      <el-tab-pane
+        label="设置角色权限"
+        v-if="this.menuList.includes('setRolePermissions')"
+      >
         <role></role>
       </el-tab-pane>
       <!-- <el-tab-pane label="添加账号" v-if="this.dmlist.includes('setMenu')">
         <addAccountNumber></addAccountNumber>
       </el-tab-pane> -->
-      <el-tab-pane label="菜单管理" v-if="this.menuList.includes('setMenu')">
+      <el-tab-pane
+        label="菜单管理"
+        v-if="this.menuList.includes('setMenu')"
+      >
         <menuList></menuList>
       </el-tab-pane>
-      <el-tab-pane label="账号管理" v-if="this.menuList.includes('accountAdmin')">
+      <el-tab-pane
+        label="账号管理"
+        v-if="this.menuList.includes('accountAdmin')"
+      >
         <accountAdmin></accountAdmin>
       </el-tab-pane>
     </el-tabs>
@@ -34,7 +52,7 @@ import MenuList from './MenuList'
 import AccountAdmin from './AccountAdmin'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
     }
   },
@@ -44,7 +62,7 @@ export default {
   computed: {
     ...mapState(['adminInfo', 'menuList'])
   },
-  created () {
+  created() {
   }
 }
 </script>
