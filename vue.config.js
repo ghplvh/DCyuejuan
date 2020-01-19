@@ -7,22 +7,22 @@ module.exports = {
   outputDir: 'yuejuan',
   assetsDir: 'static',
   productionSourceMap: false,
-  devServer: {
-    open: true,
-    port: 7777,
-    host: '192.168.0.174',
-    // host: 'http://duchengedu.com',
-    proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:8082',
-        ws: true,
-        changOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
-    }
-  },
+  // devServer: {
+  //   open: true,
+  //   port: 7777,
+  //   host: '192.168.0.174',
+  //   // host: 'http://duchengedu.com',
+  //   proxy: {
+  //     '/api': {
+  //       target: 'http://127.0.0.1:8082',
+  //       ws: true,
+  //       changOrigin: true,
+  //       pathRewrite: {
+  //         '^/api': ''
+  //       }
+  //     }
+  //   }
+  // },
   pages: {
     index: {
       // page 的入口

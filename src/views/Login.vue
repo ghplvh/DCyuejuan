@@ -1,13 +1,38 @@
 <template>
   <div id="login">
-    <el-form :model="form" :rules="rules" ref="form" label-width="60px">
-      <el-form-item label="账号" prop="phone">
-        <el-input v-model="form.phone" placeholder="请输入账号" maxlength="11"></el-input>
+    <el-form
+      :model="form"
+      :rules="rules"
+      ref="form"
+      label-width="60px"
+    >
+      <el-form-item
+        label="账号"
+        prop="phone"
+      >
+        <el-input
+          v-model="form.phone"
+          placeholder="请输入账号"
+          maxlength="11"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" @keyup.enter.native="login('form')" v-model="form.password" placeholder="请输入密码"></el-input>
+      <el-form-item
+        label="密码"
+        prop="password"
+      >
+        <el-input
+          type="password"
+          @keyup.enter.native="login('form')"
+          v-model="form.password"
+          placeholder="请输入密码"
+        ></el-input>
       </el-form-item>
-      <el-button type="primary" @click="login('form')" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="登录中">登录</el-button>
+      <el-button
+        type="primary"
+        @click="login('form')"
+        v-loading.fullscreen.lock="fullscreenLoading"
+        element-loading-text="登录中"
+      >登录</el-button>
       <!-- <router-link to="/forgetPassword" class="forget">忘记密码？</router-link> -->
     </el-form>
   </div>
@@ -17,7 +42,7 @@ import API from '../api/api'
 import { mapActions } from 'vuex'
 import { Base64 } from 'js-base64'
 export default {
-  data () {
+  data() {
     return {
       fullscreenLoading: false,
       form: {
@@ -34,13 +59,13 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.removeAdminInfo()
   },
   methods: {
     ...mapActions(['removeAdminInfo', 'saveAdminInfo']),
     // 登录
-    login (formName) {
+    login(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let data = {}
@@ -78,6 +103,11 @@ export default {
         }
       })
     }
+  },
+  mounted() {
+    // `dev
+    if (this.$store.state.dev) {
+      this.login('form')    }
   }
 }
 </script>

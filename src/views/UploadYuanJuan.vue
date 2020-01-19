@@ -1,19 +1,33 @@
 <template>
   <div id="upload-yuanjuan">
-    <el-row class="bread-crumb" type="flex" align="middle">
+    <el-row
+      class="bread-crumb"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="21">
-        <el-breadcrumb separator-class="el-icon-arrow-right" v-if="examGrade.id && examSubjectInfo.id">
+        <el-breadcrumb
+          separator-class="el-icon-arrow-right"
+          v-if="examGrade.id && examSubjectInfo.id"
+        >
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/exam/'+examId}">{{examInfo.examName}}</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId + '/' + examSubjectId}">
             <span>{{examGrade.gradeName + examSubjectInfo.subjectName}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
-                <i class="el-icon-caret-bottom el-icon--right" style="color:#409EFF;"></i>
+                <i
+                  class="el-icon-caret-bottom el-icon--right"
+                  style="color:#409EFF;"
+                ></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <template v-for="sub in examSubjectList">
-                  <router-link :to="{ path: '/subjectMain/' + examId + '/' + sub.id}" :key="sub.id" v-if="sub.id !== examSubjectInfo.id">
+                  <router-link
+                    :to="{ path: '/subjectMain/' + examId + '/' + sub.id}"
+                    :key="sub.id"
+                    v-if="sub.id !== examSubjectInfo.id"
+                  >
                     <el-dropdown-item>{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
                   </router-link>
                 </template>
@@ -23,84 +37,237 @@
           <el-breadcrumb-item>上传原卷</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
-        <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
+        <router-link
+          to=""
+          target="_blank"
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
       </el-col>
     </el-row>
     <el-row class="content">
-      <el-form :model="ytForm" :rules="ytFormRules" :inline="true" ref="ytForm" class="quill-form" label-width="100px">
-        <el-form-item prop="subject1" label="题目">
-          <quill-editor v-model="ytForm.subject1" ref="subject" :options="editorOption"></quill-editor>
+      <el-form
+        :model="ytForm"
+        :rules="ytFormRules"
+        :inline="true"
+        ref="ytForm"
+        class="quill-form"
+        label-width="100px"
+      >
+        <el-form-item
+          prop="subject1"
+          label="题目"
+        >
+          <quill-editor
+            v-model="ytForm.subject1"
+            ref="subject"
+            :options="editorOption"
+          ></quill-editor>
         </el-form-item>
-        <el-form-item prop="answer" label="答案">
-          <quill-editor v-model="ytForm.answer" :options="editorOption"></quill-editor>
+        <el-form-item
+          prop="answer"
+          label="答案"
+        >
+          <quill-editor
+            v-model="ytForm.answer"
+            :options="editorOption"
+          ></quill-editor>
         </el-form-item>
-        <el-form-item prop="questionBlock" label="题块">
-          <el-select v-model="ytForm.questionBlock" value-key="id">
-            <el-option v-for="blk in blockList" :key="blk.id" :label="blk.titleBlockName" :value="blk"></el-option>
+        <el-form-item
+          prop="questionBlock"
+          label="题块"
+        >
+          <el-select
+            v-model="ytForm.questionBlock"
+            value-key="id"
+          >
+            <el-option
+              v-for="blk in blockList"
+              :key="blk.id"
+              :label="blk.titleBlockName"
+              :value="blk"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="tNumber" label="题号">
+        <el-form-item
+          prop="tNumber"
+          label="题号"
+        >
           <el-select v-model="ytForm.tNumber">
-            <el-option v-for="tn in tnumberList" :key="tn.id" :label="tn.tnumber" :value="tn.tnumber"></el-option>
+            <el-option
+              v-for="tn in tnumberList"
+              :key="tn.id"
+              :label="tn.tnumber"
+              :value="tn.tnumber"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="sore" label="分数">
+        <el-form-item
+          prop="sore"
+          label="分数"
+        >
           <el-input v-model.number="ytForm.sore"></el-input>
         </el-form-item>
-        <el-form-item prop="types" label="类型">
+        <el-form-item
+          prop="types"
+          label="类型"
+        >
           <el-select v-model="ytForm.types">
-            <el-option v-for="tp in typeList" :key="tp.id" :label="tp.name" :value="tp.id"></el-option>
+            <el-option
+              v-for="tp in typeList"
+              :key="tp.id"
+              :label="tp.name"
+              :value="tp.id"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="difficulty" label="难度">
+        <el-form-item
+          prop="difficulty"
+          label="难度"
+        >
           <div class="rate-box">
-            <el-rate v-model="ytForm.difficulty" :texts="rateTexts" show-text @change="difficultyChange"></el-rate>
+            <el-rate
+              v-model="ytForm.difficulty"
+              :texts="rateTexts"
+              show-text
+              @change="difficultyChange"
+            ></el-rate>
           </div>
         </el-form-item>
-        <el-form-item prop="imgPathOne" label="原题图片" class="img-item">
-          <el-upload class="yt-img-up" :file-list="ytImgList" :data="{filedir:'yue/'}" :action="uploadUrl" list-type="picture-card" accept="image/*" :on-preview="pictureCardPreview" :on-remove="ytImgRemove" :on-success="ytImgSuccess">
+        <el-form-item
+          prop="imgPathOne"
+          label="原题图片"
+          class="img-item"
+        >
+          <el-upload
+            class="yt-img-up"
+            :file-list="ytImgList"
+            :data="{filedir:'yue/'}"
+            :action="uploadUrl"
+            list-type="picture-card"
+            accept="image/*"
+            :on-preview="pictureCardPreview"
+            :on-remove="ytImgRemove"
+            :on-success="ytImgSuccess"
+          >
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item prop="knowledgePoints" label="知识点" class="nlg-item">
-          <el-select class="search-select" v-model="ytForm.knowledgePoints" multiple filterable remote reserve-keyword placeholder="请输入关键词" :remote-method="remoteMethod" :loading="loading">
-            <el-option v-for="nlg in knowledgeList" :key="nlg.id" :label="nlg.name" :value="nlg.id" @click.native="selectOption(nlg)"></el-option>
+        <el-form-item
+          prop="knowledgePoints"
+          label="知识点"
+          class="nlg-item"
+        >
+          <el-select
+            class="search-select"
+            v-model="ytForm.knowledgePoints"
+            multiple
+            filterable
+            remote
+            reserve-keyword
+            placeholder="请输入关键词"
+            :remote-method="remoteMethod"
+            :loading="loading"
+          >
+            <el-option
+              v-for="nlg in knowledgeList"
+              :key="nlg.id"
+              :label="nlg.name"
+              :value="nlg.id"
+              @click.native="selectOption(nlg)"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="options" label="选项" class="opt-item" v-if="[0,1].includes(ytForm.types)">
-          <div class="option-item" v-for="(option,index) in ytForm.options" :key="index">
+        <el-form-item
+          prop="options"
+          label="选项"
+          class="opt-item"
+          v-if="[0,1].includes(ytForm.types)"
+        >
+          <div
+            class="option-item"
+            v-for="(option,index) in ytForm.options"
+            :key="index"
+          >
             <span class="opt-title">选项名</span>
-            <el-input class="opt-key" v-model="option.key"></el-input>
+            <el-input
+              class="opt-key"
+              v-model="option.key"
+            ></el-input>
             <span class="opt-title">选项内容</span>
-            <quill-editor v-model="option.value" :options="editorOption"></quill-editor>
-            <el-button type="primary" icon="el-icon-plus" circle @click="addOption()"></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle @click="deleteOption(index)" v-if="ytForm.options.length > 1"></el-button>
+            <quill-editor
+              v-model="option.value"
+              :options="editorOption"
+            ></quill-editor>
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              circle
+              @click="addOption()"
+            ></el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              circle
+              @click="deleteOption(index)"
+              v-if="ytForm.options.length > 1"
+            ></el-button>
           </div>
         </el-form-item>
-        <el-button class="submit-btn" type="primary" :loading="buttonLoading" @click="addOriginal('ytForm')">{{submitButtonText}}</el-button>
-        <el-button class="submit-btn" @click="cancelEdit()" :disabled="submitType === 'add'">取消修改</el-button>
+        <el-button
+          class="submit-btn"
+          type="primary"
+          :loading="buttonLoading"
+          @click="addOriginal('ytForm')"
+        >{{submitButtonText}}</el-button>
+        <el-button
+          class="submit-btn"
+          @click="cancelEdit()"
+          :disabled="submitType === 'add'"
+        >取消修改</el-button>
       </el-form>
       <div id="questions">
-        <el-card class="question-preview question-card" shadow="never">
+        <el-card
+          class="question-preview question-card"
+          shadow="never"
+        >
           <div slot="header">
             <span>题目预览</span>
           </div>
           <div class="card-center">
             <div v-html="ytForm.subject1"></div>
             <template v-if="[0,1].includes(ytForm.types)">
-              <div v-for="opt in ytForm.options" :key="opt.key" class="option-item">
+              <div
+                v-for="opt in ytForm.options"
+                :key="opt.key"
+                class="option-item"
+              >
                 <span>{{opt.key}}：</span><span v-html="opt.value"></span>
               </div>
             </template>
             <template v-for="img in (ytForm.imgPathOne ? ytForm.imgPathOne.split(',') : [])">
-              <img v-if="img" :key="img" :src="img" alt="原题图片">
+              <img
+                v-if="img"
+                :key="img"
+                :src="img"
+                alt="原题图片"
+              >
             </template>
           </div>
-          <el-collapse value="preview" accordion>
+          <el-collapse
+            value="preview"
+            accordion
+          >
             <el-collapse-item name="preview">
               <template slot="title">
-                <el-row class="card-footer" type="flex" align="middle" justify="space-between">
+                <el-row
+                  class="card-footer"
+                  type="flex"
+                  align="middle"
+                  justify="space-between"
+                >
                   <el-col :span="20">
                     <span>题型：{{getTypeById(ytForm.types)}}</span>
                     <span class="footer-split">|</span>
@@ -114,13 +281,28 @@
                     <span class="footer-split">|</span>
                     <span>
                       <span>知识点：</span>
-                      <el-popover placement="top-start" title="知识点" width="600" trigger="hover" :content="getKnowledgeName()">
-                        <el-button class="pop-reference" type="text" size="mini" slot="reference">{{getKnowledgeName()}}</el-button>
+                      <el-popover
+                        placement="top-start"
+                        title="知识点"
+                        width="600"
+                        trigger="hover"
+                        :content="getKnowledgeName()"
+                      >
+                        <el-button
+                          class="pop-reference"
+                          type="text"
+                          size="mini"
+                          slot="reference"
+                        >{{getKnowledgeName()}}</el-button>
                       </el-popover>
                     </span>
                   </el-col>
                   <el-col :span="4">
-                    <el-button type="text" size="mini" icon="el-icon-document">查看解析</el-button>
+                    <el-button
+                      type="text"
+                      size="mini"
+                      icon="el-icon-document"
+                    >查看解析</el-button>
                   </el-col>
                 </el-row>
               </template>
@@ -129,22 +311,41 @@
             </el-collapse-item>
           </el-collapse>
         </el-card>
-        <el-card class="question-card" shadow="never" v-for="yt in originalList" :key="yt.id">
+        <el-card
+          class="question-card"
+          shadow="never"
+          v-for="yt in originalList"
+          :key="yt.id"
+        >
           <div class="card-center">
             <div v-html="yt.subject1"></div>
             <div v-if="[0,1].includes(yt.types)">
-              <div v-for="(opt,key) in yt.options" :key="key" class="option-item">
+              <div
+                v-for="(opt,key) in yt.options"
+                :key="key"
+                class="option-item"
+              >
                 <span>{{key}}：</span><span v-html="opt"></span>
               </div>
             </div>
             <template v-for="img in (yt.imgPathOne ? yt.imgPathOne.split(',') : [])">
-              <img v-if="img" :key="img" :src="img" alt="原题图片">
+              <img
+                v-if="img"
+                :key="img"
+                :src="img"
+                alt="原题图片"
+              >
             </template>
           </div>
           <el-collapse>
             <el-collapse-item>
               <template slot="title">
-                <el-row class="card-footer" type="flex" align="middle" justify="space-between">
+                <el-row
+                  class="card-footer"
+                  type="flex"
+                  align="middle"
+                  justify="space-between"
+                >
                   <el-col :span="20">
                     <span>题型：{{getTypeById(yt.types)}}</span>
                     <span class="footer-split">|</span>
@@ -158,15 +359,39 @@
                     <span class="footer-split">|</span>
                     <span>
                       <span>知识点：</span>
-                      <el-popover placement="top-start" title="知识点" width="600" trigger="hover" :content="getKnowledgeName(yt.knowledgePoints)">
-                        <el-button class="pop-reference" type="text" size="mini" slot="reference">{{getKnowledgeName(yt.knowledgePoints)}}</el-button>
+                      <el-popover
+                        placement="top-start"
+                        title="知识点"
+                        width="600"
+                        trigger="hover"
+                        :content="getKnowledgeName(yt.knowledgePoints)"
+                      >
+                        <el-button
+                          class="pop-reference"
+                          type="text"
+                          size="mini"
+                          slot="reference"
+                        >{{getKnowledgeName(yt.knowledgePoints)}}</el-button>
                       </el-popover>
                     </span>
                   </el-col>
                   <el-col :span="4">
-                    <el-button type="primary" size="mini" @click.stop="editYt(yt)">编辑</el-button>
-                    <el-button type="danger" size="mini" :loading="deleteLoading" @click.stop="deleteYt(yt)">删除</el-button>
-                    <el-button type="text" size="mini" icon="el-icon-document">查看解析</el-button>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click.stop="editYt(yt)"
+                    >编辑</el-button>
+                    <el-button
+                      type="danger"
+                      size="mini"
+                      :loading="deleteLoading"
+                      @click.stop="deleteYt(yt)"
+                    >删除</el-button>
+                    <el-button
+                      type="text"
+                      size="mini"
+                      icon="el-icon-document"
+                    >查看解析</el-button>
                   </el-col>
                 </el-row>
               </template>
@@ -176,14 +401,35 @@
           </el-collapse>
         </el-card>
       </div>
-      <el-pagination background @prev-click="prevPage" @current-change="handleCurrentPage" @next-click="nextPage" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
+      <el-pagination
+        background
+        @prev-click="prevPage"
+        @current-change="handleCurrentPage"
+        @next-click="nextPage"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        layout="total, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
     </el-row>
-    <el-dialog title="查看原题图片" :visible.sync="previewVisible" width="60%" custom-class="preview-dialog">
+    <el-dialog
+      title="查看原题图片"
+      :visible.sync="previewVisible"
+      width="60%"
+      custom-class="preview-dialog"
+    >
       <div class="img-box">
-        <img :src="prevImg" alt="模板">
+        <img
+          :src="prevImg"
+          alt="模板"
+        >
       </div>
       <div slot="footer">
-        <el-button type="primary" size="medium" @click="previewVisible = false">确定</el-button>
+        <el-button
+          type="primary"
+          size="medium"
+          @click="previewVisible = false"
+        >确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -210,7 +456,7 @@ const container = [
   ['image']
 ]
 export default {
-  data () {
+  data() {
     let checkNumber = (rule, value, callback) => {
       setTimeout(() => {
         if (!Number.isInteger(value)) {
@@ -354,13 +600,13 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.getExamById()
     this.getTnumber()
     this.getBlocks()
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
       if (this.isMathjaxConfig === false) { // 如果：没有配置MathJax
         this.initMathjaxConfig()
@@ -370,14 +616,14 @@ export default {
       window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, document.getElementById('questions')])
     })
   },
-  updated () {
+  updated() {
     this.$nextTick(() => {
       window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, document.getElementById('questions')])
     })
   },
   methods: {
     // 初始化mathjax公式配置
-    initMathjaxConfig () {
+    initMathjaxConfig() {
       if (!window.MathJax) {
         return
       }
@@ -398,7 +644,7 @@ export default {
       this.isMathjaxConfig = true // 防止重复调用Config，造成性能损耗
     },
     // 获取考试信息
-    async getExamById () {
+    async getExamById() {
       this.loading = true
       await this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
@@ -408,7 +654,7 @@ export default {
       await this.getExamSubject()
     },
     // 查询所有考试科目
-    async getExamSubject () {
+    async getExamSubject() {
       this.loading = true
       await this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.examSubjectList = res.data.data
@@ -428,14 +674,14 @@ export default {
       this.getOriginal()
     },
     // 获取考试的年级
-    async getGradeById () {
+    async getGradeById() {
       this.loading = true
       await this.axios.post(API.GRADE_FINDBYCOMMON, { id: this.examInfo.gradeId }).then(res => {
         this.examGrade = res.data.data[0]
       }).catch(() => { this.loading = false })
     },
     // 获取试卷题块列表
-    async getBlocks () {
+    async getBlocks() {
       let data = {
         examSubjectId: this.examSubjectId
       }
@@ -444,7 +690,7 @@ export default {
       }).catch(() => { })
     },
     // 获取试卷题号列表
-    async getTnumber () {
+    async getTnumber() {
       let data = {
         examId: this.examId,
         examSubjectId: this.examSubjectId
@@ -457,7 +703,7 @@ export default {
       }).catch(() => { })
     },
     // 获取原题列表
-    async getOriginal () {
+    async getOriginal() {
       let data = {
         examId: this.examId,
         subjectName: this.examSubjectInfo.subjectName,
@@ -478,7 +724,7 @@ export default {
       }).catch(() => { })
     },
     // 远程搜索知识点
-    remoteMethod (query) {
+    remoteMethod(query) {
       if (query !== '') {
         this.loading = true
         setTimeout(() => {
@@ -494,11 +740,11 @@ export default {
       }
     },
     // 分数改变
-    difficultyChange (val) {
+    difficultyChange(val) {
       // console.log(val)
     },
     // 新增选项
-    addOption () {
+    addOption() {
       // if ([0].includes(this.ytForm.types) && this.ytForm.options.length === 4) {
       //   this.$message({
       //     message: '选择题最多只能有4个选项！',
@@ -511,12 +757,12 @@ export default {
         value: ''
       })
     },
-    selectOption (nlg) {
+    selectOption(nlg) {
       // // console.log(nlg)
       this.editNlgList.push(nlg)
     },
     // 删除选项
-    deleteOption (index) {
+    deleteOption(index) {
       this.$confirm('确定删除这个选项吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -535,7 +781,7 @@ export default {
       })
     },
     // 原题图片上传成功
-    ytImgSuccess (response, file, fileList) {
+    ytImgSuccess(response, file, fileList) {
       let list = []
       this.ytImgList = []
       // console.log(fileList)
@@ -548,7 +794,7 @@ export default {
       this.ytForm.imgPathOne = list.join(',')
     },
     // 原题图片删除成功
-    ytImgRemove (file, fileList) {
+    ytImgRemove(file, fileList) {
       let list = []
       this.ytImgList = []
       fileList.forEach(item => {
@@ -560,12 +806,12 @@ export default {
       this.ytForm.imgPathOne = list.join(',')
     },
     // 预览图片
-    pictureCardPreview (file) {
+    pictureCardPreview(file) {
       this.prevImg = file.url
       this.previewVisible = true
     },
     // 提交原题
-    addOriginal (formName) {
+    addOriginal(formName) {
       this.$refs[formName].validate((valid) => {
         // // console.log(valid)
         if (valid) {
@@ -627,7 +873,7 @@ export default {
       })
     },
     // 根据ID获取题型
-    getTypeById (id) {
+    getTypeById(id) {
       if (!id && id !== 0) {
         return ''
       }
@@ -637,7 +883,7 @@ export default {
       return type ? type.name : ''
     },
     // 获取知识点的名称
-    getKnowledgeName (arr = []) {
+    getKnowledgeName(arr = []) {
       if (arr.length > 0) {
         let names = arr.map(item => {
           return item.name
@@ -653,7 +899,7 @@ export default {
       return names.join('，')
     },
     // 编辑原题
-    editYt (yt) {
+    editYt(yt) {
       // console.log(yt)
       let options = []
       Object.keys(yt.options).forEach(key => {
@@ -697,7 +943,7 @@ export default {
       this.submitButtonText = '确认修改'
     },
     // 取消修改
-    cancelEdit () {
+    cancelEdit() {
       this.ytForm = {
         subject1: '', // 原题题目
         imgPathOne: '', // 原题图片
@@ -717,7 +963,7 @@ export default {
       this.buttonLoading = false
     },
     // 删除原题
-    deleteYt (yt) {
+    deleteYt(yt) {
       this.deleteLoading = true
       this.$confirm('确定删除这个原题吗？', '提示', {
         confirmButtonText: '确定',
@@ -744,15 +990,15 @@ export default {
       })
     },
     // 上一页
-    prevPage (page) {
+    prevPage(page) {
       this.currentPage = this.currentPage * 1 - 1
       this.getOriginal()
     },
-    handleCurrentPage (page) {
+    handleCurrentPage(page) {
       this.currentPage = page
       this.getOriginal()
     },
-    nextPage (page) {
+    nextPage(page) {
       this.currentPage = this.currentPage * 1 + 1
       this.getOriginal()
     }

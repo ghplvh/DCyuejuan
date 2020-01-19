@@ -1,6 +1,13 @@
 <template>
-  <div id="subject-main-2" v-loading="loading">
-    <el-row class="bread-crumb" type="flex" align="middle">
+  <div
+    id="subject-main-2"
+    v-loading="loading"
+  >
+    <el-row
+      class="bread-crumb"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
@@ -9,11 +16,18 @@
             <span>{{`${examGrade.gradeName}${examSubjectInfo.subjectName}(科目ID：${examSubjectId})`}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
-                <i class="el-icon-caret-bottom el-icon--right" style="color:#409EFF;"></i>
+                <i
+                  class="el-icon-caret-bottom el-icon--right"
+                  style="color:#409EFF;"
+                ></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <template v-for="sub in examSubjectList">
-                  <router-link :to="{ path: '/subjectMain/' + examId + '/' + sub.id}" :key="sub.id" v-if="sub.id !== examSubjectInfo.id">
+                  <router-link
+                    :to="{ path: '/subjectMain/' + examId + '/' + sub.id}"
+                    :key="sub.id"
+                    v-if="sub.id !== examSubjectInfo.id"
+                  >
                     <el-dropdown-item>{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
                   </router-link>
                 </template>
@@ -22,19 +36,36 @@
           </el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
-        <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
+        <router-link
+          to=""
+          target="_blank"
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="19">
-        <el-row class="content-step" style="margin-bottom:10px;">
+        <el-row
+          class="content-step"
+          style="margin-bottom:10px;"
+        >
           <el-col :span="18">
             <h1 class="font-bold">阅卷监控</h1>
             <div class="font-xixi">监控阅卷中的进度和质量；</div>
           </el-col>
-          <el-col :span="6" style="text-align:center;padding-top: 8px">
-            <el-button type="primary" icon="el-icon-five-jindushijian" size="small" @click="goToProgress">进度</el-button>
+          <el-col
+            :span="6"
+            style="text-align:center;padding-top: 8px"
+          >
+            <el-button
+              type="primary"
+              icon="el-icon-five-jindushijian"
+              size="small"
+              @click="goToProgress"
+            >进度</el-button>
             <!-- <el-button type="primary" icon="el-icon-five-anquan" size="small">质量</el-button> -->
           </el-col>
         </el-row>
@@ -50,14 +81,24 @@
             </el-col> -->
           </el-row>
           <el-row class="content-progress">
-            <el-steps direction="vertical" :active="activeStep" :space="85">
+            <el-steps
+              direction="vertical"
+              :active="activeStep"
+              :space="85"
+            >
               <el-step icon="el-icon-circle-check">
                 <div slot="description">
                   <el-row class="step-list">
-                    <el-col :span="3" :offset="1">考生管理：</el-col>
+                    <el-col
+                      :span="3"
+                      :offset="1"
+                    >考生管理：</el-col>
                     <el-col :span="15">总上传考生人数为<span class="number">{{studentCount}}</span>人</el-col>
                     <el-col :span="5">
-                      <router-link :to="{path:'/examDetail/'+examId}" class="btn deal-btn">设置考生</router-link>
+                      <router-link
+                        :to="{path:'/examDetail/'+examId}"
+                        class="btn deal-btn"
+                      >设置考生</router-link>
                     </el-col>
                   </el-row>
                 </div>
@@ -65,15 +106,27 @@
               <el-step icon="el-icon-circle-check">
                 <div slot="description">
                   <el-row class="step-list">
-                    <el-col :span="3" :offset="1">题目设置：</el-col>
-                    <el-col :span="15" v-if="examSubjectInfo.structureType === 1">
+                    <el-col
+                      :span="3"
+                      :offset="1"
+                    >题目设置：</el-col>
+                    <el-col
+                      :span="15"
+                      v-if="examSubjectInfo.structureType === 1"
+                    >
                       当前已设置答案，点击<router-link :to="{ path: '/settingAnswer/'+ examId +'/' + examSubjectId }">
                         <font color="#409EFF">查看</font>
                       </router-link>
                     </el-col>
-                    <el-col :span="15" v-else>设置该科目的试卷结构和答案;</el-col>
+                    <el-col
+                      :span="15"
+                      v-else
+                    >设置该科目的试卷结构和答案;</el-col>
                     <el-col :span="5">
-                      <router-link :to="{path:'/examPaperStructure/'+examId+'/'+examSubjectId}" class="btn deal-btn">设置试卷结构</router-link>
+                      <router-link
+                        :to="{path:'/examPaperStructure/'+examId+'/'+examSubjectId}"
+                        class="btn deal-btn"
+                      >设置试卷结构</router-link>
                     </el-col>
                   </el-row>
                 </div>
@@ -81,12 +134,26 @@
               <el-step icon="el-icon-circle-check">
                 <div slot="description">
                   <el-row class="step-list">
-                    <el-col :span="3" :offset="1">模板设置：</el-col>
+                    <el-col
+                      :span="3"
+                      :offset="1"
+                    >模板设置：</el-col>
                     <el-col :span="15">需设置题目后才可设置</el-col>
                     <el-col :span="5">
-                      <div v-if="examSubjectInfo.templateType === 1" @click="openTarget({path:'/setTemplate/'+examId+'/'+examSubjectId})" class="btn deal-btn">设置模板</div>
-                      <div v-else-if="examSubjectInfo.structureType === 1" @click="openTarget({path:'/setTemplate/'+examId+'/'+examSubjectId})" class="btn active-btn">设置模板</div>
-                      <div v-else class="btn fade-btn">设置模板</div>
+                      <div
+                        v-if="examSubjectInfo.templateType === 1"
+                        @click="openTarget({path:'/setTemplate/'+examId+'/'+examSubjectId})"
+                        class="btn deal-btn"
+                      >设置模板</div>
+                      <div
+                        v-else-if="examSubjectInfo.structureType === 1"
+                        @click="openTarget({path:'/setTemplate/'+examId+'/'+examSubjectId})"
+                        class="btn active-btn"
+                      >设置模板</div>
+                      <div
+                        v-else
+                        class="btn fade-btn"
+                      >设置模板</div>
                     </el-col>
                   </el-row>
                 </div>
@@ -94,12 +161,27 @@
               <el-step icon="el-icon-circle-check">
                 <div slot="description">
                   <el-row class="step-list">
-                    <el-col :span="3" :offset="1">题块与任务：</el-col>
+                    <el-col
+                      :span="3"
+                      :offset="1"
+                    >题块与任务：</el-col>
                     <el-col :span="15">需完成题目设置后才可设置</el-col>
                     <el-col :span="5">
-                      <router-link v-if="examSubjectInfo.frameType === 1" :to="{path:'/questionBlock/'+examId+'/'+examSubjectId}" class="btn deal-btn">设置题块和任务</router-link>
-                      <router-link v-else-if="examSubjectInfo.structureType === 1" :to="{path:'/questionBlock/'+examId+'/'+examSubjectId}" class="btn active-btn">设置题块和任务</router-link>
-                      <router-link v-else to="" class="btn fade-btn">设置题块和任务</router-link>
+                      <router-link
+                        v-if="examSubjectInfo.frameType === 1"
+                        :to="{path:'/questionBlock/'+examId+'/'+examSubjectId}"
+                        class="btn deal-btn"
+                      >设置题块和任务</router-link>
+                      <router-link
+                        v-else-if="examSubjectInfo.structureType === 1"
+                        :to="{path:'/questionBlock/'+examId+'/'+examSubjectId}"
+                        class="btn active-btn"
+                      >设置题块和任务</router-link>
+                      <router-link
+                        v-else
+                        to=""
+                        class="btn fade-btn"
+                      >设置题块和任务</router-link>
                     </el-col>
                   </el-row>
                 </div>
@@ -107,11 +189,22 @@
               <el-step icon="el-icon-circle-close">
                 <div slot="description">
                   <el-row class="step-list">
-                    <el-col :span="3" :offset="1">扫描答题卡：</el-col>
+                    <el-col
+                      :span="3"
+                      :offset="1"
+                    >扫描答题卡：</el-col>
                     <el-col :span="15">需导入考生并完成模板后才可以设置</el-col>
                     <el-col :span="5">
-                      <router-link v-if="examSubjectInfo.templateType === 1 && studentCount > 0 && examSubjectInfo.frameType === 1" :to="{path:`/scanPaper/${examId}/${examSubjectId}/${batchNumber}`}" class="btn active-btn">扫描答题卡</router-link>
-                      <router-link v-else to="" class="btn fade-btn">扫描答题卡</router-link>
+                      <router-link
+                        v-if="examSubjectInfo.templateType === 1 && studentCount > 0 && examSubjectInfo.frameType === 1"
+                        :to="{path:`/scanPaper/${examId}/${examSubjectId}/${batchNumber}`}"
+                        class="btn active-btn"
+                      >扫描答题卡</router-link>
+                      <router-link
+                        v-else
+                        to=""
+                        class="btn fade-btn"
+                      >扫描答题卡</router-link>
                     </el-col>
                   </el-row>
                 </div>
@@ -123,7 +216,10 @@
           </el-row>
         </el-row>
       </el-col>
-      <el-col :span="5" class="pdl-10">
+      <el-col
+        :span="5"
+        class="pdl-10"
+      >
         <el-row class="aside-right">
           <section>
             <h1 class="font-bold">开始阅卷</h1>
@@ -132,7 +228,10 @@
             </div>
           </section>
           <div class="mgt-20 text-center">
-            <router-link to="" class="btn fade-btn">立即开始阅卷</router-link>
+            <router-link
+              to=""
+              class="btn fade-btn"
+            >立即开始阅卷</router-link>
           </div>
         </el-row>
         <el-row class="aside-right mgt-10">
@@ -143,7 +242,10 @@
             </div>
           </section>
           <div class="mgt-20 text-center">
-            <router-link :to="{path: `/uploadYuanJuan/${examId}/${examSubjectId}`}" class="btn blue-btn">上传原卷</router-link>
+            <router-link
+              :to="{path: `/uploadYuanJuan/${examId}/${examSubjectId}`}"
+              class="btn blue-btn"
+            >上传原卷</router-link>
           </div>
         </el-row>
       </el-col>
@@ -154,7 +256,7 @@
 import API from '../api/api.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       schoolCode: '',
       loading: false,
@@ -173,14 +275,14 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.getExamById()
     this.getStudentCount()
   },
   methods: {
     // 获取考试信息
-    async getExamById () {
+    async getExamById() {
       this.loading = true
       await this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
@@ -190,16 +292,14 @@ export default {
       await this.getExamSubject()
     },
     // 查询所有考试科目
-    async getExamSubject () {
+    async getExamSubject() {
       this.loading = true
       await this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.examSubjectList = res.data.data
-        console.log(res.data.data)
         this.batchNumber = res.data.data[0].batchNumber
         this.examSubjectInfo = this.examSubjectList.filter(item => {
           return Number(item.id) === Number(this.examSubjectId)
         })[0]
-        console.log(this.examSubjectInfo)
         if (this.examSubjectInfo.structureType === 1) {
           this.activeStep = 2
         }
@@ -212,39 +312,45 @@ export default {
       }).catch(() => { this.loading = false })
     },
     // 获取考试的年级
-    async getGradeById () {
+    async getGradeById() {
       this.loading = true
       await this.axios.post(API.GRADE_FINDBYCOMMON, { id: this.examInfo.gradeId }).then(res => {
         this.examGrade = res.data.data[0]
       }).catch(() => { this.loading = false })
     },
     // 根据考试id查询本次考试的班级数和人数
-    async getStudentCount () {
+    async getStudentCount() {
       this.loading = true
       await this.axios.post(API.EXAM_SELECTCOUNT + '/' + this.examId).then(res => {
         this.studentCount = parseInt(res.data.data.examineeCount)
       }).catch(() => { this.loading = false })
     },
     // 新窗口打开
-    openTarget (router) {
+    openTarget(router) {
       this.$router.push({ path: router.path })
 
       let routeUrl = this.$router.resolve(router)
-      console.log(routeUrl)
       // window.open(routeUrl.href, '_blank')
     },
-    goToProgress () {
+    goToProgress() {
       this.$router.push({ path: `/progress/${this.examId}/${this.examSubjectId}` })
     }
   },
   watch: {
-    '$route' (to, from) {
+    '$route'(to, from) {
       this.examId = to.params.examId
       this.examSubjectId = to.params.examSubjectId
-      // console.log(this.$route.matched)
       this.getExamById()
     }
-  }
+  },
+  mounted() {
+    // `dev
+    if (this.$store.state.dev) {
+      setTimeout(() => {
+        this.examSubjectInfo.templateType === 1 && this.openTarget({ path: '/setTemplate/' + this.examId + '/' + this.examSubjectId })
+        this.examSubjectInfo.structureType === 1 && this.openTarget({ path: '/setTemplate/' + this.examId + '/' + this.examSubjectId })
+      }, 500)
+    }  }
 }
 </script>
 <style lang="scss">
