@@ -1,0 +1,1 @@
+[{"id":0,"tid":68,"structureId":"","examId":"71","examSubjectId":"264","tnumber":"三","score":0,"questionType":1,"numberType":0,"ttype":0},{"id":1,"tid":583,"structureId":0,"examId":"71","examSubjectId":"264","tnumber":"三.71","score":"10","questionType":1,"numberType":1,"ttype":0}]

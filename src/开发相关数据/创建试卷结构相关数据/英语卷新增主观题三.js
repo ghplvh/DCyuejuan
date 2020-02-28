@@ -1,0 +1,1 @@
+[{ "id": 0, "tid": 3, "structureId": "", "examId": "74", "examSubjectId": "267", "tnumber": "三", "score": 1, "questionType": 1, "numberType": 0, "ttype": 0 }, { "id": 1, "tid": 3, "structureId": 0, "examId": "74", "examSubjectId": "267", "tnumber": "三.1", "score": "1", "questionType": 1, "numberType": 1, "ttype": 0 }]

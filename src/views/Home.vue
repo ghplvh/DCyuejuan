@@ -632,7 +632,8 @@ export default {
     getPaperList() {
       let data = {
         userId: this.adminInfo.teacherInfo.id,
-        status: 0
+        status: 0,
+        schoolCode: this.schoolCode
       }
       this.axios.post(API2.APPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID, data).then(res => {
         this.awaitReadList = res.data.data || []

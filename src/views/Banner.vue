@@ -182,7 +182,8 @@ export default {
     },
     // 删除上传图片
     uploadRemove (file, fileList) {
-      this.form.picUrl = ''
+      this.filelist.remove(file)
+      console.log(this.filelist)
     },
     // 上传数量超过限制
     uploadExceed (files, fileList) {

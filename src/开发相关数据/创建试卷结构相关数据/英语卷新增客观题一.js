@@ -1,0 +1,1 @@
+[{"tid":0,"examId":"74","examSubjectId":"267","tnumber":"一","score":1,"questionType":0,"topicType":1,"optionCount":4,"numberType":0,"ttype":0},{"tid":1,"examId":"74","examSubjectId":"267","tnumber":"一.1","score":1,"questionType":0,"topicType":1,"optionCount":4,"numberType":1,"ttype":0}]

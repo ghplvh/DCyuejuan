@@ -1315,7 +1315,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.axios.post(API.STUDENT_DELSTUDENTS, this.multiStudentSelection).then(res => {
+        this.axios.post(API.STUDENT_DELSTUDENTS, { ...this.multiStudentSelection, schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -1403,7 +1403,7 @@ export default {
         let ids = this.dataTeacher.map(item => {
           return { id: item.id }
         })
-        this.axios.post(API.TEACHER_DELTEACHERS, ids).then(res => {
+        this.axios.post(API.TEACHER_DELTEACHERS, { ...ids, schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -1419,7 +1419,7 @@ export default {
         cancelButtonText: '取消',
         type: 'error'
       }).then(() => {
-        this.axios.post(API.TEACHER_DELTEACHERS, this.multiTeacherSelection).then(res => {
+        this.axios.post(API.TEACHER_DELTEACHERS, { schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode, ...this.multiTeacherSelection }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -1571,21 +1571,22 @@ export default {
         if (valid) {
           if (this.dialogType === 'add') {
             console.log(this.dialogFormAdd)
+            console.log(this.gradeList)
             for (let i = 0; i < this.gradeList.length; i++) {
               if (this.dialogFormAdd.gradeNumber === this.gradeList[i].gradeName) {
-                this.dialogTitleAdd.gradeId = this.gradeList[i].id
+                this.dialogFormAdd.gradeId = this.gradeList[i].id
               }
             }
             console.log()
-            // this.axios.post(API.STUDENT_ADDSTUDENT, this.dialogFormAdd).then(res => {
-            //   this.$message({
-            //     message: '新增学生信息成功',
-            //     type: 'success'
-            //   })
-            //   this.$refs[formName].resetFields()
-            //   this.dialogVisibleAdd = false
-            //   this.getStudentsBy()
-            // }).catch(() => { })
+            this.axios.post(API.STUDENT_ADDSTUDENT, this.dialogFormAdd).then(res => {
+              this.$message({
+                message: '新增学生信息成功',
+                type: 'success'
+              })
+              this.$refs[formName].resetFields()
+              this.dialogVisibleAdd = false
+              this.getStudentsBy()
+            }).catch(() => { })
           }
           if (this.dialogType === 'edit') {
             this.axios.post(API.STUDENT_UPDATESTUDENT, this.dialogFormAdd).then(res => {

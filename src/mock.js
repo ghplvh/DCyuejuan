@@ -54,3 +54,105 @@ export const testRes = (a, b, name = '未命名') => {
     rate: 1 - flist.length / count
   }
 }
+
+export const edit_yingyu_keguan_1 = [{
+  "tid": 378, "examId": "71", "examSubjectId": "264", "tnumber": "一", "score": "1", "questionType": 0, "topicType": 1, "optionCount": "4", "numberType": 0, "ttype": 0
+},
+{ "tid": 379, "examId": "71", "examSubjectId": "264", "tnumber": "一.1", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 380, "examId": "71", "examSubjectId": "264", "tnumber": "一.2", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 381, "examId": "71", "examSubjectId": "264", "tnumber": "一.3", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 382, "examId": "71", "examSubjectId": "264", "tnumber": "一.4", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 383, "examId": "71", "examSubjectId": "264", "tnumber": "一.5", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 384, "examId": "71", "examSubjectId": "264", "tnumber": "一.6", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 385, "examId": "71", "examSubjectId": "264", "tnumber": "一.7", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 386, "examId": "71", "examSubjectId": "264", "tnumber": "一.8", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 387, "examId": "71", "examSubjectId": "264", "tnumber": "一.9", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 388, "examId": "71", "examSubjectId": "264", "tnumber": "一.10", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 389, "examId": "71", "examSubjectId": "264", "tnumber": "一.11", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 390, "examId": "71", "examSubjectId": "264", "tnumber": "一.12", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 391, "examId": "71", "examSubjectId": "264", "tnumber": "一.13", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 392, "examId": "71", "examSubjectId": "264", "tnumber": "一.14", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 393, "examId": "71", "examSubjectId": "264", "tnumber": "一.15", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 394, "examId": "71", "examSubjectId": "264", "tnumber": "一.16", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 395, "examId": "71", "examSubjectId": "264", "tnumber": "一.17", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 396, "examId": "71", "examSubjectId": "264", "tnumber": "一.18", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 397, "examId": "71", "examSubjectId": "264", "tnumber": "一.19", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 398, "examId": "71", "examSubjectId": "264", "tnumber": "一.20", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 399, "examId": "71", "examSubjectId": "264", "tnumber": "一.21", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 400, "examId": "71", "examSubjectId": "264", "tnumber": "一.22", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 401, "examId": "71", "examSubjectId": "264", "tnumber": "一.23", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 402, "examId": "71", "examSubjectId": "264", "tnumber": "一.24", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 403, "examId": "71", "examSubjectId": "264", "tnumber": "一.25", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 404, "examId": "71", "examSubjectId": "264", "tnumber": "一.26", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 405, "examId": "71", "examSubjectId": "264", "tnumber": "一.27", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 406, "examId": "71", "examSubjectId": "264", "tnumber": "一.28", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 407, "examId": "71", "examSubjectId": "264", "tnumber": "一.29", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 408, "examId": "71", "examSubjectId": "264", "tnumber": "一.30", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 409, "examId": "71", "examSubjectId": "264", "tnumber": "一.31", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 410, "examId": "71", "examSubjectId": "264", "tnumber": "一.32", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 411, "examId": "71", "examSubjectId": "264", "tnumber": "一.33", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 412, "examId": "71", "examSubjectId": "264", "tnumber": "一.34", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 413, "examId": "71", "examSubjectId": "264", "tnumber": "一.35", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 414, "examId": "71", "examSubjectId": "264", "tnumber": "一.36", "score": "3", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 415, "examId": "71", "examSubjectId": "264", "tnumber": "一.37", "score": "3", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 416, "examId": "71", "examSubjectId": "264", "tnumber": "一.38", "score": "3", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 417, "examId": "71", "examSubjectId": "264", "tnumber": "一.39", "score": "3", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 418, "examId": "71", "examSubjectId": "264", "tnumber": "一.40", "score": "3", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 419, "examId": "71", "examSubjectId": "264", "tnumber": "一.41", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 420, "examId": "71", "examSubjectId": "264", "tnumber": "一.42", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 421, "examId": "71", "examSubjectId": "264", "tnumber": "一.43", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 422, "examId": "71", "examSubjectId": "264", "tnumber": "一.44", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 423, "examId": "71", "examSubjectId": "264", "tnumber": "一.45", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 424, "examId": "71", "examSubjectId": "264", "tnumber": "一.46", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 425, "examId": "71", "examSubjectId": "264", "tnumber": "一.47", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 426, "examId": "71", "examSubjectId": "264", "tnumber": "一.48", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 427, "examId": "71", "examSubjectId": "264", "tnumber": "一.49", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 428, "examId": "71", "examSubjectId": "264", "tnumber": "一.50", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 429, "examId": "71", "examSubjectId": "264", "tnumber": "一.51", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 430, "examId": "71", "examSubjectId": "264", "tnumber": "一.52", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 431, "examId": "71", "examSubjectId": "264", "tnumber": "一.53", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 432, "examId": "71", "examSubjectId": "264", "tnumber": "一.54", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 433, "examId": "71", "examSubjectId": "264", "tnumber": "一.55", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 434, "examId": "71", "examSubjectId": "264", "tnumber": "一.56", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 435, "examId": "71", "examSubjectId": "264", "tnumber": "一.57", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 436, "examId": "71", "examSubjectId": "264", "tnumber": "一.58", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 437, "examId": "71", "examSubjectId": "264", "tnumber": "一.59", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 },
+{ "tid": 438, "examId": "71", "examSubjectId": "264", "tnumber": "一.60", "score": "1", "minscore": null, "questionType": 0, "topicType": 1, "optionCount": "4", "answer": "A", "numberType": 1, "ttype": 0 }]
+export const edit_yingyu_zhuguan_2 = [
+  { "id": 0, "tid": 66, "structureId": "", "examId": "71", "examSubjectId": "264", "tnumber": "二", "score": 0, "questionType": 1, "numberType": 0, "ttype": 0 },
+  { "id": 1, "tid": 572, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.61", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 2, "tid": 573, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.62", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 3, "tid": 574, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.63", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 4, "tid": 575, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.64", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 5, "tid": 576, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.65", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 6, "tid": 577, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.66", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 7, "tid": 578, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.67", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 8, "tid": 579, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.68", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 9, "tid": 580, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.69", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 },
+  { "id": 10, "tid": 581, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "二.70", "score": "1.5", "questionType": 1, "numberType": 1, "ttype": 0 }]
+
+export const edit_yingyu_zhuguan_3 =
+  [{ "id": 0, "tid": 65, "structureId": "", "examId": "71", "examSubjectId": "264", "tnumber": "三", "score": 0, "questionType": 1, "numberType": 0, "ttype": 0 },
+
+  { "id": 1, "tid": 571, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "三.71", "score": "10", "questionType": 1, "numberType": 1, "ttype": 0 }]
+
+export const edit_yingyu_zhuguan_4 = [
+  { "id": 0, "tid": 67, "structureId": "", "examId": "71", "examSubjectId": "264", "tnumber": "四", "score": 0, "questionType": 1, "numberType": 0, "ttype": 0 },
+  { "id": 1, "tid": 582, "structureId": 0, "examId": "71", "examSubjectId": "264", "tnumber": "四.72", "score": "25", "questionType": 1, "numberType": 1, "ttype": 0 }]
+export const add_yingyu_keguan_1 = [{
+  "tid": 0, "examId": "74", "examSubjectId": "267", "tnumber": "一", "score": 1, "questionType": 0, "topicType": 1, "optionCount": 4, "numberType": 0, "ttype": 0
+},
+{ "tid": 1, "examId": "74", "examSubjectId": "267", "tnumber": "一.1", "score": 1, "questionType": 0, "topicType": 1, "optionCount": 4, "numberType": 1, "ttype": 0 }]
+export const add_yingyu_zhuguan_2 = [{
+  "id": 0, "tid": 2, "structureId": "", "examId": "74", "examSubjectId": "267", "tnumber": "二", "score": 1, "questionType": 1, "numberType": 0, "ttype": 0
+},
+{ "id": 1, "tid": 2, "structureId": 0, "examId": "74", "examSubjectId": "267", "tnumber": "二.1", "score": "1", "questionType": 1, "numberType": 1, "ttype": 0 }]
+
+export const add_yingyu_zhuguan_3 = [{
+  "id": 0, "tid": 3, "structureId": "", "examId": "74", "examSubjectId": "267", "tnumber": "三", "score": 1, "questionType": 1, "numberType": 0, "ttype": 0
+},
+{ "id": 1, "tid": 3, "structureId": 0, "examId": "74", "examSubjectId": "267", "tnumber": "三.1", "score": "1", "questionType": 1, "numberType": 1, "ttype": 0 }]
+export const add_yingyu_zhuguan_4 = [{
+  "id": 0, "tid": 4, "structureId": "", "examId": "74", "examSubjectId": "267", "tnumber": "四", "score": 1, "questionType": 1, "numberType": 0, "ttype": 0
+},
+{ "id": 1, "tid": 4, "structureId": 0, "examId": "74", "examSubjectId": "267", "tnumber": "四.1", "score": "1", "questionType": 1, "numberType": 1, "ttype": 0 }]
