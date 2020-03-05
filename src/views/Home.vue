@@ -539,16 +539,19 @@ export default {
     },
     choiceGrade(value) {
       this.queryData.gradeId = value.id || ''
+      this.currentPage = 1
       this.fetchEXAM_HOMEEXAM({ gradeId: value.id || '' })
     },
     // 根据下拉框选择月份查找考试
     choiceMonth(value) {
       this.queryData.examDateFrom = value && Utils.formatTime(value).substring(0, 10) || ''
+      this.currentPage = 1
       this.fetchEXAM_HOMEEXAM({ examDateFrom: value && Utils.formatTime(value).substring(0, 10) || '' })
     },
     // 根据下拉框选择类别查找考试
     choiceRange(value) {
       this.queryData.examRange = value || ''
+      this.currentPage = 1
       this.fetchEXAM_HOMEEXAM({ examRange: value || '' })
     },
     // 根据学校查找考试
@@ -556,6 +559,7 @@ export default {
       let keyCode = e.key
       if (keyCode === 'Enter') {
         this.queryData.examName = this.filterSearch
+        this.currentPage = 1
         this.fetchEXAM_HOMEEXAM({ examName: this.filterSearch })
       }
     },
