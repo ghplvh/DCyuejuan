@@ -84,7 +84,7 @@ const API = {
   // 根据考试科目id 查询科目信息
   EXAM_GETEXAMSUBJECT: 'web/exam/getExamSubject',
   // 根据id查询考试信息
-  EXAM_FINDBYID: 'web/exam/findByid',
+  EXAM_FINDBYID: 'web/examInfo/findById',
   // 根据考试id查询本次考试的班级数和人数
   EXAM_SELECTCOUNT: 'web/exam/selectCount',
   // 根据id删除考试
