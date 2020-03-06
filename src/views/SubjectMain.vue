@@ -155,22 +155,6 @@
                         class="btn fade-btn"
                       >设置模板</div>
                     </el-col>
-                    <el-col :span="5">
-                      <div
-                        v-if="examSubjectInfo.templateType === 1"
-                        @click="openTarget({path:'/dev/'+examId+'/'+examSubjectId})"
-                        class="btn deal-btn"
-                      >设置模板</div>
-                      <div
-                        v-else-if="examSubjectInfo.structureType === 1"
-                        @click="openTarget({path:'/dev/'+examId+'/'+examSubjectId})"
-                        class="btn active-btn"
-                      >设置模板</div>
-                      <div
-                        v-else
-                        class="btn fade-btn"
-                      >设置模板</div>
-                    </el-col>
                   </el-row>
                 </div>
               </el-step>
