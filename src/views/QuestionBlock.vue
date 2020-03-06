@@ -1,6 +1,13 @@
 <template>
-  <div id="question-block" v-loading="allLoading">
-    <el-row class="bread-crumb" type="flex" align="middle">
+  <div
+    id="question-block"
+    v-loading="allLoading"
+  >
+    <el-row
+      class="bread-crumb"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
@@ -9,11 +16,18 @@
             <span>{{examGrade.gradeName + examSubjectInfo.subjectName}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
-                <i class="el-icon-caret-bottom el-icon--right" style="color:#409EFF;"></i>
+                <i
+                  class="el-icon-caret-bottom el-icon--right"
+                  style="color:#409EFF;"
+                ></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <template v-for="sub in examSubjectList">
-                  <router-link :to="{ path: '/subjectMain/' + examId + '/' + sub.id}" :key="sub.id" v-if="sub.id !== examSubjectInfo.id">
+                  <router-link
+                    :to="{ path: '/subjectMain/' + examId + '/' + sub.id}"
+                    :key="sub.id"
+                    v-if="sub.id !== examSubjectInfo.id"
+                  >
                     <el-dropdown-item>{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
                   </router-link>
                 </template>
@@ -23,42 +37,97 @@
           <el-breadcrumb-item>题块与阅卷任务</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
-        <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
+        <router-link
+          to=""
+          target="_blank"
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
       </el-col>
     </el-row>
     <el-row class="question-block-content">
-      <el-tabs class="tabs" v-model="activeTab">
-        <el-tab-pane label="题块设置" name="block" v-loading="loading">
+      <el-tabs
+        class="tabs"
+        v-model="activeTab"
+      >
+        <el-tab-pane
+          label="题块设置"
+          name="block"
+          v-loading="loading"
+        >
           <el-row class="block-setting">
             <el-col :span="19">
-              <el-card :class="'box-card ' + (bIndex === activeBlockIndex ? 'card-active' : '')" @click.native="selectBlock(bIndex)" v-for="(block,bIndex) in blockList" :key="bIndex">
+              <el-card
+                :class="'box-card ' + (bIndex === activeBlockIndex ? 'card-active' : '')"
+                @click.native="selectBlock(bIndex)"
+                v-for="(block,bIndex) in blockList"
+                :key="bIndex"
+              >
                 <div slot="header">
-                  <el-input v-model="block.titleBlockName" :title="block.titleBlockName" :class="bIndex === activeBlockIndex ? '':'header-text'"></el-input>
-                  <el-button type="text" icon="el-icon-delete" v-if="blockList.length > 1" @click.stop="deleteBlock(bIndex)">删除</el-button>
+                  <el-input
+                    v-model="block.titleBlockName"
+                    :title="block.titleBlockName"
+                    :class="bIndex === activeBlockIndex ? '':'header-text'"
+                  ></el-input>
+                  <el-button
+                    type="text"
+                    icon="el-icon-delete"
+                    v-if="blockList.length > 1"
+                    @click.stop="deleteBlock(bIndex)"
+                  >删除</el-button>
                   <!-- <el-button type="text" icon="el-icon-circle-plus-outline">合并给分点</el-button> -->
                   <!-- <el-button type="text" icon="el-icon-document">给分步长</el-button> -->
                 </div>
-                <div class="question-list" v-if="block.questions.length > 0">
-                  <div class="block-tree" v-for="(question,qIndex) in block.questions" :key="qIndex">
+                <div
+                  class="question-list"
+                  v-if="block.questions.length > 0"
+                >
+                  <div
+                    class="block-tree"
+                    v-for="(question,qIndex) in block.questions"
+                    :key="qIndex"
+                  >
                     <div class="question-name">
                       <span>{{question.tnumber}}</span>
                       <!-- <span class="question-score">{{question.score ? question.score: 0 }}分</span> -->
                     </div>
-                    <div class="question-list" v-if="question.questions.length > 0">
-                      <div class="block-tree" v-for="(questionM,qmIndex) in question.questions" :key="qmIndex">
+                    <div
+                      class="question-list"
+                      v-if="question.questions.length > 0"
+                    >
+                      <div
+                        class="block-tree"
+                        v-for="(questionM,qmIndex) in question.questions"
+                        :key="qmIndex"
+                      >
                         <div class="question-name">
                           <span>{{questionM.tnumber}}</span>
                           <!-- <span class="question-score">{{questionM.score ? questionM.score: 0 }}分</span> -->
                         </div>
-                        <div class="question-list" v-if="questionM.questions.length > 0">
-                          <div class="block-tree" v-for="(questionMM,qmmIndex) in questionM.questions" :key="qmmIndex">
+                        <div
+                          class="question-list"
+                          v-if="questionM.questions.length > 0"
+                        >
+                          <div
+                            class="block-tree"
+                            v-for="(questionMM,qmmIndex) in questionM.questions"
+                            :key="qmmIndex"
+                          >
                             <div class="question-name">
                               <span>{{questionMM.tnumber}}</span>
                               <!-- <span class="question-score">{{questionMM.score ? questionMM.score: 0 }}分</span> -->
                             </div>
-                            <div class="question-list" v-if="questionMM.questions.length > 0">
-                              <div class="block-tree" v-for="(questionMMM,qmmmIndex) in questionMM.questions" :key="qmmmIndex">
+                            <div
+                              class="question-list"
+                              v-if="questionMM.questions.length > 0"
+                            >
+                              <div
+                                class="block-tree"
+                                v-for="(questionMMM,qmmmIndex) in questionMM.questions"
+                                :key="qmmmIndex"
+                              >
                                 <div class="question-name">
                                   <span>{{questionMMM.tnumber}}</span>
                                   <!-- <span class="question-score">{{questionMMM.score ? questionMMM.score: 0 }}分</span> -->
@@ -73,18 +142,41 @@
                 </div>
               </el-card>
             </el-col>
-            <el-col :span="5" class="aside" :style="asideIsFixed ? getIsFixedStyle() : ''">
+            <el-col
+              :span="5"
+              class="aside"
+              :style="asideIsFixed ? getIsFixedStyle() : ''"
+            >
               <div class="aside-title">主观题结构</div>
               <div class="aside-tree">
-                <el-tree :data="questions" node-key="id" ref="tree" :props="treeProps" default-expand-all show-checkbox :expand-on-click-node="false" @check="treeCheck"></el-tree>
+                <el-tree
+                  :data="questions"
+                  node-key="id"
+                  ref="tree"
+                  :props="treeProps"
+                  default-expand-all
+                  show-checkbox
+                  :expand-on-click-node="false"
+                  @check="treeCheck"
+                ></el-tree>
               </div>
               <div>
-                <el-button :type="hasChange ? 'primary' :'info'" size="medium" class="save-btn" :loading="buttonLoading" @click="saveBlock()" :disabled="!hasChange">保存</el-button>
+                <el-button
+                  :type="hasChange ? 'primary' :'info'"
+                  size="medium"
+                  class="save-btn"
+                  :loading="buttonLoading"
+                  @click="saveBlock()"
+                  :disabled="!hasChange"
+                >保存</el-button>
               </div>
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="题块任务设置" name="task">
+        <el-tab-pane
+          label="题块任务设置"
+          name="task"
+        >
           <div class="task-setting">
             <!-- <el-row class="task-setting-top">
               <el-upload action="" class="upload">
@@ -94,59 +186,133 @@
               <el-button type="text" size="small" icon="el-icon-download">导出阅卷任务（包含老师）</el-button>
             </el-row> -->
             <el-row>
-              <el-table :data="tableData" row-key="id" @cell-click="cellClick" :expand-row-keys="expandRowKeys" v-loading="loading" border>
-                <el-table-column type="expand" width="48" align="center">
+              <el-table
+                :data="tableData"
+                row-key="id"
+                @cell-click="cellClick"
+                :expand-row-keys="expandRowKeys"
+                v-loading="loading"
+                border
+              >
+                <el-table-column
+                  type="expand"
+                  width="48"
+                  align="center"
+                >
                   <template slot-scope="props">
                     <el-form inline>
-                      <el-form-item label="题块信息" class="width25"><span>{{ props.row.titleBlockName }}</span></el-form-item>
-                      <el-form-item label="题块内容" class="width75"><span>{{ props.row.content.join('、') }}</span></el-form-item>
-                      <el-form-item label="评阅方式" class="width25"><span>{{ getReadWayNameById(props.row.appraiseReadWay) }}</span></el-form-item>
-                      <el-form-item label="仲裁老师" class="width75"><span>{{ getTeacherNameByIds(props.row.arbitramentTearcherId) }}</span></el-form-item>
-                      <el-form-item label="分配方式" class="width100"><span>{{ getTaskWayNameById(props.row.distributionType) }}</span></el-form-item>
-                      <el-form-item label="阅卷老师" class="width100"><span>{{ getTeacherNameByIds(props.row.teacherId) }}</span></el-form-item>
+                      <el-form-item
+                        label="题块信息"
+                        class="width25"
+                      ><span>{{ props.row.titleBlockName }}</span></el-form-item>
+                      <el-form-item
+                        label="题块内容"
+                        class="width75"
+                      ><span>{{ props.row.content.join('、') }}</span></el-form-item>
+                      <el-form-item
+                        label="评阅方式"
+                        class="width25"
+                      ><span>{{ getReadWayNameById(props.row.appraiseReadWay) }}</span></el-form-item>
+                      <el-form-item
+                        label="仲裁老师"
+                        class="width75"
+                      ><span>{{ getTeacherNameByIds(props.row.arbitramentTearcherId) }}</span></el-form-item>
+                      <el-form-item
+                        label="分配方式"
+                        class="width100"
+                      ><span>{{ getTaskWayNameById(props.row.distributionType) }}</span></el-form-item>
+                      <el-form-item
+                        label="阅卷老师"
+                        class="width100"
+                      ><span>{{ getTeacherNameByIds(props.row.teacherId) }}</span></el-form-item>
                     </el-form>
                   </template>
                 </el-table-column>
-                <el-table-column prop="titleBlockName" label="题块" width="120" align="center"></el-table-column>
-                <el-table-column label="包含题目" width="291" align="center">
+                <el-table-column
+                  prop="titleBlockName"
+                  label="题块"
+                  width="120"
+                  align="center"
+                ></el-table-column>
+                <el-table-column
+                  label="包含题目"
+                  width="291"
+                  align="center"
+                >
                   <template slot-scope="scope">
                     <div class="show-ellipsis">{{scope.row.content && scope.row.content.join('、')}}</div>
                   </template>
                 </el-table-column>
-                <el-table-column label="评阅方式" width="80" align="center">
+                <el-table-column
+                  label="评阅方式"
+                  width="80"
+                  align="center"
+                >
                   <template slot-scope="scope">
-                    <div class="setting" @click.stop="setMarkType(scope.row)">
+                    <div
+                      class="setting"
+                      @click.stop="setMarkType(scope.row)"
+                    >
                       <i class="el-icon-setting"></i>{{getReadWayNameById(scope.row.appraiseReadWay)}}
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="阅卷老师" width="200" align="center">
+                <el-table-column
+                  label="阅卷老师"
+                  width="200"
+                  align="center"
+                >
                   <template slot-scope="scope">
-                    <div class="setting" @click.stop="setViewer(scope.row)">
+                    <div
+                      class="setting"
+                      @click.stop="setViewer(scope.row)"
+                    >
                       <i class="el-icon-setting"></i>
                       <!-- {{getTeacherNameByIds(scope.row.teacherId)}} -->
                       {{getTeacherNameByList(scope.row.teacherList)}}
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="仲裁老师" width="200" align="center">
+                <el-table-column
+                  label="仲裁老师"
+                  width="200"
+                  align="center"
+                >
                   <template slot-scope="scope">
-                    <div class="setting" @click.stop="setReviewer(scope.row)">
+                    <div
+                      class="setting"
+                      @click.stop="setReviewer(scope.row)"
+                    >
                       <i class="el-icon-setting"></i>{{getTeacherNameByIds(scope.row.arbitramentTearcherId)}}
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="分配方式" width="100" align="center">
+                <el-table-column
+                  label="分配方式"
+                  width="100"
+                  align="center"
+                >
                   <template slot-scope="scope">
-                    <div class="setting" @click.stop="setTaskAway(scope.row)">
+                    <div
+                      class="setting"
+                      @click.stop="setTaskAway(scope.row)"
+                    >
                       <i class="el-icon-setting"></i>{{getTaskWayNameById(scope.row)}}
                       <!-- <i class="el-icon-setting"></i> -->
                     </div>
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" width="120" align="center">
+                <el-table-column
+                  label="操作"
+                  width="120"
+                  align="center"
+                >
                   <template slot-scope="scope">
-                    <div class="copy-task" v-if="scope.row.teacherId" @click.stop="setCopy(scope.row)">复制阅卷任务</div>
+                    <div
+                      class="copy-task"
+                      v-if="scope.row.teacherId"
+                      @click.stop="setCopy(scope.row)"
+                    >复制阅卷任务</div>
                     <div v-else>-</div>
                   </template>
                 </el-table-column>
@@ -157,75 +323,189 @@
         </el-tab-pane>
       </el-tabs>
       <div class="to-style">
-        <el-button type="primary" size="mini" @click="openTarget({path: '/blockStyle/'+ examId +'/'+ examSubjectId})">题块框选</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="openTarget({path: '/blockStyle/'+ examId +'/'+ examSubjectId})"
+        >题块框选</el-button>
       </div>
     </el-row>
-    <div id="drag" class="add-block-btn" :style="dragStyle" v-if="activeTab === 'block'">
-      <el-button type="primary" icon="el-icon-plus" circle @click="addQuestionBlock()">题块</el-button>
+    <div
+      id="drag"
+      class="add-block-btn"
+      :style="dragStyle"
+      v-if="activeTab === 'block'"
+    >
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        circle
+        @click="addQuestionBlock()"
+      >题块</el-button>
     </div>
-    <el-dialog title="设置阅卷方式" :visible.sync="markTypeVisible" custom-class="marktype-dialog" width="550px">
-      <el-row type="flex" align="middle">
+    <el-dialog
+      title="设置阅卷方式"
+      :visible.sync="markTypeVisible"
+      custom-class="marktype-dialog"
+      width="550px"
+    >
+      <el-row
+        type="flex"
+        align="middle"
+      >
         <el-col :span="4">阅卷方式：</el-col>
         <el-col :span="8">
-          <el-radio-group v-model="markType.appraiseReadWay" size="small">
-            <el-radio-button v-for="way in readWayList" :key="way.id" :label="way.id">{{way.name}}</el-radio-button>
+          <el-radio-group
+            v-model="markType.appraiseReadWay"
+            size="small"
+          >
+            <el-radio-button
+              v-for="way in readWayList"
+              :key="way.id"
+              :label="way.id"
+            >{{way.name}}</el-radio-button>
           </el-radio-group>
         </el-col>
       </el-row>
-      <el-row type="flex" align="middle" v-if="markType.appraiseReadWay !== 1">
+      <el-row
+        type="flex"
+        align="middle"
+        v-if="markType.appraiseReadWay !== 1"
+      >
         <el-col :span="4">仲裁分差：</el-col>
         <el-col :span="3">
-          <el-input v-model="markType.arbitramentScoreGap" size="small"></el-input>
+          <el-input
+            v-model="markType.arbitramentScoreGap"
+            size="small"
+          ></el-input>
         </el-col>
       </el-row>
       <div slot="footer">
         <el-button @click="markTypeVisible = false">取消</el-button>
-        <el-button type="primary" @click="saveReadWay()">保存</el-button>
+        <el-button
+          type="primary"
+          @click="saveReadWay()"
+        >保存</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="viewer.title" :visible.sync="viewerVisible" custom-class="viewer-dialog" width="800px">
-      <el-tabs class="viewer-tabs" v-model="viewer.activeTab">
-        <el-tab-pane label="新增老师" name="addTeacher">
-          <el-row type="flex" align="middle" class="search-row">
+    <el-dialog
+      :title="viewer.title"
+      :visible.sync="viewerVisible"
+      custom-class="viewer-dialog"
+      width="800px"
+    >
+      <el-tabs
+        class="viewer-tabs"
+        v-model="viewer.activeTab"
+      >
+        <el-tab-pane
+          label="新增老师"
+          name="addTeacher"
+        >
+          <el-row
+            type="flex"
+            align="middle"
+            class="search-row"
+          >
             <el-col :span="6">
               <span>学校：</span>
-              <el-select v-model="viewer.search.school" value-key="id" size="small" :disabled="schoolList.length <= 1" @change="searchTeacher()">
-                <el-option label="全部" :value="{}"></el-option>
-                <el-option v-for="school in schoolList" :key="school.id" :label="school.schoolName" :value="school"></el-option>
+              <el-select
+                v-model="viewer.search.school"
+                value-key="id"
+                size="small"
+                :disabled="schoolList.length <= 1"
+                @change="searchTeacher()"
+              >
+                <el-option
+                  label="全部"
+                  :value="{}"
+                ></el-option>
+                <el-option
+                  v-for="school in schoolList"
+                  :key="school.id"
+                  :label="school.schoolName"
+                  :value="school"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :span="6">
               <span>年级：</span>
-              <el-select v-model="viewer.search.gradeId" size="small" @change="searchTeacher()">
-                <el-option label="全部" value=""></el-option>
-                <el-option v-for="grade in gradeList" :key="grade.id" :label="grade.gradeName" :value="grade.id"></el-option>
+              <el-select
+                v-model="viewer.search.gradeId"
+                size="small"
+                @change="searchTeacher()"
+              >
+                <el-option
+                  label="全部"
+                  value=""
+                ></el-option>
+                <el-option
+                  v-for="grade in gradeList"
+                  :key="grade.id"
+                  :label="grade.gradeName"
+                  :value="grade.id"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :span="6">
               <span>学科：</span>
-              <el-select v-model="viewer.search.subjectId" size="small" @change="searchTeacher()">
-                <el-option label="全部" value=""></el-option>
-                <el-option v-for="sub in subjectList" :key="sub.id" :label="sub.examSubjectDesc" :value="sub.id"></el-option>
+              <el-select
+                v-model="viewer.search.subjectId"
+                size="small"
+                @change="searchTeacher()"
+              >
+                <el-option
+                  label="全部"
+                  value=""
+                ></el-option>
+                <el-option
+                  v-for="sub in subjectList"
+                  :key="sub.id"
+                  :label="sub.examSubjectDesc"
+                  :value="sub.id"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :span="6">
               <span>姓名：</span>
-              <el-input v-model="viewer.search.name" size="small" @keypress.enter.native="searchTeacher()"></el-input>
+              <el-input
+                v-model="viewer.search.name"
+                size="small"
+                @keypress.enter.native="searchTeacher()"
+              ></el-input>
             </el-col>
           </el-row>
           <el-row class="search-content">
-            <el-checkbox :indeterminate="isIndeterminate" v-model="viewer.checkAll" @change="checkAllChange">全选</el-checkbox>
-            <el-checkbox-group v-model="viewer.checkedList" @change="checkedChange">
-              <el-checkbox v-for="teacher in viewer.filterTeacherList" :label="teacher.id" :key="teacher.id">{{teacher.name}}</el-checkbox>
+            <el-checkbox
+              :indeterminate="isIndeterminate"
+              v-model="viewer.checkAll"
+              @change="checkAllChange"
+            >全选</el-checkbox>
+            <el-checkbox-group
+              v-model="viewer.checkedList"
+              @change="checkedChange"
+            >
+              <el-checkbox
+                v-for="teacher in viewer.filterTeacherList"
+                :label="teacher.id"
+                :key="teacher.id"
+              >{{teacher.name}}</el-checkbox>
             </el-checkbox-group>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="已添加" name="isAdd">
+        <el-tab-pane
+          label="已添加"
+          name="isAdd"
+        >
           <el-row class="search-content">
             <!-- <el-row v-if="viewer.checkedList.length > 0">学校：{{viewer.search.school.schoolName}}</el-row> -->
             <div class="teacher-box">
               <template v-for="(teacher,index) in getCheckedTeachers()">
-                <el-tag closable @close="removeTeacher(index)" :key="index">
+                <el-tag
+                  closable
+                  @close="removeTeacher(index)"
+                  :key="index"
+                >
                   {{teacher.name}}{{ teacher.teacherMobile ? '--' + teacher.teacherMobile : ''}}
                 </el-tag>
               </template>
@@ -235,46 +515,112 @@
       </el-tabs>
       <div slot="footer">
         <el-button @click="viewerVisible = false">取消</el-button>
-        <el-button type="primary" @click="saveTeacher()">保存</el-button>
+        <el-button
+          type="primary"
+          @click="saveTeacher()"
+        >保存</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="设置分配方式" :visible.sync="taskAwayVisible" custom-class="taskaway-dialog" width="890px" top="10%">
-      <el-row type="flex" align="middle">
+    <el-dialog
+      title="设置分配方式"
+      :visible.sync="taskAwayVisible"
+      custom-class="taskaway-dialog"
+      width="890px"
+      top="10%"
+    >
+      <el-row
+        type="flex"
+        align="middle"
+      >
         <el-col :span="2">分配方式：</el-col>
         <el-col :span="10">
-          <el-radio-group v-model="taskAway.distributionType" size="medium">
-            <el-radio-button v-for="way in distributionTypes" :key="way.id" :label="way.id">{{way.name}}</el-radio-button>
+          <el-radio-group
+            v-model="taskAway.distributionType"
+            size="medium"
+          >
+            <el-radio-button
+              v-for="way in distributionTypes"
+              :key="way.id"
+              :label="way.id"
+            >{{way.name}}</el-radio-button>
           </el-radio-group>
         </el-col>
       </el-row>
-      <el-row type="flex" align="middle" class="tips">
+      <el-row
+        type="flex"
+        align="middle"
+        class="tips"
+      >
         <i class="el-icon-info"></i>
         <span v-if="taskAway.distributionType === 0">可以自定义每位老师的阅卷任务；若按已上传试卷数，若有补扫，需要再次分配任务</span>
         <span v-if="taskAway.distributionType === 1">为每位老师分配班级或者学生</span>
       </el-row>
-      <el-row type="flex" align="middle" class="setting-row">
+      <el-row
+        type="flex"
+        align="middle"
+        class="setting-row"
+      >
         <el-col :span="4">分配总数：{{taskAway.count}}</el-col>
         <el-col :span="6">
         </el-col>
         <el-col :span="4">待分配：{{taskAway.odd}}</el-col>
-        <el-col :span="2" :offset="2" v-if="taskAway.distributionType === 0">快捷设置：</el-col>
-        <el-col :span="6" class="avg-col" v-if="taskAway.distributionType === 0">
-          <el-button size="small" type="primary" @click="avgTask()">全部平均分配</el-button>
-          <el-button size="small" type="danger" @click="removeTask()">清空分配</el-button>
+        <el-col
+          :span="2"
+          :offset="2"
+          v-if="taskAway.distributionType === 0"
+        >快捷设置：</el-col>
+        <el-col
+          :span="6"
+          class="avg-col"
+          v-if="taskAway.distributionType === 0"
+        >
+          <el-button
+            size="small"
+            type="primary"
+            @click="avgTask()"
+          >全部平均分配</el-button>
+          <el-button
+            size="small"
+            type="danger"
+            @click="removeTask()"
+          >清空分配</el-button>
         </el-col>
       </el-row>
       <template v-if="taskAway.distributionType === 0">
         <div class="schools">
           <el-row class="schools-info">
             <el-col :span="12">新邵县第一中学</el-col>
-            <el-col :span="4" :offset="4">考生人数：{{studentCount}}</el-col>
-            <el-col :span="3" :offset="1">阅卷老师：{{viewerCount}}</el-col>
+            <el-col
+              :span="4"
+              :offset="4"
+            >考生人数：{{studentCount}}</el-col>
+            <el-col
+              :span="3"
+              :offset="1"
+            >阅卷老师：{{viewerCount}}</el-col>
           </el-row>
-          <el-table :data="taskAway.viewerData" size="mini" border height="205" :header-cell-style="{color: '#333','font-weight': 'bold'}">
-            <el-table-column prop="name" label="姓名" align="center"></el-table-column>
-            <el-table-column label="任务量" align="center">
+          <el-table
+            :data="taskAway.viewerData"
+            size="mini"
+            border
+            height="205"
+            :header-cell-style="{color: '#333','font-weight': 'bold'}"
+          >
+            <el-table-column
+              prop="name"
+              label="姓名"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              label="任务量"
+              align="center"
+            >
               <template slot-scope="scope">
-                <el-input size="mini" v-model="scope.row.quantity" @blur="verifyOdd(scope.$index)"></el-input>
+                <el-input
+                  size="mini"
+                  v-model="scope.row.quantity"
+                  @blur="verifyOdd(scope.$index)"
+                ></el-input>
               </template>
             </el-table-column>
           </el-table>
@@ -282,20 +628,38 @@
       </template>
       <div slot="footer">
         <el-button @click="taskAwayVisible = false">取消</el-button>
-        <el-button type="primary" @click="saveTaskWay()">确定</el-button>
+        <el-button
+          type="primary"
+          @click="saveTaskWay()"
+        >确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="复制阅卷任务" width="500px" :visible.sync="copyVisible">
-      <el-checkbox :indeterminate="copy.isIndeterminate" v-model="copy.copyCheckAll" @change="copyCheckAllChange">全选</el-checkbox>
+    <el-dialog
+      title="复制阅卷任务"
+      width="500px"
+      :visible.sync="copyVisible"
+    >
+      <el-checkbox
+        :indeterminate="copy.isIndeterminate"
+        v-model="copy.copyCheckAll"
+        @change="copyCheckAllChange"
+      >全选</el-checkbox>
       <div style="margin: 15px 0;"></div>
       <el-checkbox-group v-model="copy.copyIdList">
         <template v-for="block in blockList">
-          <el-checkbox v-if="block.id !== copy.id" :label="block.id" :key="block.id">{{block.titleBlockName}}</el-checkbox>
+          <el-checkbox
+            v-if="block.id !== copy.id"
+            :label="block.id"
+            :key="block.id"
+          >{{block.titleBlockName}}</el-checkbox>
         </template>
       </el-checkbox-group>
       <div slot="footer">
         <el-button @click="copyVisible = false">取消</el-button>
-        <el-button type="primary" @click="copySetting()">确定</el-button>
+        <el-button
+          type="primary"
+          @click="copySetting()"
+        >确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -305,7 +669,7 @@ import API from '../api/api.js'
 import TreeUtil from '../utils/TreeUtil.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       schoolCode: '',
       examId: this.$route.params.examId,
@@ -401,11 +765,11 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.getExamById()
   },
-  mounted () {
+  mounted() {
     // 监听页面滚动
     window.addEventListener('scroll', this.handleScroll)
     let drag = document.getElementById('drag')
@@ -413,7 +777,7 @@ export default {
   },
   methods: {
     // 获取考试信息
-    async getExamById () {
+    async getExamById() {
       this.allLoading = true
       await this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
@@ -422,7 +786,7 @@ export default {
       this.getExamStudentCount()
     },
     // 获取考试人数
-    async getExamStudentCount () {
+    async getExamStudentCount() {
       this.allLoading = true
       await this.axios.post(`${API.EXAM_SELECTCOUNT}/${this.examId}`).then(res => {
         this.studentCount = res.data.data.examineeCount
@@ -431,7 +795,7 @@ export default {
       this.getExamSubject()
     },
     // 查询所有考试科目
-    async getExamSubject () {
+    async getExamSubject() {
       this.allLoading = true
       await this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.examSubjectList = res.data.data
@@ -443,7 +807,7 @@ export default {
       this.getGradeById()
     },
     // 获取考试的年级
-    async getGradeById () {
+    async getGradeById() {
       this.allLoading = true
       await this.axios.post(API.GRADE_FINDBYCOMMON, { id: this.examInfo.gradeId }).then(res => {
         this.examGrade = res.data.data[0]
@@ -452,7 +816,7 @@ export default {
       this.getExamStructureZg()
     },
     // 查询主观题结构
-    async getExamStructureZg () {
+    async getExamStructureZg() {
       this.loading = true
       await this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 1, {}).then(res => {
         let data = []
@@ -517,10 +881,9 @@ export default {
       this.getTitleBlock()
     },
     // 获取题块信息
-    async getTitleBlock () {
+    async getTitleBlock() {
       this.loading = true
       await this.axios.post(API.TITLEBLOCK_FINDBYEXAMSUBJECTID + '/' + this.examSubjectId).then(res => {
-        console.log(res)
         let data = []
         let checkedNodes = []
         res.data.data.forEach((item, index) => {
@@ -601,16 +964,14 @@ export default {
           }
         ]
         this.blockList = data.length > 0 ? data : nullBlock
-        // console.log(this.blockList)
         this.tableData = data
-        console.log(tableData)
         this.selectBlock(0)
         this.loading = false
       }).catch(() => { this.loading = false })
       this.getSchoolTeacher()
     },
     // 获取学校所有的老师
-    async getSchoolTeacher () {
+    async getSchoolTeacher() {
       this.allLoading = true
       let data = {
         schoolCode: this.schoolList[0].id
@@ -622,7 +983,7 @@ export default {
       this.getGrade()
     },
     // 获取学校所有年级信息
-    async getGrade () {
+    async getGrade() {
       this.allLoading = true
       await this.axios.post(API.GRADE_FINDBYCOMMON, { schoolCode: this.schoolCode }).then(res => {
         this.gradeList = res.data.data
@@ -631,7 +992,7 @@ export default {
       this.getSchoolSubject()
     },
     // 获取学校所有科目
-    async getSchoolSubject () {
+    async getSchoolSubject() {
       this.allLoading = true
       await this.axios.post(API.EXAM_FINDBYSUBJECTCOM, { schoolCode: this.schoolNumber }).then(res => {
         this.subjectList = res.data.data
@@ -639,8 +1000,7 @@ export default {
       }).catch(() => { this.allLoading = false })
     },
     // 计算题块分数
-    calculateScore (questions) {
-      console.log(questions)
+    calculateScore(questions) {
       if (!Array.isArray(questions)) {
         return questions
       }
@@ -675,7 +1035,7 @@ export default {
       return arr
     },
     // 切换题块
-    selectBlock (index) {
+    selectBlock(index) {
       this.activeBlockIndex = index
       let checkedNodes = this.$refs.tree.getCheckedNodes()
       let noChecked = []
@@ -713,7 +1073,7 @@ export default {
       this.$refs.tree.setCheckedNodes(nodes)
     },
     // 监听页面滚动，aside吸顶
-    handleScroll () {
+    handleScroll() {
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       if (scrollTop > 196) {
         this.asideIsFixed = true
@@ -722,7 +1082,7 @@ export default {
       }
     },
     // aside吸顶时的样式
-    getIsFixedStyle () {
+    getIsFixedStyle() {
       let right = (window.innerWidth - 1200) / 2
       return {
         position: 'fixed',
@@ -732,7 +1092,7 @@ export default {
       }
     },
     // 为新增题块按钮增加移动事件
-    addMouseEvent (dom) {
+    addMouseEvent(dom) {
       let body = document.querySelector('body')
       dom.onmousedown = (e) => {
         let top = dom.offsetTop
@@ -763,7 +1123,7 @@ export default {
       }
     },
     // 新增题块
-    addQuestionBlock () {
+    addQuestionBlock() {
       this.blockList.push(
         {
           blockid: new Date().getTime(),
@@ -775,19 +1135,18 @@ export default {
       this.selectBlock(this.blockList.length - 1)
     },
     // 删除题块
-    deleteBlock (bIndex) {
+    deleteBlock(bIndex) {
       this.blockList.splice(bIndex, 1)
       this.hasCheckedQuestions.splice(bIndex, 1)
       this.selectBlock(this.blockList.length - 1)
     },
     // 选择题目
-    treeCheck (data, dataChecked) {
+    treeCheck(data, dataChecked) {
       this.hasChange = true
       let checkedNodes = this.$refs.tree.getCheckedNodes(false, true)
       this.hasCheckedQuestions[this.activeBlockIndex] = []
       let arr = []
       let isLeast = false
-      console.log(checkedNodes)
       checkedNodes.forEach(item => {
         delete item.questions
         item.pid = item.structureId
@@ -800,16 +1159,14 @@ export default {
         }
       })
       if (arr.length > 0 && isLeast) {
-        // console.log(arr.slice(0))
         let tree = new TreeUtil(arr, 'id', 'pid', {}, 'questions')
-        // console.log(tree.toTree())
         this.blockList[this.activeBlockIndex].questions = this.calculateScore(tree.toTree())
       } else {
         this.blockList[this.activeBlockIndex].questions = []
       }
     },
     // 保存题块
-    async saveBlock () {
+    async saveBlock() {
       this.buttonLoading = true
       let data = []
       this.blockList.forEach(block => {
@@ -851,7 +1208,7 @@ export default {
       this.buttonLoading = false
     },
     // 点击单元格事件
-    cellClick (row, column, cell, event) {
+    cellClick(row, column, cell, event) {
       if (this.expandRowKeys.length > 0 && this.expandRowKeys[0] === row.id) {
         this.expandRowKeys = []
       } else {
@@ -859,14 +1216,14 @@ export default {
       }
     },
     // 根据ID获取评阅方式
-    getReadWayNameById (id) {
+    getReadWayNameById(id) {
       let way = this.readWayList.find(item => {
         return id === item.id
       })
       return way ? way.name : '-'
     },
     // 显示评阅方式弹窗
-    setMarkType (row) {
+    setMarkType(row) {
       this.markTypeVisible = true
       this.markType = {
         id: row.id,
@@ -875,7 +1232,7 @@ export default {
       }
     },
     // 修改评阅方式
-    saveReadWay () {
+    saveReadWay() {
       this.axios.post(API.TITLEBLOCK_UPDATECOMMON, this.markType).then(res => {
         this.$message({
           message: '评阅方式修改成功',
@@ -886,7 +1243,7 @@ export default {
       }).catch(() => { })
     },
     // 搜索教师
-    async searchTeacher () {
+    async searchTeacher() {
       let search = this.viewer.search
       let data = {
         schoolCode: search.school.id,
@@ -909,7 +1266,7 @@ export default {
       }).catch(() => { })
     },
     // 显示阅卷老师弹窗
-    async setViewer (row) {
+    async setViewer(row) {
       this.viewer.title = '设置阅卷老师'
       this.viewer.type = 'viewer'
       this.viewer.id = row.id
@@ -919,7 +1276,7 @@ export default {
       this.viewerVisible = true
     },
     // 获取选中的教师信息
-    getCheckedTeachers () {
+    getCheckedTeachers() {
       return this.teacherList.filter(te => {
         let teid = this.viewer.checkedTeacherList.find(id => {
           return te.id === id
@@ -928,7 +1285,7 @@ export default {
       })
     },
     // 根据教师集合获取教师名字字符串
-    getTeacherNameByList (teacherList) {
+    getTeacherNameByList(teacherList) {
       if (!Array.isArray(teacherList)) {
         return '-'
       } else {
@@ -938,7 +1295,7 @@ export default {
       }
     },
     // 根据ID数组字符串获取教师信息
-    getTeacherNameByIds (teacherIds) {
+    getTeacherNameByIds(teacherIds) {
       if (!teacherIds) {
         return '-'
       }
@@ -954,7 +1311,7 @@ export default {
       return names.length > 0 ? names.join(',') : '-'
     },
     // 显示仲裁老师弹窗
-    async setReviewer (row) {
+    async setReviewer(row) {
       this.viewer.title = '设置仲裁老师'
       this.viewer.type = 'reviewer'
       this.viewer.id = row.id
@@ -964,7 +1321,7 @@ export default {
       this.viewerVisible = true
     },
     // 全选改变
-    checkAllChange (val) {
+    checkAllChange(val) {
       if (val) {
         let arr = this.viewer.filterTeacherList.map(item => { return item.id })
         this.viewer.checkedList = arr
@@ -998,7 +1355,7 @@ export default {
       this.isIndeterminate = false
     },
     // 监听CheckBox状态改变
-    checkedChange (value) {
+    checkedChange(value) {
       let checkedCount = value.length
       this.viewer.checkAll = checkedCount === this.viewer.filterTeacherList.length
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.teacherList.length
@@ -1014,11 +1371,11 @@ export default {
       this.viewer.tempList = value
     },
     // 删除阅卷老师
-    removeTeacher (index) {
+    removeTeacher(index) {
       this.viewer.checkedList.splice(index, 1)
     },
     // 修改阅卷/仲裁老师
-    saveTeacher () {
+    saveTeacher() {
       let data = {}
       if (this.viewer.type === 'viewer') {
         data = {
@@ -1042,19 +1399,14 @@ export default {
       }).catch(() => { })
     },
     // 根据ID获取分配方式
-    getTaskWayNameById (id) {
-      console.log(id)
-      console.log(this.distributionTypes)
+    getTaskWayNameById(id) {
       let way = this.distributionTypes.find(item => {
-        console.log(item)
         return id === item.id
       })
-      console.log(way)
       return way ? way.name : '-'
     },
     // 分配方式修改窗口显示
-    setTaskAway (row) {
-      console.log(row)
+    setTaskAway(row) {
       if (!row.teacherList || row.teacherList.length === 0) {
         this.$message({
           message: '请先设置阅卷老师',
@@ -1078,7 +1430,7 @@ export default {
       this.taskAwayVisible = true
     },
     // 平均分配
-    avgTask () {
+    avgTask() {
       let row = this.taskAway.row
       let arr = []
       let lastQtt = this.taskAway.count
@@ -1101,7 +1453,7 @@ export default {
       this.taskAway.viewerData = arr
     },
     // 清空分配
-    removeTask () {
+    removeTask() {
       this.$confirm('此操作将清空所有已分配的阅卷任务, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1116,7 +1468,7 @@ export default {
       })
     },
     // 验证剩余数量
-    verifyOdd (index) {
+    verifyOdd(index) {
       let sum = 0
       this.taskAway.viewerData.forEach(item => {
         sum += parseInt(item.quantity)
@@ -1131,7 +1483,7 @@ export default {
       this.taskAway.odd = this.taskAway.count - sum
     },
     // 修改分配方式
-    saveTaskWay () {
+    saveTaskWay() {
       let data = {
         examBlockId: this.taskAway.id,
         examSubjectId: this.examSubjectId,
@@ -1141,6 +1493,7 @@ export default {
           return item
         })
       }
+      console.log("allActionTask",data)
       this.axios.post(API.TITLEBLOCK_ALLOCATIONTASK, data).then(res => {
         this.$message({
           message: '分配方式修改成功',
@@ -1151,11 +1504,11 @@ export default {
       }).catch(() => { })
     },
     // 复制阅卷任务窗口显示
-    setCopy (row) {
+    setCopy(row) {
       this.copy.id = row.id
       this.copyVisible = true
     },
-    copyCheckAllChange (val) {
+    copyCheckAllChange(val) {
       let checkedList = []
       if (val) {
         let arr = this.blockList.filter(item => {
@@ -1171,7 +1524,7 @@ export default {
       this.copy.isIndeterminate = false
     },
     // 新窗口打开
-    openTarget (router) {
+    openTarget(router) {
       // let routeUrl = this.$router.resolve(router)
       // window.open(routeUrl.href, '_blank')
       this.$router.push({ path: router.path })

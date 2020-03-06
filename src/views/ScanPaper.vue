@@ -1,7 +1,11 @@
  /* eslint-disable */
 <template>
   <div id="scan-paper">
-    <el-row class="bread-crumb" type="flex" align="middle">
+    <el-row
+      class="bread-crumb"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
@@ -10,11 +14,18 @@
             <span>{{`${examGrade.gradeName}${examSubjectInfo.subjectName}(科目ID：${examSubjectId})`}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
-                <i class="el-icon-caret-bottom el-icon--right" style="color:#409EFF;"></i>
+                <i
+                  class="el-icon-caret-bottom el-icon--right"
+                  style="color:#409EFF;"
+                ></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <template v-for="sub in examSubjectList">
-                  <router-link :to="{ path: '/subjectMain/' + examId + '/' + sub.id}" :key="sub.id" v-if="sub.id !== examSubjectInfo.id">
+                  <router-link
+                    :to="{ path: '/subjectMain/' + examId + '/' + sub.id}"
+                    :key="sub.id"
+                    v-if="sub.id !== examSubjectInfo.id"
+                  >
                     <el-dropdown-item>{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
                   </router-link>
                 </template>
@@ -24,33 +35,65 @@
           <el-breadcrumb-item>{{getActiveName(activeName)}}</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
-        <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
+        <router-link
+          to=""
+          target="_blank"
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
       </el-col>
     </el-row>
     <el-row class="scan">
       <el-tabs v-model="activeName">
-        <el-tab-pane label="扫描答题卡" :name="1">
-          <div class="scan-card" v-loading="tabPaneLoading" element-loading-text="拼命加载中...">
+        <el-tab-pane
+          label="扫描答题卡"
+          :name="1"
+        >
+          <div
+            class="scan-card"
+            v-loading="tabPaneLoading"
+            element-loading-text="拼命加载中..."
+          >
             <el-container>
               <el-aside class="left-content">
                 <el-row>
                   <el-row class="school-select">
                     <span class="select-span">学校</span>
-                    <el-select size="small" v-model="school">
+                    <el-select
+                      size="small"
+                      v-model="school"
+                    >
                       <el-option></el-option>
                     </el-select>
                   </el-row>
-                  <el-row class="template-wrapper" type="flex" align="middle">
+                  <el-row
+                    class="template-wrapper"
+                    type="flex"
+                    align="middle"
+                  >
                     <el-row>
                       <span class="select-span">模板</span>
-                      <el-select size="small" v-model="template">
+                      <el-select
+                        size="small"
+                        v-model="template"
+                      >
                         <el-option></el-option>
                       </el-select>
                       <el-row class="template-content">
-                        <el-col :span="10" :offset="4">试卷张数：1</el-col>
-                        <el-col :span="10" :offset="0">客观题数：12</el-col>
-                        <el-col :span="10" :offset="4">考号位数：0</el-col>
+                        <el-col
+                          :span="10"
+                          :offset="4"
+                        >试卷张数：1</el-col>
+                        <el-col
+                          :span="10"
+                          :offset="0"
+                        >客观题数：12</el-col>
+                        <el-col
+                          :span="10"
+                          :offset="4"
+                        >考号位数：0</el-col>
                       </el-row>
                     </el-row>
                   </el-row>
@@ -58,11 +101,26 @@
                 <el-row class="batch-info">
                   <el-row class="batch-info-title">批次信息</el-row>
                   <el-row class="batch-info-wrapper">
-                    <el-table :row-style="{width:'250px'}" :header-row-style="{width:'250px'}">
-                      <el-table-column label="批次" width="56px"></el-table-column>
-                      <el-table-column label="已扫描" width="70px"></el-table-column>
-                      <el-table-column label="已上传" width="70px"></el-table-column>
-                      <el-table-column label="异常" width="54px"></el-table-column>
+                    <el-table
+                      :row-style="{width:'250px'}"
+                      :header-row-style="{width:'250px'}"
+                    >
+                      <el-table-column
+                        label="批次"
+                        width="56px"
+                      ></el-table-column>
+                      <el-table-column
+                        label="已扫描"
+                        width="70px"
+                      ></el-table-column>
+                      <el-table-column
+                        label="已上传"
+                        width="70px"
+                      ></el-table-column>
+                      <el-table-column
+                        label="异常"
+                        width="54px"
+                      ></el-table-column>
                     </el-table>
                   </el-row>
                 </el-row>
@@ -76,8 +134,14 @@
                     <el-button type="text">下载扫描客户端</el-button>
                   </div> -->
                   <div class="steps-wrapper">
-                    <el-steps :active="active" :space="'33%'">
-                      <el-step title="1.扫描" icon="el-icon-circle-check">
+                    <el-steps
+                      :active="active"
+                      :space="'33%'"
+                    >
+                      <el-step
+                        title="1.扫描"
+                        icon="el-icon-circle-check"
+                      >
                         <div slot="description">
                           <el-row class="desc-row-1">
                             <div>参与考生人数：{{examSubjectInfo.examStuNum}}</div>
@@ -86,7 +150,12 @@
                             </div> -->
                           </el-row>
                           <el-row class="desc-row-1">
-                            <el-button type="primary" size="small" icon="el-icon-caret-right" @click="scanBegin()">开始扫描</el-button>
+                            <el-button
+                              type="primary"
+                              size="small"
+                              icon="el-icon-caret-right"
+                              @click="scanBegin()"
+                            >开始扫描</el-button>
                           </el-row>
                         </div>
                       </el-step>
@@ -99,7 +168,10 @@
                           </el-row>
                         </div>
                       </el-step> -->
-                      <el-step title="2.上传试卷" icon="el-icon-circle-check">
+                      <el-step
+                        title="2.上传试卷"
+                        icon="el-icon-circle-check"
+                      >
                         <div slot="description">
                           <!-- <el-row class="desc-row-1">
                             <div>本机扫描人数：37</div>
@@ -108,16 +180,26 @@
                             <div>已经上传人数：{{examSubjectInfo.scanStuNum}}</div>
                           </el-row>
                           <el-row class="desc-row-1">
-                            <el-button type="primary" size="small">上传进度</el-button>
+                            <el-button
+                              type="primary"
+                              size="small"
+                            >上传进度</el-button>
                           </el-row>
                         </div>
                       </el-step>
-                      <el-step title="3.切图" icon="el-icon-circle-check">
+                      <el-step
+                        title="3.切图"
+                        icon="el-icon-circle-check"
+                      >
                         <div slot="description">
                           <el-row class="desc-row-1">
                           </el-row>
                           <el-row class="desc-row-1">
-                            <el-button type="primary" size="small" @click="slicing()">开始切图</el-button>
+                            <el-button
+                              type="primary"
+                              size="small"
+                              @click="slicing()"
+                            >开始切图</el-button>
                           </el-row>
                         </div>
                       </el-step>
@@ -125,14 +207,32 @@
                     <el-row class="wrapper-desc">说明：已上传试卷为无定位异常和考号异常的试卷。点击上传进度可以查看本机扫描的试卷是否全部上传至云端，并可以发起重新上传。</el-row>
                   </div>
                 </el-row>
-                <el-card class="pic-content" shadow="never">
+                <el-card
+                  class="pic-content"
+                  shadow="never"
+                >
                   <div slot="header">
                     <span>扫描批次：{{Number(batchNumber) + 1}}</span>
                   </div>
-                  <div v-if="batchList.length === 0" class="no-data-wrapper">暂无数据</div>
-                  <el-row v-else class="batchList">
-                    <el-col :span="4" class="sm-pic-div" v-for="image in batchList" :key="image">
-                      <img :src="image" alt="" @click="previewImage(image)">
+                  <div
+                    v-if="batchList.length === 0"
+                    class="no-data-wrapper"
+                  >暂无数据</div>
+                  <el-row
+                    v-else
+                    class="batchList"
+                  >
+                    <el-col
+                      :span="4"
+                      class="sm-pic-div"
+                      v-for="image in batchList"
+                      :key="image"
+                    >
+                      <img
+                        :src="image"
+                        alt=""
+                        @click="previewImage(image)"
+                      >
                     </el-col>
                   </el-row>
                 </el-card>
@@ -199,12 +299,24 @@
         </el-tab-pane> -->
       </el-tabs>
     </el-row>
-    <el-dialog title="查看模板" :visible.sync="previewVisible" width="60%" custom-class="preview-dialog">
+    <el-dialog
+      title="查看模板"
+      :visible.sync="previewVisible"
+      width="60%"
+      custom-class="preview-dialog"
+    >
       <div class="img-box">
-        <img :src="prevImg" alt="模板">
+        <img
+          :src="prevImg"
+          alt="模板"
+        >
       </div>
       <div slot="footer">
-        <el-button type="primary" size="medium" @click="previewVisible = false">确定</el-button>
+        <el-button
+          type="primary"
+          size="medium"
+          @click="previewVisible = false"
+        >确定</el-button>
       </div>
     </el-dialog>
     <!-- <el-form ref="formform" :model="form" label-width="80px">
@@ -221,7 +333,7 @@ import API from '../api/api.js'
 // import cookie from '../api/requestHeader.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       form: {
         examSubjectId: this.$route.params.examSubjectId,
@@ -252,74 +364,67 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
-    console.log(this.batchNumber)
     this.getExamById()
     this.getBatch()
   },
   methods: {
-    UploadUrl () {
+    UploadUrl() {
       // return `http://47.107.116.88:10003/web/upload/uploadImgAndFileName`
       return `http://192.168.0.176:10003/web/upload/uploadImgAndFileName`
     },
-    slicing () {
+    slicing() {
       this.axios.post(API.ADMIN_SLICING, {
         examId: this.examId,
         examSubjectId: this.examSubjectId
       }).then(res => {
-        console.log(res)
         this.$message({
           message: '切图成功。',
           type: 'success'
         })
       })
     },
-    getBatch () {
+    getBatch() {
       this.loading = true
       this.axios.get(`${API.ADMIN_GETIMAGE}?filename=answersheet/${this.examSubjectId}/${Number(this.batchNumber) + 1}/`).then(res => {
         this.batchList = res.data.data
-        console.log(this.batchList)
       })
     },
-    previewImage (img) {
+    previewImage(img) {
       this.prevImg = img
       this.previewVisible = true
     },
     // 获取考试信息
-    async getExamById () {
+    async getExamById() {
       this.loading = true
       await this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
-        console.log(this.examInfo)
         this.getGradeById()
         this.loading = false
       }).catch(() => { this.loading = false })
       await this.getExamSubject()
     },
     // 查询所有考试科目
-    async getExamSubject () {
+    async getExamSubject() {
       this.loading = true
       await this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.examSubjectList = res.data.data
         this.examSubjectInfo = this.examSubjectList.filter(item => {
-          console.log(item.id === this.examSubjectId)
           if (Number(item.id) === Number(this.examSubjectId)) {
-            console.log(item)
             return item
           }
         })[0]
-        console.log(this.examSubjectInfo)
       }).catch(() => { this.loading = false })
     },
     // 获取考试的年级
-    async getGradeById () {
+    async getGradeById() {
       this.loading = true
       await this.axios.post(API.GRADE_FINDBYCOMMON, { id: this.examInfo.gradeId }).then(res => {
         this.examGrade = res.data.data[0]
       }).catch(() => { this.loading = false })
     },
-    getActiveName (id) {
+    getActiveName(id) {
       if (!id) {
         return ''
       }
@@ -328,7 +433,7 @@ export default {
       })
       return tab.name
     },
-    scanBegin () {
+    scanBegin() {
       // 获取当前科目
     }
   }

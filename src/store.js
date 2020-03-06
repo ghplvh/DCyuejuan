@@ -13,7 +13,7 @@ export default new Vuex.Store({
     // `dev
     dev: 0,
     download: 0,
-    devAddshijuan: 0
+    devAddshijuan: 1
   },
   mutations: {
     saveAdminInfo(state) {

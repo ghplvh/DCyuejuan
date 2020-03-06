@@ -910,7 +910,6 @@ export default {
         //   return item.id === this.examSubjectId
         // })
         this.examSubjectList = res.data.data
-        console.log(this.examSubjectList)
         this.examSubjectInfo = this.examSubjectList.filter(item => {
           return Number(item.id) === Number(this.examSubjectId)
         })[0]
@@ -928,7 +927,6 @@ export default {
       this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 0, {}).then(res => {
         let list = res.data.data
         let data = []
-        console.log(list)
         list.forEach(item => {
           this.questionList.push(item)
           item.oneDcExamStructureDtoList.forEach(question => {
@@ -936,7 +934,6 @@ export default {
           })
         })
         data.sort((a, b) => { return a.tid - b.tid })
-        console.log(data, 'cccc')
         this.kgTableData = data
         this.getTableSpan()
         this.loading = false
@@ -947,13 +944,10 @@ export default {
       this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 1, {}).then(res => {
         let list = res.data.data
         let data = []
-        console.log(list[list.length - 1].tid)
         this.lastTid = list[list.length - 1].tid
         list.forEach(item => {
           this.questionList.push(item)
-          console.log(item)
           if (!item.oneDcExamStructureDtoList || item.oneDcExamStructureDtoList.length === 0) {
-            console.log('object')
             item.ssid = item.id
             data.push(item)
           } else {
@@ -975,7 +969,6 @@ export default {
             })
           }
         })
-        console.log(data, 'ddd')
         data.sort((a, b) => { return a.tid - b.tid })
         this.zgTableData = data
         this.getTableSpanZg()
@@ -1081,9 +1074,7 @@ export default {
     },
     // 客观题表格跨行
     kgSpanMethod({ row, column, rowIndex, columnIndex }) {
-      // console.log(columnIndex, rowIndex)
       if ([5].includes(columnIndex)) {
-        // console.log(row, this.tableSpan)
         if (rowIndex === this.tableSpan[row.structureId][0]) {
           return { rowspan: this.tableSpan[row.structureId].length, colspan: 1 }
         } else {
@@ -1149,7 +1140,6 @@ export default {
       this.zgQuestionList = []
       Object.keys(rows).forEach(key => {
         let item = rows[key]
-        // console.log(item)
         this.editId = item[0].structureId
         this.zgQuestionList.push({
           questionType: '普通题',
@@ -1162,17 +1152,14 @@ export default {
             return parseInt(tq.numberType) === 1
           })
         })
-        // console.log(this.zgQuestionList)
         this.zgQuestionList.forEach(bq => {
           bq.miniQuestionList.forEach(mq => {
             let list = item.filter(tq => {
-              // console.log(tq.structureId, mq.id)
               return parseInt(tq.numberType) === 2 && tq.structureId === mq.id
             })
             mq.miniQuestionList = list
             mq.miniQuestionList.forEach(mmq => {
               let list = item.filter(tq => {
-                // console.log(tq.structureId, mmq.id)
                 return parseInt(tq.numberType) === 3 && tq.structureId === mmq.id
               })
               mmq.miniQuestionList = list
@@ -1180,7 +1167,6 @@ export default {
           })
         })
       })
-      // console.log(this.zgQuestionList)
       this.zgTitle = '修改主观题'
       this.dialogType = 'edit'
       this.addZgVisible = true
@@ -1378,7 +1364,6 @@ export default {
         return
       }
       let ans = kgqMini.answer.toLowerCase()
-      console.log(ans)
       if (Number(questionType) === 3 && (ans !== 't' && ans !== 'f')) {
         this.$message({
           message: '请输入T或F，不区分大小写',
@@ -1392,7 +1377,6 @@ export default {
         })
         kgqMini.answer = this.saveAnswerTemp
       } else if (Number(questionType) === 2) {
-        console.log(ans)
         if (ans.length < 2) {
           this.$message({
             message: '多选题的答案不能只有一个',
@@ -1444,8 +1428,6 @@ export default {
       })
       let tids = kgTids.concat(zgTids)
       let tid = Utils.arrMaxNum2(tids)
-      console.log(tids)
-      console.log(tid)
       return tid < 0 ? 0 : tid + 1
     },
     // 提交客观题
@@ -1618,7 +1600,6 @@ export default {
       for (let i = question.startNo; i <= question.endNo; i++) {
         question.miniQuestionList.push({ tnumber: this.zgBigQuestionNo.bigNo + '.' + i, score: question.score, miniQuestionList: [] })
       }
-      console.log(this.zgQuestionList)
       this.zgQuestionList.forEach(item => {
         item.miniQuestionList.forEach(mini => {
           score += (item.score * 1)
@@ -1640,15 +1621,12 @@ export default {
     },
     // 计算分数
     calculateScore() {
-      console.log(111)
       this.zgScoreCount = 0
       this.recursiveScore(this.zgQuestionList)
     },
     // 递归计算总分数
     recursiveScore(questionList) {
-      console.log(questionList)
       questionList.forEach(item => {
-        console.log(item)
         if (item.questionType) {
           this.recursiveScore(item.miniQuestionList)
         } else if (item.miniQuestionList.length > 0) {
@@ -1760,7 +1738,6 @@ export default {
           })
         }
       })
-      console.log(data)
       if (hasEmptyMini) {
         // this.$message({
         //   message: '小题不能为空',

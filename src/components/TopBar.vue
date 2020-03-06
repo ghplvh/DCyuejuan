@@ -1,30 +1,80 @@
 <template>
   <div class="top-bar">
-    <el-row class="layout" type="flex">
-      <el-col :span="3" class="layout-logo">
-        <router-link to="/" class="bar-logo"></router-link>
+    <el-row
+      class="layout"
+      type="flex"
+    >
+      <el-col
+        :span="3"
+        class="layout-logo"
+      >
+        <router-link
+          to="/"
+          class="bar-logo"
+        ></router-link>
       </el-col>
-      <el-col :span="9" class="layout-menu">
-        <el-menu :default-active="activeIndex" mode="horizontal" text-color="#303133" active-text-color="#409EFF" router>
+      <el-col
+        :span="9"
+        class="layout-menu"
+      >
+        <el-menu
+          :default-active="activeIndex"
+          mode="horizontal"
+          text-color="#303133"
+          active-text-color="#409EFF"
+          router
+        >
           <el-menu-item index="home">首页</el-menu-item>
           <el-menu-item index="personManager">人员信息管理</el-menu-item>
           <el-menu-item index="examAnalyze">考试分析</el-menu-item>
           <el-menu-item index="answerSheet">答题卡工具</el-menu-item>
         </el-menu>
       </el-col>
-      <el-col :span="7" class="layout-btn">
-        <router-link to="/exam/create" class="create-exam-btn">
-          <el-button type="primary" size="medium" icon="el-icon-plus" round>创建考试</el-button>
+      <el-col
+        :span="7"
+        class="layout-btn"
+      >
+        <router-link
+          to="/exam/create"
+          class="create-exam-btn"
+        >
+          <el-button
+            type="primary"
+            size="medium"
+            icon="el-icon-plus"
+            round
+          >创建考试</el-button>
         </router-link>
         <a class="app-btn">
-          <el-popover placement="top-start" width="100" trigger="hover">
-            <div><img src="../assets/logo.png" alt="app二维码"><span>扫码下载APP</span></div>
-            <el-button class="app-qrcode" slot="reference" type="primary" size="medium" icon="el-icon-mobile-phone" plain round>阅卷APP</el-button>
+          <el-popover
+            placement="top-start"
+            width="100"
+            trigger="hover"
+          >
+            <div><img
+                src="../assets/logo.png"
+                alt="app二维码"
+              ><span>扫码下载APP</span></div>
+            <el-button
+              class="app-qrcode"
+              slot="reference"
+              type="primary"
+              size="medium"
+              icon="el-icon-mobile-phone"
+              plain
+              round
+            >阅卷APP</el-button>
           </el-popover>
         </a>
       </el-col>
-      <el-col :span="5" class="layout-dropdown">
-        <div class="avatar-box"><img src="../assets/logo.png" alt=""></div>
+      <el-col
+        :span="5"
+        class="layout-dropdown"
+      >
+        <div class="avatar-box"><img
+            src="../assets/logo.png"
+            alt=""
+          ></div>
         <el-dropdown trigger="click">
           <span class="el-dropdown-link">
             <span>{{adminInfo.teacherInfo.name || adminInfo.phone}}</span>
@@ -52,7 +102,7 @@ export default {
   props: {
     active: String
   },
-  data () {
+  data() {
     return {
       activeIndex: this.active
     }
@@ -60,8 +110,7 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
-    console.log(this.adminInfo)
+  created() {
   }
 }
 </script>

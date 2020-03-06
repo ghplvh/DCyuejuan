@@ -1,6 +1,10 @@
 <template>
   <div id="exam-detail">
-    <el-row class="bread-crumb" type="flex" align="middle">
+    <el-row
+      class="bread-crumb"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
@@ -8,8 +12,14 @@
           <el-breadcrumb-item>考生信息管理</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
-        <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
+        <router-link
+          to=""
+          target="_blank"
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
       </el-col>
     </el-row>
     <el-row class="exam-info">
@@ -18,69 +28,214 @@
           <el-col :span="12">{{examInfo.examName}}</el-col>
           <el-col :span="12">本科目考试共<font color="#ffac00">{{schoolCount}}</font>个学校参与，考生共计<font color="#ffac00">{{total}}</font>人</el-col>
         </el-row>
-        <el-row class="join-school" type="flex" align="middle">
-          <el-col :span="13" class="join-school-title">
-            <span class="title-name" style="width:70px;">参与学校：</span>
-            <el-select v-model="schoolInfo.schoolName" size="medium">
-              <el-option :label="schoolInfo.schoolName" :value="schoolInfo.schoolName"></el-option>
+        <el-row
+          class="join-school"
+          type="flex"
+          align="middle"
+        >
+          <el-col
+            :span="13"
+            class="join-school-title"
+          >
+            <span
+              class="title-name"
+              style="width:70px;"
+            >参与学校：</span>
+            <el-select
+              v-model="schoolInfo.schoolName"
+              size="medium"
+            >
+              <el-option
+                :label="schoolInfo.schoolName"
+                :value="schoolInfo.schoolName"
+              ></el-option>
             </el-select>
-            <el-tooltip :content="adminInfo.teacherInfo.name" placement="top" effect="light">
+            <el-tooltip
+              :content="adminInfo.teacherInfo.name"
+              placement="top"
+              effect="light"
+            >
               <span class="upload-pp">上传人: {{adminInfo.teacherInfo.name}}</span>
             </el-tooltip>
             <span class="v-line">|</span>
             <span class="exam-stu-count">考生人数：{{total}}</span>
             <!-- <el-button type="primary" plain size="mini" icon="el-icon-edit" @click="areaSetting()">考生范围设置</el-button> -->
           </el-col>
-          <el-col :span="11" class="join-school-filter">
-            <el-select size="medium" v-model="filterClassId" placeholder="请选择班级" @change="getExaminee()">
-              <el-option label="全部" :value="''"></el-option>
-              <el-option v-for="clazz in examClassList" :key="clazz.id" :label="clazz.className" :value="clazz.id"></el-option>
+          <el-col
+            :span="11"
+            class="join-school-filter"
+          >
+            <el-select
+              size="medium"
+              v-model="filterClassId"
+              placeholder="请选择班级"
+              @change="getExaminee()"
+            >
+              <el-option
+                label="全部"
+                :value="''"
+              ></el-option>
+              <el-option
+                v-for="clazz in examClassList"
+                :key="clazz.id"
+                :label="clazz.className"
+                :value="clazz.id"
+              ></el-option>
             </el-select>
-            <el-input size="medium" v-model="filterInput" class="filter-condition" placeholder="请输入姓名、学号">
-              <el-button slot="append" icon="el-icon-search" size="medium" @click="getExaminee()"></el-button>
+            <el-input
+              size="medium"
+              v-model="filterInput"
+              class="filter-condition"
+              placeholder="请输入姓名、学号"
+            >
+              <el-button
+                slot="append"
+                icon="el-icon-search"
+                size="medium"
+                @click="getExaminee()"
+              ></el-button>
             </el-input>
           </el-col>
         </el-row>
         <el-row class="opra-row">
-          <el-col :span="13" class="opra-left">
-            <el-button type="text" icon="el-icon-plus" size="mini" @click="addExamStudent()">单个新增</el-button>
-            <el-button type="text" icon="el-icon-circle-check-outline" size="mini" @click="selectClass()">选择班级</el-button>
+          <el-col
+            :span="13"
+            class="opra-left"
+          >
+            <el-button
+              type="text"
+              icon="el-icon-plus"
+              size="mini"
+              @click="addExamStudent()"
+            >单个新增</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-circle-check-outline"
+              size="mini"
+              @click="selectClass()"
+            >选择班级</el-button>
             <!-- <el-button type="text" icon="el-icon-upload2" size="mini" @click="quickUpload()">批量导入</el-button> -->
-            <el-button type="text" icon="el-icon-delete" size="mini" @click="multipleDelete()">多选删除</el-button>
-            <el-button type="text" icon="el-icon-download" size="mini" @click="downloadExaminee()">导出</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              size="mini"
+              @click="multipleDelete()"
+            >多选删除</el-button>
+            <el-button
+              type="text"
+              icon="el-icon-download"
+              size="mini"
+              @click="downloadExaminee()"
+            >导出</el-button>
           </el-col>
-          <el-col :span="11" class="opra-right">
-            <el-button type="text" icon="el-icon-delete" @click="deleteAllByExam()">删除所有考生</el-button>
+          <el-col
+            :span="11"
+            class="opra-right"
+          >
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              @click="deleteAllByExam()"
+            >删除所有考生</el-button>
           </el-col>
         </el-row>
         <el-row class="table-stu">
-          <el-table :data="tableData" v-loading="loading" element-loading-text="拼命加载中..." @selection-change="SelectionChange" border size="mini">
-            <el-table-column type="selection" align="center" width="50"></el-table-column>
-            <el-table-column prop="studentName" label="姓名" align="center" width="100"></el-table-column>
-            <el-table-column prop="studentId" label="学号" align="center" width="249"></el-table-column>
-            <el-table-column prop="studentExamId" label="考号" align="center" width="249"></el-table-column>
-            <el-table-column prop="className" label="班级" align="center" width="249"></el-table-column>
-            <el-table-column label="操作" align="center" width="220">
+          <el-table
+            :data="tableData"
+            v-loading="loading"
+            element-loading-text="拼命加载中..."
+            @selection-change="SelectionChange"
+            border
+            size="mini"
+          >
+            <el-table-column
+              type="selection"
+              align="center"
+              width="50"
+            ></el-table-column>
+            <el-table-column
+              prop="studentName"
+              label="姓名"
+              align="center"
+              width="100"
+            ></el-table-column>
+            <el-table-column
+              prop="studentId"
+              label="学号"
+              align="center"
+              width="249"
+            ></el-table-column>
+            <el-table-column
+              prop="studentExamId"
+              label="考号"
+              align="center"
+              width="249"
+            ></el-table-column>
+            <el-table-column
+              prop="className"
+              label="班级"
+              align="center"
+              width="249"
+            ></el-table-column>
+            <el-table-column
+              label="操作"
+              align="center"
+              width="220"
+            >
               <template slot-scope="scope">
-                <el-button type="text" @click="editRow(scope.row)">编辑</el-button>
-                <el-button type="text" class="delete" @click="deleteRow(scope.row)">删除</el-button>
+                <el-button
+                  type="text"
+                  @click="editRow(scope.row)"
+                >编辑</el-button>
+                <el-button
+                  type="text"
+                  class="delete"
+                  @click="deleteRow(scope.row)"
+                >删除</el-button>
               </template>
             </el-table-column>
           </el-table>
           <el-row class="page-box">
-            <el-pagination background @size-change="pageSizeChange" @prev-click="prevPage" @next-click="nextPage" @current-change="pageCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            <el-pagination
+              background
+              @size-change="pageSizeChange"
+              @prev-click="prevPage"
+              @next-click="nextPage"
+              @current-change="pageCurrentChange"
+              :current-page.sync="currentPage"
+              :page-size="pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+            >
             </el-pagination>
           </el-row>
         </el-row>
       </el-card>
     </el-row>
-    <el-dialog title="考生范围设置" :visible.sync="areaSettingVisible" center custom-class="area-setting-dialog" width="600px">
+    <el-dialog
+      title="考生范围设置"
+      :visible.sync="areaSettingVisible"
+      center
+      custom-class="area-setting-dialog"
+      width="600px"
+    >
       <el-row class="subject-row">
         <span class="tips">请选择需要<font color="red">单独设置考生</font>的科目，勾选后，相应科目即可单独设置考生，不受考试组导入考生影响。</span>
-        <el-checkbox :indeterminate="isIndeterminate" v-model="subjectsCheckAll" @change="subjectCheckAllChange">全选</el-checkbox>
+        <el-checkbox
+          :indeterminate="isIndeterminate"
+          v-model="subjectsCheckAll"
+          @change="subjectCheckAllChange"
+        >全选</el-checkbox>
         <div style="margin: 15px 0;"></div>
-        <el-checkbox-group v-model="checkedSubjects" @change="subjectCheckedChange">
-          <el-checkbox v-for="subject in subjectList" :label="subject" :key="subject.id">{{subject.subjectName}}</el-checkbox>
+        <el-checkbox-group
+          v-model="checkedSubjects"
+          @change="subjectCheckedChange"
+        >
+          <el-checkbox
+            v-for="subject in subjectList"
+            :label="subject"
+            :key="subject.id"
+          >{{subject.subjectName}}</el-checkbox>
         </el-checkbox-group>
       </el-row>
       <el-row>
@@ -91,96 +246,231 @@
         <el-button @click="areaSettingVisible = false">取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="添加考生" :visible.sync="ExamStudentVisible" center custom-class="exam-student-dialog" width="600px">
+    <el-dialog
+      title="添加考生"
+      :visible.sync="ExamStudentVisible"
+      center
+      custom-class="exam-student-dialog"
+      width="600px"
+    >
       <el-row class="search-row grade-row">
         <el-col :span="3">选择年级</el-col>
-        <el-col :span="20" :offset="1">
-          <el-select size="medium" v-model="examineeGrade" value-key="id" @change="getClassByGrade(examineeGrade.id)">
-            <el-option v-for="grade in examGrade" :key="grade.id" :value="grade" :label="grade.gradeName"></el-option>
+        <el-col
+          :span="20"
+          :offset="1"
+        >
+          <el-select
+            size="medium"
+            v-model="examineeGrade"
+            value-key="id"
+            @change="getClassByGrade(examineeGrade.id)"
+          >
+            <el-option
+              v-for="grade in examGrade"
+              :key="grade.id"
+              :value="grade"
+              :label="grade.gradeName"
+            ></el-option>
           </el-select>
         </el-col>
       </el-row>
       <el-row class="search-row grade-row">
         <el-col :span="3">选择班级</el-col>
-        <el-col :span="20" :offset="1">
-          <el-select size="medium" v-model="examineeClass" value-key="id" @change="getStudentByClass()">
-            <el-option v-for="clazz in classList" :key="clazz.id" :value="clazz" :label="clazz.className"></el-option>
+        <el-col
+          :span="20"
+          :offset="1"
+        >
+          <el-select
+            size="medium"
+            v-model="examineeClass"
+            value-key="id"
+            @change="getStudentByClass()"
+          >
+            <el-option
+              v-for="clazz in classList"
+              :key="clazz.id"
+              :value="clazz"
+              :label="clazz.className"
+            ></el-option>
           </el-select>
         </el-col>
       </el-row>
       <el-row class="search-row student-row">
         <el-col :span="3">查询考生</el-col>
-        <el-col :span="20" :offset="1">
-          <el-select size="medium" v-model="selectStudent" value-key="id" filterable placeholder="请输入学号或姓名">
-            <el-option v-for="stu in students" :key="stu.id" :label="stu.studentName + ' | ' + stu.studentId" :value="stu"></el-option>
+        <el-col
+          :span="20"
+          :offset="1"
+        >
+          <el-select
+            size="medium"
+            v-model="selectStudent"
+            value-key="id"
+            filterable
+            placeholder="请输入学号或姓名"
+          >
+            <el-option
+              v-for="stu in students"
+              :key="stu.id"
+              :label="stu.studentName + ' | ' + stu.studentId"
+              :value="stu"
+            ></el-option>
           </el-select>
         </el-col>
       </el-row>
-      <div class="base-info" v-if="selectStudent">
+      <div
+        class="base-info"
+        v-if="selectStudent"
+      >
         <el-row class="student-info">
           <el-col :span="12">姓名：{{selectStudent.studentName}}</el-col>
           <el-col :span="12">学号：{{selectStudent.studentId}}</el-col>
           <el-col :span="12">年级：{{selectStudent.gradeNumber}}</el-col>
           <el-col :span="12">班级：{{selectStudent.classNumber}}</el-col>
         </el-row>
-        <el-form :model="examInfoForm" ref="examInfoForm" :rules="examInfoRules" :inline="true" label-width="61px" size="medium" class="exam-info-form">
-          <el-form-item label="考号:" prop="studentExamId">
-            <el-input v-model="examInfoForm.studentExamId" placeholder="请输入考号"></el-input>
+        <el-form
+          :model="examInfoForm"
+          ref="examInfoForm"
+          :rules="examInfoRules"
+          :inline="true"
+          label-width="61px"
+          size="medium"
+          class="exam-info-form"
+        >
+          <el-form-item
+            label="考号:"
+            prop="studentExamId"
+          >
+            <el-input
+              v-model="examInfoForm.studentExamId"
+              placeholder="请输入考号"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="考场:" prop="examroomNumber">
-            <el-input v-model="examInfoForm.examroomNumber" placeholder="请输入考场号"></el-input>
+          <el-form-item
+            label="考场:"
+            prop="examroomNumber"
+          >
+            <el-input
+              v-model="examInfoForm.examroomNumber"
+              placeholder="请输入考场号"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="座号:" prop="seatNumber">
-            <el-input v-model="examInfoForm.seatNumber" placeholder="请输入座号"></el-input>
+          <el-form-item
+            label="座号:"
+            prop="seatNumber"
+          >
+            <el-input
+              v-model="examInfoForm.seatNumber"
+              placeholder="请输入座号"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
-      <div slot="footer" v-if="selectStudent">
-        <el-button type="primary" @click="submitExamInfoForm('examInfoForm')">确定</el-button>
+      <div
+        slot="footer"
+        v-if="selectStudent"
+      >
+        <el-button
+          type="primary"
+          @click="submitExamInfoForm('examInfoForm')"
+        >确定</el-button>
         <el-button @click="ExamStudentVisible = false">取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="选择班级" :visible.sync="gradeVisible" center custom-class="grade-dialog">
+    <el-dialog
+      title="选择班级"
+      :visible.sync="gradeVisible"
+      center
+      custom-class="grade-dialog"
+    >
       <el-row class="grade-row">
         <span>选择年级：</span>
-        <el-select size="medium" v-model="examClassGrade" @change="getClassByGrade(examClassGrade)">
-          <el-option v-for="grade in examGrade" :key="grade.id" :value="grade.id" :label="grade.gradeName"></el-option>
+        <el-select
+          size="medium"
+          v-model="examClassGrade"
+          @change="getClassByGrade(examClassGrade)"
+        >
+          <el-option
+            v-for="grade in examGrade"
+            :key="grade.id"
+            :value="grade.id"
+            :label="grade.gradeName"
+          ></el-option>
         </el-select>
       </el-row>
       <el-row class="class-row">
-        <el-checkbox :indeterminate="classIsIndeterminate" v-model="classCheckAll" @change="classCheckAllChange" class="check-all-row">
+        <el-checkbox
+          :indeterminate="classIsIndeterminate"
+          v-model="classCheckAll"
+          @change="classCheckAllChange"
+          class="check-all-row"
+        >
           <span>全选</span>
           <span class="class-total">{{checkedClass.length}}个班级，共{{checkedStudentCount}}人</span>
         </el-checkbox>
-        <el-checkbox-group v-model="checkedClass" @change="checkedClassChange">
-          <el-checkbox v-for="clazz in classList" :label="clazz" :key="clazz.id">{{clazz.className}}</el-checkbox>
+        <el-checkbox-group
+          v-model="checkedClass"
+          @change="checkedClassChange"
+        >
+          <el-checkbox
+            v-for="clazz in classList"
+            :label="clazz"
+            :key="clazz.id"
+          >{{clazz.className}}</el-checkbox>
         </el-checkbox-group>
       </el-row>
       <el-row>
         <font color="red">注: 选择班级导入时，将会替换原考生表中的信息。</font>
       </el-row>
       <div slot="footer">
-        <el-button type="primary" @click="addExamineeList()">确定</el-button>
+        <el-button
+          type="primary"
+          @click="addExamineeList()"
+        >确定</el-button>
         <el-button @click="gradeVisible = false">取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="导入考生信息" :visible.sync="quickUploadVisible" center custom-class="quick-upload-dialog" width="410px">
+    <el-dialog
+      title="导入考生信息"
+      :visible.sync="quickUploadVisible"
+      center
+      custom-class="quick-upload-dialog"
+      width="410px"
+    >
       <span class="quick-upload-title">请根据实际情况选择导入方式:</span>
       <el-radio-group v-model="quickUploadType">
-        <el-radio :label="1" class="upload-radio">完整信息导入(用于学生信息完整的情况, 匹配更精确)</el-radio>
-        <el-radio :label="2" disabled class="upload-radio">快速导入(用于只有姓名,考号,班级的情况)</el-radio>
+        <el-radio
+          :label="1"
+          class="upload-radio"
+        >完整信息导入(用于学生信息完整的情况, 匹配更精确)</el-radio>
+        <el-radio
+          :label="2"
+          disabled
+          class="upload-radio"
+        >快速导入(用于只有姓名,考号,班级的情况)</el-radio>
       </el-radio-group>
       <div>
         <font color="red">注: 快速导入只能用于每场考试首次添加考生</font>
       </div>
       <div slot="footer">
-        <el-upload :action="examineeImportUrl" class="select-file" :limit="1">
+        <el-upload
+          :action="examineeImportUrl"
+          class="select-file"
+          :limit="1"
+        >
           <el-button type="primary">选择文件</el-button>
         </el-upload>
-        <el-button class="download-moban" @click="downloadMoban()">下载模板</el-button>
+        <el-button
+          class="download-moban"
+          @click="downloadMoban()"
+        >下载模板</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="编辑考生" :visible.sync="editDialogVisible" center custom-class="exam-student-dialog">
+    <el-dialog
+      title="编辑考生"
+      :visible.sync="editDialogVisible"
+      center
+      custom-class="exam-student-dialog"
+    >
       <div class="base-info">
         <el-row class="student-info">
           <el-col :span="12">姓名：{{selectRow.studentName}}</el-col>
@@ -188,21 +478,50 @@
           <el-col :span="12">年级：{{selectRow.gradeName}}</el-col>
           <el-col :span="12">班级：{{selectRow.className}}</el-col>
         </el-row>
-        <el-form :model="examInfoForm" ref="editInfoForm" :rules="examInfoRules" :inline="true" label-width="61px" size="medium" class="exam-info-form">
-          <el-form-item label="考号:" prop="studentExamId">
-            <el-input v-model="examInfoForm.studentExamId" placeholder="请输入考号"></el-input>
+        <el-form
+          :model="examInfoForm"
+          ref="editInfoForm"
+          :rules="examInfoRules"
+          :inline="true"
+          label-width="61px"
+          size="medium"
+          class="exam-info-form"
+        >
+          <el-form-item
+            label="考号:"
+            prop="studentExamId"
+          >
+            <el-input
+              v-model="examInfoForm.studentExamId"
+              placeholder="请输入考号"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="考场:" prop="examroomNumber">
-            <el-input v-model="examInfoForm.examroomNumber" placeholder="请输入考场号"></el-input>
+          <el-form-item
+            label="考场:"
+            prop="examroomNumber"
+          >
+            <el-input
+              v-model="examInfoForm.examroomNumber"
+              placeholder="请输入考场号"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="座号:" prop="seatNumber">
-            <el-input v-model="examInfoForm.seatNumber" placeholder="请输入座号"></el-input>
+          <el-form-item
+            label="座号:"
+            prop="seatNumber"
+          >
+            <el-input
+              v-model="examInfoForm.seatNumber"
+              placeholder="请输入座号"
+            ></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div slot="footer">
-        <el-button type="primary" @click="submitEditInfoForm('editInfoForm')">修改</el-button>
-        <el-button @click="ExamStudentVisible = false">取消</el-button>
+        <el-button
+          type="primary"
+          @click="submitEditInfoForm('editInfoForm')"
+        >修改</el-button>
+        <el-button @click="editDialogVisible = false">取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -211,7 +530,7 @@
 import API from '../api/api.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       examId: this.$route.params.examId,
       examInfo: {},
@@ -269,7 +588,7 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
+  created() {
     this.schoolNumber = this.adminInfo.teacherInfo.schoolCode
     this.getSchoolByCode()
     this.getExaminee()
@@ -279,7 +598,7 @@ export default {
   },
   methods: {
     // 获取学校信息
-    getSchoolByCode () {
+    getSchoolByCode() {
       let data = {
         schoolCode: this.schoolNumber
       }
@@ -288,7 +607,7 @@ export default {
       }).catch(() => { })
     },
     // 查询考生信息
-    getExaminee () {
+    getExaminee() {
       this.loading = true
       let data = {
         pageIndex: this.currentPage,
@@ -299,29 +618,32 @@ export default {
       if (isNaN(this.filterInput)) {
         data.studentName = this.filterInput
       } else {
-        data.studentId = this.filterClassId
+        data.studentExamId = this.filterInput
       }
+      console.log('data,,,,', data)
       this.axios.post(API.EXAMINEE_SELECTCONDITION, data).then(res => {
         this.tableData = res.data.data.list
         this.total = res.data.data.total
         this.loading = false
-      }).catch(() => { })
+      }).catch(() => {
+        this.loading = false
+      })
     },
     // 根据考试id查询考试信息
-    getExamInfo () {
+    getExamInfo() {
       this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
         this.getGradeById()
       }).catch(() => { })
     },
     // 获取考试的年级
-    getGradeById () {
+    getGradeById() {
       this.axios.post(API.GRADE_FINDBYCOMMON, { schoolCode: this.schoolNumber }).then(res => {
         this.examGrade = res.data.data
         this.getExamClassList()
       }).catch(() => { })
     },
-    getExamClassList () {
+    getExamClassList() {
       // this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + this.examGrade[0].id).then(res => {
       let data = {
         examId: this.examId,
@@ -332,24 +654,24 @@ export default {
       }).catch(() => { })
     },
     // 根据考试id查询本次考试的班级数和人数
-    getExamClass () {
+    getExamClass() {
       this.axios.post(API.EXAM_SELECTCOUNT + '/' + this.examId).then(res => {
       }).catch(() => { })
     },
     // 查询所有考试的科目
-    getExamSubject () {
+    getExamSubject() {
       this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.subjectList = res.data.data
       }).catch(() => { })
     },
     // 根据选择的年级获取班级列表
-    getClassByGrade (gradeId) {
+    getClassByGrade(gradeId) {
       this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + gradeId).then(res => {
         this.classList = res.data.data
       }).catch(() => { })
     },
     // 根据学校年级班级获取学生列表
-    getStudentByClass () {
+    getStudentByClass() {
       this.axios.post(API.STUDENT_GETSTUDENTSBY, {
         schoolNumber: this.examineeGrade.schoolCode,
         gradeId: this.examineeGrade.id,
@@ -360,7 +682,7 @@ export default {
       }).catch(() => { })
     },
     // 提交表单单个新增考生
-    submitExamInfoForm (formName) {
+    submitExamInfoForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let data = {
@@ -386,7 +708,7 @@ export default {
       })
     },
     // 提交表单修改考生信息
-    submitEditInfoForm (examInfoForm) {
+    submitEditInfoForm(examInfoForm) {
       this.$refs[examInfoForm].validate(valid => {
         if (valid) {
           this.axios.post(API.ADMIN_UPDATESINGLEEXAMINEE, this.examInfoForm).then(res => {
@@ -403,7 +725,7 @@ export default {
       })
     },
     // 根据多个班级id和考试id添加考生信息
-    addExamineeList () {
+    addExamineeList() {
       let ids = this.checkedClass.map(clazz => {
         return clazz.id
       })
@@ -414,11 +736,11 @@ export default {
       }).catch(() => { })
     },
     // 表格行选中
-    SelectionChange (val) {
+    SelectionChange(val) {
       this.multipleSelection = val
     },
     // 多选删除
-    multipleDelete () {
+    multipleDelete() {
       let ids = this.multipleSelection.map(row => {
         return row.id
       })
@@ -459,7 +781,7 @@ export default {
       }).then(() => { })
     },
     // 删除所有
-    deleteAllByExam () {
+    deleteAllByExam() {
       const h = this.$createElement
       this.$msgbox({
         title: '提示',
@@ -489,7 +811,7 @@ export default {
         }
       }).then(action => { })
     },
-    editRow (row) {
+    editRow(row) {
       this.editDialogVisible = true
       this.selectRow = row
       this.examInfoForm = {
@@ -499,7 +821,7 @@ export default {
         seatNumber: row.seatNumber
       }
     },
-    deleteRow (row) {
+    deleteRow(row) {
       const h = this.$createElement
       this.$msgbox({
         title: '提示',
@@ -529,35 +851,35 @@ export default {
         }
       }).then(() => { })
     },
-    pageSizeChange (size) {
+    pageSizeChange(size) {
       this.pageSize = size
       this.getExaminee()
     },
-    pageCurrentChange (page) {
+    pageCurrentChange(page) {
       this.currentPage = page
       this.getExaminee()
     },
-    prevPage (page) {
+    prevPage(page) {
       this.currentPage = this.currentPage - 1
       this.getExaminee()
     },
-    nextPage (page) {
+    nextPage(page) {
       this.currentPage = this.currentPage + 1
       this.getExaminee()
     },
-    areaSetting () {
+    areaSetting() {
       this.areaSettingVisible = true
     },
-    subjectCheckAllChange (val = false) {
+    subjectCheckAllChange(val = false) {
       this.checkedSubjects = val ? this.subjectList : []
       this.isIndeterminate = false
     },
-    subjectCheckedChange (value = []) {
+    subjectCheckedChange(value = []) {
       let checkedCount = value.length
       this.subjectsCheckAll = checkedCount === this.subjectList.length
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.subjectList.length
     },
-    addExamStudent () {
+    addExamStudent() {
       this.ExamStudentVisible = true
       this.examInfoForm = {
         studentExamId: '',
@@ -565,15 +887,14 @@ export default {
         seatNumber: ''
       }
     },
-    selectClass () {
+    selectClass() {
       this.gradeVisible = true
     },
-    classCheckAllChange (val = false) {
+    classCheckAllChange(val = false) {
       this.checkedClass = val ? this.classList : []
       this.classIsIndeterminate = false
     },
-    checkedClassChange (value = []) {
-      console.log(value)
+    checkedClassChange(value = []) {
       if (value.length === 0) {
         return false
       }
@@ -583,7 +904,7 @@ export default {
       this.classIsIndeterminate = checkedCount > 0 && checkedCount < this.classList.length
     },
     // 根据班级id查询总人数
-    getStudentCountByClass () {
+    getStudentCountByClass() {
       let ids = this.checkedClass.map(clazz => {
         return clazz.id
       })
@@ -591,18 +912,18 @@ export default {
         this.checkedStudentCount = res.data.data
       }).catch(() => { })
     },
-    quickUpload () {
+    quickUpload() {
       this.quickUploadVisible = true
     },
     // 导出考生模板
-    downloadMoban () {
+    downloadMoban() {
       this.download(API.FTP_DOWNLOADFILE)
     },
     // 导出考生信息
-    downloadExaminee () {
+    downloadExaminee() {
       this.download(API.EXAMINEE_EXPORTEXAMINEE)
     },
-    download (apiUrl) {
+    download(apiUrl) {
       const elink = document.createElement('a')
       elink.style.display = 'none'
       elink.target = '_blank'

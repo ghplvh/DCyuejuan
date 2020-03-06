@@ -8,7 +8,13 @@
 - [bug][] /examDetail 选择班级， 全选bug
 2020-03-02 
 - [bug][done] /home 当年级选择全部时，点击第二页，这时，切换年级到初三等无数据年级， 请求的pageIndex也是2
-- [bug][] /setTemplate 刷新页面，login丢失；
+- [bug][done] /setTemplate 刷新页面，login丢失；
+- [bug][done] 接口报错 loading不结束
+2020-03-06 14:56:30
+- [bug][done] /createExam 创建考试，名称过长接口报错，限制名称长度20
+- [bug][] /subjectMain 下路由， 面包屑丢失subjectMain
+- [bug][] /personManager 添加学生，姓名过长，报错
+- [bug][] /questionBlock 全部分配allocationTask 500
 
 # xshell
 120.24.181.77

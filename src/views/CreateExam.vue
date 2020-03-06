@@ -1,53 +1,112 @@
 <template>
   <div id="create-exam">
     <el-card>
-      <div slot="header" class="exam-header">
+      <div
+        slot="header"
+        class="exam-header"
+      >
         <span>创建考试</span>
       </div>
       <div class="exam-settings">
         <p class="exam-setting-title">基本设置</p>
-        <el-form :model="examForm" :rules="examFormRules" ref="examForm" label-position="left" label-width="80px">
-          <el-form-item label="考试名称" prop="examName">
-            <el-input size="medium" v-model="examForm.examName"></el-input>
+        <el-form
+          :model="examForm"
+          :rules="examFormRules"
+          ref="examForm"
+          label-position="left"
+          label-width="80px"
+        >
+          <el-form-item
+            label="考试名称"
+            prop="examName"
+          >
+            <el-input
+              size="medium"
+              :maxlength="19"
+              v-model="examForm.examName"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="考试时间" required>
+          <el-form-item
+            label="考试时间"
+            required
+          >
             <el-col :span="3">
               <el-form-item prop="startDate">
-                <el-date-picker type="date" placeholder="选择日期" v-model="examForm.examDateFrom"></el-date-picker>
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="examForm.examDateFrom"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col class="line" :span="2">至</el-col>
+            <el-col
+              class="line"
+              :span="2"
+            >至</el-col>
             <el-col :span="3">
               <el-form-item prop="endDate">
-                <el-date-picker type="date" placeholder="选择日期" v-model="examForm.examDateTo"></el-date-picker>
+                <el-date-picker
+                  type="date"
+                  placeholder="选择日期"
+                  v-model="examForm.examDateTo"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
           </el-form-item>
           <el-form-item label="考试类型">
             <el-radio-group v-model="examForm.examType">
-              <el-radio v-for="type in examTypeList" :key="type.id" :label="type.id">{{type.name}}</el-radio>
+              <el-radio
+                v-for="type in examTypeList"
+                :key="type.id"
+                :label="type.id"
+              >{{type.name}}</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="考试范围">
             <el-radio-group v-model="examForm.examRange">
-              <el-radio v-for="range in examRangeList" :key="range.id" :label="range.id">{{range.name}}</el-radio>
+              <el-radio
+                v-for="range in examRangeList"
+                :key="range.id"
+                :label="range.id"
+              >{{range.name}}</el-radio>
             </el-radio-group>
             <div class="form-tips">统考发起学校统一设置试卷结构、模板、题块、答案、原卷；参与学校独立设置考生、扫描试卷、阅卷（仅阅本校）</div>
           </el-form-item>
-          <el-form-item label="选择学校" v-if="examForm.examRange >= 1">
+          <el-form-item
+            label="选择学校"
+            v-if="examForm.examRange >= 1"
+          >
             <el-checkbox-group v-model="examForm.schoolList">
-              <el-checkbox v-for="school in schoolList" :key="school.id" :label="school.schoolCode">{{school.schoolName}}</el-checkbox>
+              <el-checkbox
+                v-for="school in schoolList"
+                :key="school.id"
+                :label="school.schoolCode"
+              >{{school.schoolName}}</el-checkbox>
             </el-checkbox-group>
-            <el-button plain class="add-exam-school" icon="el-icon-plus" size="small" @click="addExamSchool">添加学校（请至少选择两所学校）</el-button>
+            <el-button
+              plain
+              class="add-exam-school"
+              icon="el-icon-plus"
+              size="small"
+              @click="addExamSchool"
+            >添加学校（请至少选择两所学校）</el-button>
           </el-form-item>
           <el-form-item label="考试模式">
             <el-radio-group v-model="examForm.examMode">
-              <el-radio v-for="mode in examModeList" :key="mode.id" :label="mode.id">{{mode.name}}</el-radio>
+              <el-radio
+                v-for="mode in examModeList"
+                :key="mode.id"
+                :label="mode.id"
+              >{{mode.name}}</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="阅卷方式">
             <el-radio-group v-model="examForm.checkMode">
-              <el-radio v-for="way in yueJuanWayList" :key="way.id" :label="way.id">{{way.name}}</el-radio>
+              <el-radio
+                v-for="way in yueJuanWayList"
+                :key="way.id"
+                :label="way.id"
+              >{{way.name}}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
@@ -56,11 +115,27 @@
         <p class="exam-template-title">选择模板</p>
         <div class="exam-template-content">
           <template v-for="temp in templateList">
-            <el-popover width="280" placement="top" trigger="hover" :key="temp.id" popper-class="template-popper">
-              <el-row type="flex" align="middle">
-                <el-tag v-for="sub in temp.subList" :key="sub.id">{{temp.gradeList[0].gradeName + sub.examSubjectDesc}}</el-tag>
+            <el-popover
+              width="280"
+              placement="top"
+              trigger="hover"
+              :key="temp.id"
+              popper-class="template-popper"
+            >
+              <el-row
+                type="flex"
+                align="middle"
+              >
+                <el-tag
+                  v-for="sub in temp.subList"
+                  :key="sub.id"
+                >{{temp.gradeList[0].gradeName + sub.examSubjectDesc}}</el-tag>
               </el-row>
-              <el-button plain slot="reference" @click="selectTemplate(temp)">{{temp.templateName}}</el-button>
+              <el-button
+                plain
+                slot="reference"
+                @click="selectTemplate(temp)"
+              >{{temp.templateName}}</el-button>
             </el-popover>
           </template>
         </div>
@@ -68,61 +143,144 @@
       <div class="exam-subjects">
         <div class="exam-subjects-title">
           <span>科目管理</span>
-          <el-button type="primary" size="small" @click="addSubjects()">添加科目</el-button>
-          <el-button size="small" @click="removeAll()">全部清空</el-button>
+          <el-button
+            type="primary"
+            size="small"
+            @click="addSubjects()"
+          >添加科目</el-button>
+          <el-button
+            size="small"
+            @click="removeAll()"
+          >全部清空</el-button>
         </div>
         <div class="exam-subjects-content">
           <p class="exam-subjects-content-title">已经创建</p>
           <div class="exam-subjects-content-tags">
-            <el-tag v-for="(tag,index) in subjectTagList" :key="index" closable color="#ffffff" @close="tagClose(index)">{{tag.gradeName + tag.examSubjectDesc}}</el-tag>
+            <el-tag
+              v-for="(tag,index) in subjectTagList"
+              :key="index"
+              closable
+              color="#ffffff"
+              @close="tagClose(index)"
+            >{{tag.gradeName + tag.examSubjectDesc}}</el-tag>
           </div>
         </div>
       </div>
       <div class="exam-opration">
-        <el-button type="primary" @click="saveExam()" :loading="saveLoading">保存</el-button>
+        <el-button
+          type="primary"
+          @click="saveExam()"
+          :loading="saveLoading"
+        >保存</el-button>
         <el-button @click="closeExam()">关闭</el-button>
       </div>
     </el-card>
-    <el-dialog title="添加学校" :visible.sync="dialogSchoolVisible" custom-class="school-dialog">
+    <el-dialog
+      title="添加学校"
+      :visible.sync="dialogSchoolVisible"
+      custom-class="school-dialog"
+    >
       <span>学校</span>
-      <el-select remote filterable :remote-method="remoteMethod" :loading="loading" loading-text="加载中，请稍后..." size="small" v-model="school" value-key="id" placeholder="请选择或输入">
+      <el-select
+        remote
+        filterable
+        :remote-method="remoteMethod"
+        :loading="loading"
+        loading-text="加载中，请稍后..."
+        size="small"
+        v-model="school"
+        value-key="id"
+        placeholder="请选择或输入"
+      >
         <el-option-group label="匹配到的学校">
-          <el-option v-for="item in optionList" :key="item" :label="item.name" :value="item"></el-option>
+          <el-option
+            v-for="item in optionList"
+            :key="item"
+            :label="item.name"
+            :value="item"
+          ></el-option>
         </el-option-group>
       </el-select>
       <span slot="footer">
         <el-button @click="saveAndContinue()">保存并继续</el-button>
-        <el-button type="primary" @click="addSchool()">确定</el-button>
+        <el-button
+          type="primary"
+          @click="addSchool()"
+        >确定</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="添加科目" :visible.sync="dialogSubjectVisible" width="800px" custom-class="subject-dialog">
+    <el-dialog
+      title="添加科目"
+      :visible.sync="dialogSubjectVisible"
+      width="800px"
+      custom-class="subject-dialog"
+    >
       <div class="subject-grade">
         <h3>年级选择</h3>
-        <el-radio-group v-model="subjectGradeId" @change="gradeChange">
-          <el-radio v-for="grade in gradeList" :key="grade.id" :label="grade.id" :disabled="getGradeDisabled(grade)">{{grade.gradeName}}</el-radio>
+        <el-radio-group
+          v-model="subjectGradeId"
+          @change="gradeChange"
+        >
+          <el-radio
+            v-for="grade in gradeList"
+            :key="grade.id"
+            :label="grade.id"
+            :disabled="getGradeDisabled(grade)"
+          >{{grade.gradeName}}</el-radio>
         </el-radio-group>
       </div>
       <div class="subject-subjects">
         <h3>学科选择</h3>
-        <el-button size="small" type="text" @click="setAddSubject()">添加</el-button>
+        <el-button
+          size="small"
+          type="text"
+          @click="setAddSubject()"
+        >添加</el-button>
         <el-checkbox-group v-model="gradeSubjects">
-          <el-checkbox v-for="(sub,index) in subjectList" :key="index" :label="sub" @click="subjectClick" :disabled="getSubjectDisabled(sub)">{{sub.examSubjectDesc}}</el-checkbox>
+          <el-checkbox
+            v-for="(sub,index) in subjectList"
+            :key="index"
+            :label="sub"
+            @click="subjectClick"
+            :disabled="getSubjectDisabled(sub)"
+          >{{sub.examSubjectDesc}}</el-checkbox>
         </el-checkbox-group>
       </div>
       <div class="subject-preview">
         <h3>预览创建</h3>
-        <el-tag closable v-for="(subTag,index) in gradeSubjects" :key="index" @close="removeGradeSubject(index)">{{subjectGrade.gradeName + subTag.examSubjectDesc}}</el-tag>
+        <el-tag
+          closable
+          v-for="(subTag,index) in gradeSubjects"
+          :key="index"
+          @close="removeGradeSubject(index)"
+        >{{subjectGrade.gradeName + subTag.examSubjectDesc}}</el-tag>
       </div>
       <span slot="footer">
-        <el-button type="primary" :disabled="!canAddSubject" @click="addGradeSubject()">保存</el-button>
+        <el-button
+          type="primary"
+          :disabled="!canAddSubject"
+          @click="addGradeSubject()"
+        >保存</el-button>
         <el-button @click="dialogSubjectVisible = false">关闭</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="添加学科" width="500px" :visible.sync="addSubjectVisible" custom-class="add-subject-dialog">
+    <el-dialog
+      title="添加学科"
+      width="500px"
+      :visible.sync="addSubjectVisible"
+      custom-class="add-subject-dialog"
+    >
       <span>学科名称：</span>
-      <el-input size="medium" v-model="addSubjectName" placeholder="请输入学科名称"></el-input>
+      <el-input
+        size="medium"
+        v-model="addSubjectName"
+        placeholder="请输入学科名称"
+      ></el-input>
       <div slot="footer">
-        <el-button type="primary" @click="saveSubject()">保存</el-button>
+        <el-button
+          type="primary"
+          @click="saveSubject()"
+        >保存</el-button>
         <el-button @click="addSubjectVisible = false">取消</el-button>
       </div>
     </el-dialog>
@@ -133,7 +291,7 @@ import API from '../api/api.js'
 import { mapState } from 'vuex'
 import Utils from '../utils/Utils'
 export default {
-  data () {
+  data() {
     return {
       examTypeList: [
         { id: 0, name: '普通' },
@@ -202,7 +360,7 @@ export default {
       addSubjectName: ''
     }
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.getSubjectTemplateList()
     this.getGradeList()
@@ -219,24 +377,24 @@ export default {
       return false
     }
   },
-  mounted () {
+  mounted() {
   },
   methods: {
     // 获取学校列表
-    getSchools () {
+    getSchools() {
       this.axios.post(API.ADMINSCHOOL_GETSCHOOL, {}).then(res => {
         this.schoolList = res.data.data
       }).catch(() => { })
     },
     // 查询所有考试模板
-    getSubjectTemplateList () {
+    getSubjectTemplateList() {
       this.axios.post(API.EXAM_FINDBYTEMPLATELIST, { schoolCode: this.schoolCode }).then(res => {
         this.templateList = res.data.data
         // this.getSubjectsById(res.data.data)
       }).catch(() => { })
     },
     // 根据模板id查询科目信息
-    async getSubjectsById (templateList) {
+    async getSubjectsById(templateList) {
       let len = templateList.length
       for (let i = 0; i < len; i++) {
         let item = templateList[i]
@@ -250,7 +408,7 @@ export default {
       }
     },
     // 查询学校所有年级
-    getGradeList () {
+    getGradeList() {
       this.axios.post(`${API.GRADE_FINDBYGRADES}/${this.schoolCode}`).then(res => {
         this.gradeList = res.data.data.map(item => {
           let data = {
@@ -263,11 +421,11 @@ export default {
       }).catch(() => { })
     },
     // 标签关闭事件
-    tagClose (index) {
+    tagClose(index) {
       this.subjectTagList.splice(index, 1)
     },
     // select下拉框远程搜索（匹配学校）方法
-    remoteMethod (query = '') {
+    remoteMethod(query = '') {
       if (query !== '') {
         this.loading = true
         setTimeout(async () => {
@@ -281,11 +439,11 @@ export default {
       }
     },
     // 显示添加考试学校的弹窗
-    addExamSchool () {
+    addExamSchool() {
       this.dialogSchoolVisible = true
     },
     // 保存并继续
-    saveAndContinue () {
+    saveAndContinue() {
       let hasThisSchool = this.examSchoolList.find((item) => {
         return item.id === this.school.id
       })
@@ -299,12 +457,12 @@ export default {
       }
     },
     // 添加学校
-    addSchool () {
+    addSchool() {
       this.saveAndContinue()
       this.dialogSchoolVisible = false
     },
     // 选择模板
-    selectTemplate (temp) {
+    selectTemplate(temp) {
       this.subjectTagList = temp.subList.map(item => {
         item.gradeId = temp.gradeList[0].id
         item.gradeName = temp.gradeList[0].gradeName
@@ -312,17 +470,17 @@ export default {
       })
     },
     // 清空所有
-    removeAll () {
+    removeAll() {
       this.subjectTagList = []
     },
     // 获取学校的所有科目
-    getAllSubject () {
+    getAllSubject() {
       this.axios.post(API.EXAM_FINDBYSUBJECTCOM, { schoolCode: this.schoolCode }).then(res => {
         this.subjectList = res.data.data
       }).catch(() => { })
     },
     // 显示新增科目弹窗
-    addSubjects () {
+    addSubjects() {
       if (this.gradeList.length === 0) {
         this.$message({
           message: '该学校还没有年级',
@@ -334,15 +492,15 @@ export default {
       this.gradeChange(this.subjectGradeId)
       this.dialogSubjectVisible = true
     },
-    gradeChange (id) {
+    gradeChange(id) {
       this.subjectGrade = this.gradeList.find(item => {
         return id === item.id
       })
     },
-    subjectClick () { },
+    subjectClick() { },
     // 根据ID获取年级
     // 获取年级是否禁选
-    getGradeDisabled (grade) {
+    getGradeDisabled(grade) {
       if (this.subjectTagList.length === 0) {
         return false
       } else {
@@ -354,7 +512,7 @@ export default {
       }
     },
     // 获取科目是否禁选
-    getSubjectDisabled (subject) {
+    getSubjectDisabled(subject) {
       if (this.subjectTagList.length === 0) {
         return false
       } else {
@@ -369,11 +527,11 @@ export default {
       }
     },
     // 取消选择一个科目
-    removeGradeSubject (index) {
+    removeGradeSubject(index) {
       this.gradeSubjects.splice(index, 1)
     },
     // 新增科目
-    addGradeSubject () {
+    addGradeSubject() {
       this.gradeSubjects.forEach(item => {
         this.subjectTagList.push({
           gradeId: this.subjectGrade.id,
@@ -387,46 +545,46 @@ export default {
       this.dialogSubjectVisible = false
     },
     // 保存考试
-    saveExam () {
-      console.log(Utils.formatTime(this.examForm.examDateFrom))
-      this.$refs['examForm'].validate(valid => {
+    async saveExam() {
+      const that = this
+      async function callBack(valid) {
         if (valid) {
-          if (this.subjectTagList.length === 0) {
-            this.$message({
+          if (that.subjectTagList.length === 0) {
+            that.$message({
               message: '请选择考试科目',
               type: 'warning'
             })
             return
           }
-          this.saveLoading = true
-          let subjectIds = this.subjectTagList.map(item => {
+          that.saveLoading = true
+          let subjectIds = that.subjectTagList.map(item => {
             return item.id
           })
-          this.examForm.establishId = this.adminInfo.teacherInfo.id
-          this.examForm.schoolCode = this.examForm.examRange === 1 ? this.examForm.schoolList.join(',') : this.schoolCode
-          this.examForm.gradeId = this.subjectTagList[0].gradeId
-          this.examForm.subjectId = subjectIds.join(',')
-          this.examForm.examDateFrom = Utils.formatTime(this.examForm.examDateFrom)
-          this.examForm.examDateTo = Utils.formatTime(this.examForm.examDateTo)
-          this.axios.post(API.EXAM_ESTABLISH, this.examForm).then(res => {
-            this.$router.push('/home')
-            this.saveLoading = false
-          })
+          that.examForm.establishId = that.adminInfo.teacherInfo.id
+          that.examForm.schoolCode = that.examForm.examRange === 1 ? that.examForm.schoolList.join(',') : that.schoolCode
+          that.examForm.gradeId = that.subjectTagList[0].gradeId
+          that.examForm.subjectId = subjectIds.join(',')
+          that.examForm.examDateFrom = Utils.formatTime(that.examForm.examDateFrom)
+          that.examForm.examDateTo = Utils.formatTime(that.examForm.examDateTo)
+          await that.axios.post(API.EXAM_ESTABLISH, that.examForm).then(res => {
+            that.$router.push('/home')
+          }).catch(() => { that.saveLoading = false })
         } else {
           return false
         }
-      })
+      }
+      this.$refs['examForm'].validate(callBack)
     },
     // 关闭
-    closeExam () {
+    closeExam() {
       this.$router.push('/home')
     },
     // 添加学科弹窗显示
-    setAddSubject () {
+    setAddSubject() {
       this.addSubjectName = ''
       this.addSubjectVisible = true
     },
-    saveSubject () {
+    saveSubject() {
       let data = {
         examSubjectDesc: this.addSubjectName,
         schoolCode: this.schoolCode

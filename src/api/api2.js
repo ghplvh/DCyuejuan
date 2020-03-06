@@ -4,7 +4,7 @@ const API = {
   /**
    * @description 根据教师id获取阅卷列表
    */
-  APPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID: '/appExamExamine/getDcExamExamineByUserId',
+  APPEXAMEXAMINE_GETDCEXAMEXAMINEBYUSERID: 'appExamExamine/getDcExamExamineByUserId',
   /**
    * @description 根据教师获取审阅题块信息
    */

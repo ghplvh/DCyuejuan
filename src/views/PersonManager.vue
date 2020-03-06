@@ -1224,8 +1224,6 @@ export default {
       }
       // 获取年级ID
       const gradeId = this.gradeList.filter(item => { return item.gradeName === this.classGradeName })[0].id
-      console.log(gradeId)
-      console.log(this.adminInfo)
       const param = {
         className: this.className,
         gradeId: gradeId,
@@ -1233,7 +1231,6 @@ export default {
         schoolId: this.schoolNumber
       }
       this.axios.post(API.ADMIN_ADDCLASS, param).then(res => {
-        console.log(res)
         if (res.data.code === 0) {
           this.$message.success('添加成功！')
           this.getClassList()
@@ -1244,7 +1241,6 @@ export default {
     getClassList() {
       this.axios.post(API.ADMIN_GETCLASSLIST, { schoolId: this.schoolNumber }).then(res => {
         this.classList = res.data.data
-        console.log(this.classList)
       })
     },
     // 正在导入
@@ -1259,9 +1255,6 @@ export default {
       })
     },
     search() {
-      console.log(this.filterGradeStudent)
-      console.log(this.filterClassStudent)
-      console.log(this.searchInputStudent)
     },
     // 学生信息导入成功
     uploadSuccessStudent(response, file, fileList) {
@@ -1357,7 +1350,6 @@ export default {
       if (this.filterClassTeacher.id) {
         data.className = this.filterClassTeacher.className
       }
-      console.log(data)
       this.axios.post(API.TEACHER_TEACHERSBY, data).then(res => {
         let teacherData = res.data.data.list
         this.dataTeacher = teacherData
@@ -1523,7 +1515,6 @@ export default {
         return i.gradeName === name
       })[0]
       this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + grade.id).then(res => {
-        console.log('res', res)
         this.teacherClassList = res.data.data
         // 直接使用下标插入数组数据不是响应式的双向绑定
         // this.$set(this.teacherClassList, index, res.data.data)
@@ -1570,14 +1561,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.dialogType === 'add') {
-            console.log(this.dialogFormAdd)
-            console.log(this.gradeList)
             for (let i = 0; i < this.gradeList.length; i++) {
               if (this.dialogFormAdd.gradeNumber === this.gradeList[i].gradeName) {
                 this.dialogFormAdd.gradeId = this.gradeList[i].id
               }
             }
-            console.log()
             this.axios.post(API.STUDENT_ADDSTUDENT, this.dialogFormAdd).then(res => {
               this.$message({
                 message: '新增学生信息成功',
@@ -1727,7 +1715,6 @@ export default {
             item.gradeName = item.gradeName ? item.gradeName.gradeName : ''
             item.className = item.className.length > 0 ? item.className.join(',') : ''
           })
-          console.log(form)
           if (this.dialogType === 'add') {
             this.axios.post(API.TEACHER_ADDTEACHER, form).then(res => {
               this.$message({
@@ -1872,7 +1859,6 @@ export default {
     // 下载模版
     downloadMobanStudent() {
       this.axios.post(API.ADMIN_STUDENTDOWNLOAD, {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
-        console.log(res)
         const url = window.URL.createObjectURL(new Blob([res.data]))
         const link = document.createElement('a')
         link.style.display = 'none'
@@ -1884,7 +1870,6 @@ export default {
     },
     downloadMobanTeacher() {
       this.axios.post(API.ADMIN_TEACHERDOWNLOAD, {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
-        console.log(res)
         const url = window.URL.createObjectURL(new Blob([res.data]))
         const link = document.createElement('a')
         link.style.display = 'none'

@@ -129,7 +129,6 @@ export default {
     ...mapState(['adminInfo', 'menuList']),
     // 默认激活菜单
     defaultActive: function () {
-      console.log(this.$route.path.replace('/', ''))
       return this.$route.path.replace('/', '')
     }
   },
@@ -160,7 +159,6 @@ export default {
     },
     lgout() {
       this.$store.dispatch('removeAdminInfo')
-      console.log(this.$store.state.isLogin)
       this.$router.push('/')
     }
   }

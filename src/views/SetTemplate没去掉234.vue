@@ -1,32 +1,89 @@
 <template>
-  <div id="set-template" element-loading-text="加载图片中" v-loading="loading">
+  <div
+    id="set-template"
+    element-loading-text="加载图片中"
+    v-loading="loading"
+  >
     <el-container>
       <el-header height="50px">
-        <el-row class="title" type="flex" align="center">
+        <el-row
+          class="title"
+          type="flex"
+          align="center"
+        >
           <el-col :span="2">好易学</el-col>
-          <el-col :span="2" :offset="9">创建模板</el-col>
-          <el-col :span="3" :offset="8" class="operation-video">
-            <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+          <el-col
+            :span="2"
+            :offset="9"
+          >创建模板</el-col>
+          <el-col
+            :span="3"
+            :offset="8"
+            class="operation-video"
+          >
+            <router-link
+              to=""
+              target="_blank"
+            ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
           </el-col>
         </el-row>
       </el-header>
-      <el-tabs v-model="activeTab" @tab-click="tabsClick">
-        <el-tab-pane label="1.模板信息" name="templateInfo">
+      <el-tabs
+        v-model="activeTab"
+        @tab-click="tabsClick"
+      >
+        <el-tab-pane
+          label="1.模板信息"
+          name="templateInfo"
+        >
           <div class="template-info">
             <el-row class="template-info-select">
-              <el-col :span="16" :offset="6">
+              <el-col
+                :span="16"
+                :offset="6"
+              >
                 <span class="select-text">请选择你要查看的模板：</span>
-                <el-select class="select-template" value-key="id" v-model="currentTemplate" @change="changeTemplate">
-                  <el-option v-for="temp in examTemplateInfo" :key="temp.id" :label="temp.tempName" :value="temp"></el-option>
+                <el-select
+                  class="select-template"
+                  value-key="id"
+                  v-model="currentTemplate"
+                  @change="changeTemplate"
+                >
+                  <el-option
+                    v-for="temp in examTemplateInfo"
+                    :key="temp.id"
+                    :label="temp.tempName"
+                    :value="temp"
+                  ></el-option>
                 </el-select>
-                <el-button type="primary" class="add-template" @click="showAddTemplate()">新增模版</el-button>
-                <el-button type="primary" class="add-template" @click="scanAddTemplate()">扫描上传</el-button>
-                <el-button type="primary" class="add-template" @click="scanAddShi()">扫描试卷</el-button>
-                <el-button type="danger" class="add-template" @click="deleteTemplate()" :loading="buttonLoading">删除当前模板</el-button>
+                <el-button
+                  type="primary"
+                  class="add-template"
+                  @click="showAddTemplate()"
+                >新增模版</el-button>
+                <el-button
+                  type="primary"
+                  class="add-template"
+                  @click="scanAddTemplate()"
+                >扫描上传</el-button>
+                <el-button
+                  type="primary"
+                  class="add-template"
+                  @click="scanAddShi()"
+                >扫描试卷</el-button>
+                <el-button
+                  type="danger"
+                  class="add-template"
+                  @click="deleteTemplate()"
+                  :loading="buttonLoading"
+                >删除当前模板</el-button>
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="16" :offset="6">
+              <el-col
+                :span="16"
+                :offset="6"
+              >
                 <el-col :span="8">
                   <span>试卷页数：</span>
                   <span class="big-black">{{currentTemplate.testPage || 0}}页</span>
@@ -42,18 +99,36 @@
               </el-col>
             </el-row>
             <el-row class="available-row">
-              <el-col :span="16" :offset="6">
+              <el-col
+                :span="16"
+                :offset="6"
+              >
                 <el-row>
                   <div class="pic-list-name">有效页:
-                    <span class="big-black" v-if="svgImages.length === 0">暂无</span></div>
-                  <div class="sm-pic-div" v-for="image in svgImages" :key="image" @click="previewImage(image)">
-                    <img :src="image" alt="">
+                    <span
+                      class="big-black"
+                      v-if="svgImages.length === 0"
+                    >暂无</span></div>
+                  <div
+                    class="sm-pic-div"
+                    v-for="image in svgImages"
+                    :key="image"
+                    @click="previewImage(image)"
+                  >
+                    <img
+                      :src="image"
+                      alt=""
+                    >
                   </div>
                 </el-row>
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="16" :offset="6" style="color:#999;">
+              <el-col
+                :span="16"
+                :offset="6"
+                style="color:#999;"
+              >
                 <el-row>提示：</el-row>
                 <el-row>1.多模板仅针对于考号识别和客观题识别，主观题的题块划分只对主模板有效。</el-row>
                 <el-row>2.当前已创建<font color="red">1</font>个</el-row>
@@ -61,20 +136,52 @@
             </el-row>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="2.图片水平定位" name="horPosition">
+        <el-tab-pane
+          label="2.图片水平定位"
+          name="horPosition"
+        >
           <el-row>
             <el-col :span="20">
-              <el-row type="flex" align="middle" justify="space-between" class="main-header opration">
-                <el-col :span="18" :offset="1">
+              <el-row
+                type="flex"
+                align="middle"
+                justify="space-between"
+                class="main-header opration"
+              >
+                <el-col
+                  :span="18"
+                  :offset="1"
+                >
                   操作提示： 请对照网格调整图片，完成后点击保存将跳到下一页；若模板包含多张图片，请注意每页都需要进行水平定位。
                 </el-col>
-                <el-col :span="6" class="zoom">
-                  <el-row type="flex" align="middle" justify="space-between">
-                    <el-col :span="6" class="btn-box">
-                      <el-button type="primary" size="mini" @click="changeDeg(-0.2)">左旋1°</el-button>
+                <el-col
+                  :span="6"
+                  class="zoom"
+                >
+                  <el-row
+                    type="flex"
+                    align="middle"
+                    justify="space-between"
+                  >
+                    <el-col
+                      :span="6"
+                      class="btn-box"
+                    >
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        @click="changeDeg(-0.2)"
+                      >左旋1°</el-button>
                     </el-col>
-                    <el-col :span="6" class="btn-box">
-                      <el-button type="primary" size="mini" @click="changeDeg(0.2)">右旋1°</el-button>
+                    <el-col
+                      :span="6"
+                      class="btn-box"
+                    >
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        @click="changeDeg(0.2)"
+                      >右旋1°</el-button>
                     </el-col>
                     <!-- <el-col :span="3" class="icon-box"><i class="iconfont icon-unie039" @click="setScale(-0.05)"></i></el-col>
                     <el-col :span="3" class="icon-box"><i class="iconfont icon-fangda" @click="setScale(0.05)"></i></el-col> -->
@@ -82,41 +189,105 @@
                 </el-col>
               </el-row>
               <el-row class="paper-img">
-                <div class="mask" :style="{width: getSvgWidth()+'px', height: getSvgHeight()+'px'}">
-                  <div class="horizon-line" v-for="i in Math.floor(getSvgHeight()/30)" :key="i"></div>
+                <div
+                  class="mask"
+                  :style="{width: getSvgWidth()+'px', height: getSvgHeight()+'px'}"
+                >
+                  <div
+                    class="horizon-line"
+                    v-for="i in Math.floor(getSvgHeight()/30)"
+                    :key="i"
+                  ></div>
                 </div>
-                <div class="mask" :style="{width: getSvgWidth()+'px', height: getSvgHeight()+'px'}">
-                  <div class="vertical-line" v-for="i in Math.floor(getSvgWidth()/30)" :key="i"></div>
+                <div
+                  class="mask"
+                  :style="{width: getSvgWidth()+'px', height: getSvgHeight()+'px'}"
+                >
+                  <div
+                    class="vertical-line"
+                    v-for="i in Math.floor(getSvgWidth()/30)"
+                    :key="i"
+                  ></div>
                 </div>
-                <div class="main-svg" :style="mainSvgHeight" ref="horPosition">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :width="getSvgWidth()" :height="getSvgHeight()" :viewBox="getSvgViewBox()">
-                    <image :width="getSvgWidth()" :height="getSvgHeight()" :xlink:href="svgImages[currentPaper]" :transform="imageTransform"></image>
+                <div
+                  class="main-svg"
+                  :style="mainSvgHeight"
+                  ref="horPosition"
+                >
+                  <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    :width="getSvgWidth()"
+                    :height="getSvgHeight()"
+                    :viewBox="getSvgViewBox()"
+                  >
+                    <image
+                      :width="getSvgWidth()"
+                      :height="getSvgHeight()"
+                      :xlink:href="svgImages[currentPaper]"
+                      :transform="imageTransform"
+                    ></image>
                   </svg>
                 </div>
               </el-row>
             </el-col>
             <el-col :span="4">
               <div class="thumbnail-view">
-                <div v-for="(img,index) in svgImages" :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'" :key="img">
-                  <img :src="img" alt="" @click="selectPaper(index)">
+                <div
+                  v-for="(img,index) in svgImages"
+                  :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'"
+                  :key="img"
+                >
+                  <img
+                    :src="img"
+                    alt=""
+                    @click="selectPaper(index)"
+                  >
                 </div>
               </div>
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="3.选择定位区" name="positionArea">
+        <el-tab-pane
+          label="3.选择定位区"
+          name="positionArea"
+        >
           <el-row>
             <el-col :span="20">
-              <el-row type="flex" align="middle" justify="space-between" class="main-header opration">
-                <el-col :span="18" :offset="1">
+              <el-row
+                type="flex"
+                align="middle"
+                justify="space-between"
+                class="main-header opration"
+              >
+                <el-col
+                  :span="18"
+                  :offset="1"
+                >
                   操作提示： 请框选试卷的一行文字作为文字定位区，完成后点击保存将跳到下一页；若模版包含多张图片，请注意每页都需要框选定位区。
-                  <el-button type="text" size="small">查看框选示例</el-button>
+                  <el-button
+                    type="text"
+                    size="small"
+                  >查看框选示例</el-button>
                 </el-col>
-                <el-col :span="6" class="zoom">
-                  <el-row type="flex" align="middle" justify="space-between">
-                    <el-col :span="6" class="btn-box">
+                <el-col
+                  :span="6"
+                  class="zoom"
+                >
+                  <el-row
+                    type="flex"
+                    align="middle"
+                    justify="space-between"
+                  >
+                    <el-col
+                      :span="6"
+                      class="btn-box"
+                    >
                     </el-col>
-                    <el-col :span="6" class="btn-box">
+                    <el-col
+                      :span="6"
+                      class="btn-box"
+                    >
                     </el-col>
                     <!-- <el-col :span="3" class="icon-box"><i class="iconfont icon-unie039" @click="setScale(-0.05)"></i></el-col>
                     <el-col :span="3" class="icon-box"><i class="iconfont icon-fangda" @click="setScale(0.05)"></i></el-col> -->
@@ -124,21 +295,83 @@
                 </el-col>
               </el-row>
               <el-row class="paper-img">
-                <div class="main-svg" :style="mainSvgHeight" ref="positionArea">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :width="getSvgWidth()" :height="getSvgHeight()" :viewBox="getSvgViewBox()">
-                    <image :width="getSvgWidth()" :xlink:href="svgImages[currentPaper]" :transform="imageTransform"></image>
+                <div
+                  class="main-svg"
+                  :style="mainSvgHeight"
+                  ref="positionArea"
+                >
+                  <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    :width="getSvgWidth()"
+                    :height="getSvgHeight()"
+                    :viewBox="getSvgViewBox()"
+                  >
+                    <image
+                      :width="getSvgWidth()"
+                      :xlink:href="svgImages[currentPaper]"
+                      :transform="imageTransform"
+                    ></image>
                     <template v-for="(block,brlIndex) in blockRectList">
-                      <g :key="brlIndex" v-if="block.page === currentPaper" :class="block.isActive ? 'is-active' : ''">
-                        <rect class="cut-rect" :x="block.rect.x" :y="block.rect.y" :width="block.rect.width" :height="block.rect.height" :index="brlIndex" @mousedown="rectMousedown"></rect>
+                      <g
+                        :key="brlIndex"
+                        v-if="block.page === currentPaper"
+                        :class="block.isActive ? 'is-active' : ''"
+                      >
+                        <rect
+                          class="cut-rect"
+                          :x="block.rect.x"
+                          :y="block.rect.y"
+                          :width="block.rect.width"
+                          :height="block.rect.height"
+                          :index="brlIndex"
+                          @mousedown="rectMousedown"
+                        ></rect>
                         <template v-if="block.isActive">
-                          <circle v-for="(circle,cIndex) in block.circleList" :key="cIndex" :class="'point ' + circle.className" :brl-index="brlIndex" :index="cIndex" :cx="circle.cx" :cy="circle.cy" :r="circle.r" :fill="circle.fill" @mousedown="circleMouseDown"></circle>
+                          <circle
+                            v-for="(circle,cIndex) in block.circleList"
+                            :key="cIndex"
+                            :class="'point ' + circle.className"
+                            :brl-index="brlIndex"
+                            :index="cIndex"
+                            :cx="circle.cx"
+                            :cy="circle.cy"
+                            :r="circle.r"
+                            :fill="circle.fill"
+                            @mousedown="circleMouseDown"
+                          ></circle>
                         </template>
-                        <foreignObject v-if="block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height" :style="{display: block.foreignObject.display}">
-                          <span class="save-button" @click="saveBlock(brlIndex)" @mousedown="mousedownBlock">保存</span>
-                          <span class="delete-button" @click="deleteBlock(brlIndex)" @mousedown="mousedownBlock">删除</span>
+                        <foreignObject
+                          v-if="block.isActive"
+                          :x="block.foreignObject.x"
+                          :y="block.foreignObject.y"
+                          :width="block.foreignObject.width"
+                          :height="block.foreignObject.height"
+                          :style="{display: block.foreignObject.display}"
+                        >
+                          <span
+                            class="save-button"
+                            @click="saveBlock(brlIndex)"
+                            @mousedown="mousedownBlock"
+                          >保存</span>
+                          <span
+                            class="delete-button"
+                            @click="deleteBlock(brlIndex)"
+                            @mousedown="mousedownBlock"
+                          >删除</span>
                         </foreignObject>
-                        <foreignObject v-if="!block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height">
-                          <span class="edit-button" @click="editBlock(brlIndex)" @mousedown="mousedownBlock">编辑</span>
+                        <foreignObject
+                          v-if="!block.isActive"
+                          :x="block.foreignObject.x"
+                          :y="block.foreignObject.y"
+                          :width="block.foreignObject.width"
+                          :height="block.foreignObject.height"
+                        >
+                          <span
+                            class="edit-button"
+                            @click="editBlock(brlIndex)"
+                            @mousedown="mousedownBlock"
+                          >编辑</span>
                         </foreignObject>
                       </g>
                     </template>
@@ -148,25 +381,57 @@
             </el-col>
             <el-col :span="4">
               <div class="thumbnail-view">
-                <div v-for="(img,index) in svgImages" :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'" :key="img">
-                  <img :src="img" alt="" @click="selectPaper(index)">
+                <div
+                  v-for="(img,index) in svgImages"
+                  :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'"
+                  :key="img"
+                >
+                  <img
+                    :src="img"
+                    alt=""
+                    @click="selectPaper(index)"
+                  >
                 </div>
               </div>
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="4.选择考号区" name="positionExamCode">
+        <el-tab-pane
+          label="4.选择考号区"
+          name="positionExamCode"
+        >
           <el-row>
             <el-col :span="20">
-              <el-row type="flex" align="middle" justify="space-between" class="main-header opration">
-                <el-col :span="18" :offset="1">
+              <el-row
+                type="flex"
+                align="middle"
+                justify="space-between"
+                class="main-header opration"
+              >
+                <el-col
+                  :span="18"
+                  :offset="1"
+                >
                   操作提示： 请框选试卷上的考号区，完成后点击保存将跳到下一页。
                 </el-col>
-                <el-col :span="6" class="zoom">
-                  <el-row type="flex" align="middle" justify="space-between">
-                    <el-col :span="6" class="btn-box">
+                <el-col
+                  :span="6"
+                  class="zoom"
+                >
+                  <el-row
+                    type="flex"
+                    align="middle"
+                    justify="space-between"
+                  >
+                    <el-col
+                      :span="6"
+                      class="btn-box"
+                    >
                     </el-col>
-                    <el-col :span="6" class="btn-box">
+                    <el-col
+                      :span="6"
+                      class="btn-box"
+                    >
                     </el-col>
                     <!-- <el-col :span="3" class="icon-box"><i class="iconfont icon-unie039" @click="setScale(-0.05)"></i></el-col>
                     <el-col :span="3" class="icon-box"><i class="iconfont icon-fangda" @click="setScale(0.05)"></i></el-col> -->
@@ -174,21 +439,83 @@
                 </el-col>
               </el-row>
               <el-row class="paper-img">
-                <div class="main-svg" :style="mainSvgHeight" ref="positionExamCode">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :width="getSvgWidth()" :height="getSvgHeight()" :viewBox="getSvgViewBox()">
-                    <image :width="getSvgWidth()" :xlink:href="svgImages[currentPaper]" :transform="imageTransform"></image>
+                <div
+                  class="main-svg"
+                  :style="mainSvgHeight"
+                  ref="positionExamCode"
+                >
+                  <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    :width="getSvgWidth()"
+                    :height="getSvgHeight()"
+                    :viewBox="getSvgViewBox()"
+                  >
+                    <image
+                      :width="getSvgWidth()"
+                      :xlink:href="svgImages[currentPaper]"
+                      :transform="imageTransform"
+                    ></image>
                     <template v-for="(block,brlIndex) in blockRectList">
-                      <g :key="brlIndex" v-if="block.page === currentPaper" :class="block.isActive ? 'is-active' : ''">
-                        <rect class="cut-rect" :x="block.rect.x" :y="block.rect.y" :width="block.rect.width" :height="block.rect.height" :index="brlIndex" @mousedown="rectMousedown"></rect>
+                      <g
+                        :key="brlIndex"
+                        v-if="block.page === currentPaper"
+                        :class="block.isActive ? 'is-active' : ''"
+                      >
+                        <rect
+                          class="cut-rect"
+                          :x="block.rect.x"
+                          :y="block.rect.y"
+                          :width="block.rect.width"
+                          :height="block.rect.height"
+                          :index="brlIndex"
+                          @mousedown="rectMousedown"
+                        ></rect>
                         <template v-if="block.isActive">
-                          <circle v-for="(circle,cIndex) in block.circleList" :key="cIndex" :class="'point ' + circle.className" :brl-index="brlIndex" :index="cIndex" :cx="circle.cx" :cy="circle.cy" :r="circle.r" :fill="circle.fill" @mousedown="circleMouseDown"></circle>
+                          <circle
+                            v-for="(circle,cIndex) in block.circleList"
+                            :key="cIndex"
+                            :class="'point ' + circle.className"
+                            :brl-index="brlIndex"
+                            :index="cIndex"
+                            :cx="circle.cx"
+                            :cy="circle.cy"
+                            :r="circle.r"
+                            :fill="circle.fill"
+                            @mousedown="circleMouseDown"
+                          ></circle>
                         </template>
-                        <foreignObject v-if="block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height" :style="{display: block.foreignObject.display}">
-                          <span class="save-button" @click="saveBlock(brlIndex)" @mousedown="mousedownBlock">保存</span>
-                          <span class="delete-button" @click="deleteBlock(brlIndex)" @mousedown="mousedownBlock">删除</span>
+                        <foreignObject
+                          v-if="block.isActive"
+                          :x="block.foreignObject.x"
+                          :y="block.foreignObject.y"
+                          :width="block.foreignObject.width"
+                          :height="block.foreignObject.height"
+                          :style="{display: block.foreignObject.display}"
+                        >
+                          <span
+                            class="save-button"
+                            @click="saveBlock(brlIndex)"
+                            @mousedown="mousedownBlock"
+                          >保存</span>
+                          <span
+                            class="delete-button"
+                            @click="deleteBlock(brlIndex)"
+                            @mousedown="mousedownBlock"
+                          >删除</span>
                         </foreignObject>
-                        <foreignObject v-if="!block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height">
-                          <span class="edit-button" @click="editBlock(brlIndex)" @mousedown="mousedownBlock">编辑</span>
+                        <foreignObject
+                          v-if="!block.isActive"
+                          :x="block.foreignObject.x"
+                          :y="block.foreignObject.y"
+                          :width="block.foreignObject.width"
+                          :height="block.foreignObject.height"
+                        >
+                          <span
+                            class="edit-button"
+                            @click="editBlock(brlIndex)"
+                            @mousedown="mousedownBlock"
+                          >编辑</span>
                         </foreignObject>
                       </g>
                     </template>
@@ -198,27 +525,62 @@
             </el-col>
             <el-col :span="4">
               <div class="thumbnail-view">
-                <div v-for="(img,index) in svgImages" :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'" :key="img">
-                  <img :src="img" alt="" @click="selectPaper(index)">
+                <div
+                  v-for="(img,index) in svgImages"
+                  :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'"
+                  :key="img"
+                >
+                  <img
+                    :src="img"
+                    alt=""
+                    @click="selectPaper(index)"
+                  >
                 </div>
               </div>
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="5.选择客观题区" name="positionObjective">
+        <el-tab-pane
+          label="5.选择客观题区"
+          name="positionObjective"
+        >
           <el-row>
             <el-col :span="20">
-              <el-row type="flex" align="middle" justify="space-between" class="main-header opration">
-                <el-col :span="12" :offset="1">
+              <el-row
+                type="flex"
+                align="middle"
+                justify="space-between"
+                class="main-header opration"
+              >
+                <el-col
+                  :span="12"
+                  :offset="1"
+                >
                   操作提示： 请框选试卷上客观题区，完成后点击保存将跳到下一页；若多张试卷上有客观题区，请注意都需要框选。
                 </el-col>
-                <el-col :span="6" class="zoom">
-                  <el-row type="flex" align="middle" justify="start">
-                    <el-col :span="10" class="btn-box">
-                      <el-button type="primary" :loading="editBlockTitleForm.isLoading"
-                      @click="saveBlock">同步题号</el-button>
+                <el-col
+                  :span="6"
+                  class="zoom"
+                >
+                  <el-row
+                    type="flex"
+                    align="middle"
+                    justify="start"
+                  >
+                    <el-col
+                      :span="10"
+                      class="btn-box"
+                    >
+                      <el-button
+                        type="primary"
+                        :loading="editBlockTitleForm.isLoading"
+                        @click="saveBlock"
+                      >同步题号</el-button>
                     </el-col>
-                    <el-col :span="3" class="btn-box" >
+                    <el-col
+                      :span="3"
+                      class="btn-box"
+                    >
                       <el-checkbox v-model="editBlockTitleForm.isAutoSave">
                         自动同步
                       </el-checkbox>
@@ -229,14 +591,53 @@
                 </el-col>
               </el-row>
               <el-row class="paper-img">
-                <div class="main-svg" :style="mainSvgHeight" ref="positionObjective">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :width="getSvgWidth()" :height="getSvgHeight()" :viewBox="getSvgViewBox()" onload="start()">
-                    <image :width="getSvgWidth()" :height="getSvgHeight()" :xlink:href="svgImages[currentPaper]" :transform="imageTransform"></image>
+                <div
+                  class="main-svg"
+                  :style="mainSvgHeight"
+                  ref="positionObjective"
+                >
+                  <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    :width="getSvgWidth()"
+                    :height="getSvgHeight()"
+                    :viewBox="getSvgViewBox()"
+                    onload="start()"
+                  >
+                    <image
+                      :width="getSvgWidth()"
+                      :height="getSvgHeight()"
+                      :xlink:href="svgImages[currentPaper]"
+                      :transform="imageTransform"
+                    ></image>
                     <template v-for="(block,brlIndex) in blockRectList">
-                      <g :key="brlIndex" v-if="block.page === currentPaper" :class="block.isActive ? 'is-active' : ''">
-                        <rect class="cut-rect" :x="block.rect.x" :y="block.rect.y" :width="block.rect.width" :height="block.rect.height" :index="brlIndex" @mousedown="rectMousedown"></rect>
+                      <g
+                        :key="brlIndex"
+                        v-if="block.page === currentPaper"
+                        :class="block.isActive ? 'is-active' : ''"
+                      >
+                        <rect
+                          class="cut-rect"
+                          :x="block.rect.x"
+                          :y="block.rect.y"
+                          :width="block.rect.width"
+                          :height="block.rect.height"
+                          :index="brlIndex"
+                          @mousedown="rectMousedown"
+                        ></rect>
                         <template v-if="block.isActive">
-                          <circle v-for="(circle,cIndex) in block.circleList" :key="cIndex" :class="'point ' + circle.className" :brl-index="brlIndex" :index="cIndex" :cx="circle.cx" :cy="circle.cy" :r="circle.r" :fill="circle.fill" @mousedown="circleMouseDown"></circle>
+                          <circle
+                            v-for="(circle,cIndex) in block.circleList"
+                            :key="cIndex"
+                            :class="'point ' + circle.className"
+                            :brl-index="brlIndex"
+                            :index="cIndex"
+                            :cx="circle.cx"
+                            :cy="circle.cy"
+                            :r="circle.r"
+                            :fill="circle.fill"
+                            @mousedown="circleMouseDown"
+                          ></circle>
                         </template>
                         <!-- <foreignObject v-if="block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height" :style="{display: block.foreignObject.display}">
                           <span class="save-button" @click="saveBlock(brlIndex)" @mousedown="mousedownBlock">保存</span>
@@ -250,24 +651,31 @@
                     <template v-if="currentPaper === 0">
                       <!-- `block -->
                       <template v-for="(block,brlIndex) in littleBlockRectList">
-                        <g :key="brlIndex" :index="brlIndex">
+                        <g
+                          :key="brlIndex"
+                          :index="brlIndex"
+                        >
                           <!-- <text :x="block.text.x" :y="block.text.y" class="text-center" style="font-size:11px;">{{brlIndex}}</text> -->
                           <template v-for="(item, index) in block">
                             <text
-                              @click = editBlolckTitle(item[5],item[4])
+                              @click=editBlolckTitle(item[5],item[4])
                               v-if="index === 0"
                               :key="index"
                               :x="(parseInt(item[0] / ratio[0]) + parseInt(item[2] / ratio[0]) / 2).toFixed(0)"
                               :y="parseInt(parseInt(item[1] / ratio[0]) -5 )"
                               class="text-center"
-                              style="font-size:16px;">{{item[4]||"#"}}</text>
+                              style="font-size:16px;"
+                            >{{item[4]||"#"}}</text>
                             <rect
                               v-if="index > 0"
                               class="cut-rect"
                               :x="parseInt(item[0] / ratio[0])"
                               :y="parseInt(item[1] / ratio[0])"
                               :width="parseInt(item[2] / ratio[0])"
-                              :height="parseInt(item[3] / ratio[0])" :index="index" :key="index"></rect>
+                              :height="parseInt(item[3] / ratio[0])"
+                              :index="index"
+                              :key="index"
+                            ></rect>
                           </template>
                         </g>
                       </template>
@@ -286,8 +694,16 @@
             </el-col>
             <el-col :span="4">
               <div class="thumbnail-view">
-                <div v-for="(img,index) in svgImages" :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'" :key="img">
-                  <img :src="img" alt="" @click="selectPaper(index)">
+                <div
+                  v-for="(img,index) in svgImages"
+                  :class="index === currentPaper ? 'img-wrapper selected' : 'img-wrapper'"
+                  :key="img"
+                >
+                  <img
+                    :src="img"
+                    alt=""
+                    @click="selectPaper(index)"
+                  >
                 </div>
               </div>
             </el-col>
@@ -295,51 +711,144 @@
         </el-tab-pane>
       </el-tabs>
     </el-container>
-    <el-dialog title="查看模板" :visible.sync="previewVisible" width="60%" custom-class="preview-dialog">
+    <el-dialog
+      title="查看模板"
+      :visible.sync="previewVisible"
+      width="60%"
+      custom-class="preview-dialog"
+    >
       <div class="img-box">
-        <img :src="prevImg" alt="模板">
+        <img
+          :src="prevImg"
+          alt="模板"
+        >
       </div>
       <div slot="footer">
-        <el-button type="primary" size="medium" @click="previewVisible = false">确定</el-button>
+        <el-button
+          type="primary"
+          size="medium"
+          @click="previewVisible = false"
+        >确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="新增模板" :visible.sync="addTemplateVisible" width="500px" custom-class="add-template-dialog">
-      <el-form :model="addTemplateForm" status-icon :rules="addTemplateFormRules" ref="addTemplateForm" size="medium" label-width="100px">
-        <el-form-item label="模板名称" prop="tempName">
-          <el-input v-model.number="addTemplateForm.tempName" :disabled="examTemplateInfo.length === 0"></el-input>
+    <el-dialog
+      title="新增模板"
+      :visible.sync="addTemplateVisible"
+      width="500px"
+      custom-class="add-template-dialog"
+    >
+      <el-form
+        :model="addTemplateForm"
+        status-icon
+        :rules="addTemplateFormRules"
+        ref="addTemplateForm"
+        size="medium"
+        label-width="100px"
+      >
+        <el-form-item
+          label="模板名称"
+          prop="tempName"
+        >
+          <el-input
+            v-model.number="addTemplateForm.tempName"
+            :disabled="examTemplateInfo.length === 0"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="考号形式" prop="testnumberType">
+        <el-form-item
+          label="考号形式"
+          prop="testnumberType"
+        >
           <el-select v-model="addTemplateForm.testnumberType">
-            <el-option v-for="type in testnumberTypes" :key="type.id" :label="type.name" :value="type.id"></el-option>
+            <el-option
+              v-for="type in testnumberTypes"
+              :key="type.id"
+              :label="type.name"
+              :value="type.id"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客观题数" prop="objective">
+        <el-form-item
+          label="客观题数"
+          prop="objective"
+        >
           <el-input v-model.number="addTemplateForm.objective"></el-input>
         </el-form-item>
-        <el-form-item label="答题卡页数" prop="testPage">
-          <el-input v-model.number="addTemplateForm.testPage" disabled></el-input>
+        <el-form-item
+          label="答题卡页数"
+          prop="testPage"
+        >
+          <el-input
+            v-model.number="addTemplateForm.testPage"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item label="答题卡图片" prop="imgUrl">
-          <el-upload class="answer-card-upload" :limit="answerCardLimit" :data="answerCardData" :action="uploadUrl" list-type="picture-card" accept="image/*" :on-preview="pictureCardPreview" :before-upload="answerCardBeforeUpload" :on-remove="answerCardRemove" :on-success="answerCardSuccess" :on-exceed="answerCardExceed">
+        <el-form-item
+          label="答题卡图片"
+          prop="imgUrl"
+        >
+          <el-upload
+            class="answer-card-upload"
+            :limit="answerCardLimit"
+            :data="answerCardData"
+            :action="uploadUrl"
+            list-type="picture-card"
+            accept="image/*"
+            :on-preview="pictureCardPreview"
+            :before-upload="answerCardBeforeUpload"
+            :on-remove="answerCardRemove"
+            :on-success="answerCardSuccess"
+            :on-exceed="answerCardExceed"
+          >
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button type="primary" size="medium" @click="addTemplate('addTemplateForm')" :loading="buttonLoading">确定</el-button>
-        <el-button size="medium" @click="addTemplateVisible = false">取消</el-button>
+        <el-button
+          type="primary"
+          size="medium"
+          @click="addTemplate('addTemplateForm')"
+          :loading="buttonLoading"
+        >确定</el-button>
+        <el-button
+          size="medium"
+          @click="addTemplateVisible = false"
+        >取消</el-button>
       </div>
     </el-dialog>
     <!-- `edit -->
-     <el-dialog title="修改题号" :visible.sync="editBlockTitleForm.isVisible" width="500px" custom-class="add-template-dialog">
-      <el-form :model="editBlockTitleForm" status-icon :rules="editBlockTitleForm" ref="editBlockTitleForm" size="medium" label-width="100px">
-        <el-form-item label="当前题号" prop="key">
+    <el-dialog
+      title="修改题号"
+      :visible.sync="editBlockTitleForm.isVisible"
+      width="500px"
+      custom-class="add-template-dialog"
+    >
+      <el-form
+        :model="editBlockTitleForm"
+        status-icon
+        :rules="editBlockTitleForm"
+        ref="editBlockTitleForm"
+        size="medium"
+        label-width="100px"
+      >
+        <el-form-item
+          label="当前题号"
+          prop="key"
+        >
           <el-input v-model="editBlockTitleForm.key"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button type="primary" size="medium" @click="saveBlolckTitle" :loading="editBlockTitleForm.isLoading">确定</el-button>
-        <el-button size="medium" @click="editBlockTitleForm.isVisible = false">取消</el-button>
+        <el-button
+          type="primary"
+          size="medium"
+          @click="saveBlolckTitle"
+          :loading="editBlockTitleForm.isLoading"
+        >确定</el-button>
+        <el-button
+          size="medium"
+          @click="editBlockTitleForm.isVisible = false"
+        >取消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -349,7 +858,7 @@ import API from '../api/api.js'
 import Utils from '../utils/Utils.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     let checkNumber = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('客观题数不能为0'))
@@ -482,42 +991,39 @@ export default {
   },
   computed: {
     ...mapState(['adminInfo']),
-    mainSvgHeight () {
+    mainSvgHeight() {
       return { height: (window.innerHeight - 145) + 'px' }
     },
-    imageTransform () {
+    imageTransform() {
       return 'rotate(' + [this.rotateDeg].join(',') + ')'
     }
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.getExamSubject()
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
       this.getRatio()
     })
   },
-  updated () {
+  updated() {
   },
   methods: {
     // 查询所有考试科目
-    async getExamSubject () {
+    async getExamSubject() {
       this.loading = true
       await this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.examSubjectList = res.data.data
         this.examSubjectInfo = this.examSubjectList.filter(item => {
-          // console.log(item.id === this.examSubjectId)
           if (Number(item.id) === Number(this.examSubjectId)) {
-            // console.log(item)
             return item
           }
         })[0]
-        // console.log(this.examSubjectInfo)
       }).catch(() => { this.loading = false })
     },
     // 获取图片宽高比
-    getRatio (refresh = true) {
+    getRatio(refresh = true) {
       if (this.currentSVGRef !== 'templateInfo') {
         this.$nextTick(() => {
           this.svgWidth = this.$refs[this.currentSVGRef].clientWidth
@@ -535,7 +1041,6 @@ export default {
               // this.ratioWH = srcImg.height / srcImg.width
               let ratio = srcImg.width / (imageWidth === 0 ? this.svgWidth : imageWidth)
               this.ratio.splice(index, 1, ratio)
-              // console.log(this.ratio, 'ratio')
               if (index === this.svgImages.length - 1) {
                 this.addEvent()
               }
@@ -548,7 +1053,7 @@ export default {
       }
     },
     // 查询模板
-    getExamTemplate () {
+    getExamTemplate() {
       this.loading = true
       let data = {
         examId: this.examId,
@@ -556,7 +1061,6 @@ export default {
       }
       this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
         let list = res.data.data
-        console.log('getExamTemplate,res', res)
         this.examTemplateInfo = list.map(item => {
           item.imgUrl = item.imgUrl.split(',')
           item.locationCoord = Utils.isJsonString(item.locationCoord) ? this.convertData(JSON.parse(item.locationCoord), false) : []
@@ -564,11 +1068,9 @@ export default {
           item.optionalTopicTopic = Utils.isJsonString(item.optionalTopicTopic) ? this.convertData(JSON.parse(item.optionalTopicTopic), false) : []
           return item
         })
-        // console.log(this.examTemplateInfo)
         // this.examTemplateInfo = list
         this.currentTemplate = list[0]
         this.littleBlockRectList = JSON.parse(list[0].objectiveCoord || '')
-        console.log('currentTemplate', this.currentTemplate)
         this.changeTemplate()
 
         this.tempList = this.getCurrentRectList()
@@ -578,7 +1080,7 @@ export default {
       }).catch(() => { this.loading = false })
     },
     // 模板切换
-    changeTemplate () {
+    changeTemplate() {
       this.svgImages = this.currentTemplate.imgUrl
       this.locationCoord = this.currentTemplate.locationCoord
       this.numberCoord = this.currentTemplate.numberCoord
@@ -586,23 +1088,23 @@ export default {
       this.optionalTopicTopic = this.currentTemplate.optionalTopicTopic
     },
     // 获取考号形式
-    getTestnumberType (id) {
+    getTestnumberType(id) {
       let type = this.testnumberTypes.find(item => {
         return item.id === id
       })
       return type ? type.name : '暂未设置'
     },
     // 图片预览
-    previewImage (img) {
+    previewImage(img) {
       this.prevImg = img
       this.previewVisible = true
     },
-    pictureCardPreview (file) {
+    pictureCardPreview(file) {
       this.prevImg = file.url
       this.previewVisible = true
     },
     // 显示新增模板弹窗
-    showAddTemplate () {
+    showAddTemplate() {
       this.addTemplateForm = {
         examId: this.$route.params.examId,
         examSubjectId: this.$route.params.examSubjectId,
@@ -616,11 +1118,11 @@ export default {
     },
     // 答题卡上传
     // 上传前
-    answerCardBeforeUpload (file) {
+    answerCardBeforeUpload(file) {
       this.answerCardData.filedir = 'model/'
     },
     // 上传成功
-    answerCardSuccess (response, file, fileList) {
+    answerCardSuccess(response, file, fileList) {
       let list = []
       fileList.forEach(item => {
         list.push(item.response.data.data)
@@ -630,7 +1132,7 @@ export default {
       this.addTemplateForm.imgUrl = list.join(',')
     },
     // 删除图片
-    answerCardRemove (file, fileList) {
+    answerCardRemove(file, fileList) {
       let list = []
       fileList.forEach(item => {
         list.push(item.response.data)
@@ -640,19 +1142,18 @@ export default {
       this.addTemplateForm.imgUrl = list.join(',')
     },
     // 超过限制
-    answerCardExceed (file, fileList) {
+    answerCardExceed(file, fileList) {
       this.$message({
         message: '上传数量超过限制',
         type: 'warning'
       })
     },
     // 新增模板
-    addTemplate (formName) {
+    addTemplate(formName) {
       this.buttonLoading = true
       this.addTemplateForm.userId = this.adminInfo.id
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // console.log(this.addTemplateForm)
           this.axios.post(API.EXAMTEMPLATE_ADDEXAMTEMPLATE, this.addTemplateForm).then(res => {
             this.$message({
               message: '新增模板成功',
@@ -669,7 +1170,7 @@ export default {
       })
     },
     // 扫描上传模板 `scan
-    scanAddTemplate () {
+    scanAddTemplate() {
       let param = {
         subjectId: this.examSubjectId,
         examId: this.examId
@@ -681,9 +1182,7 @@ export default {
         // headers: {'Access-Control-Allow-Origin': '*'},
         data: param
       }).then(res => {
-        console.log('scanAddTemplate,res', res)
         let a = res.data.questionsloc.replace(/↵/g, '\n')
-        console.log('a,', JSON.parse(a))
         // 处理格式
         let arr = Object.entries(JSON.parse(a)).map((item, index) => {
           let res = Object.entries(item[1]).map(item2 => {
@@ -695,7 +1194,6 @@ export default {
           gg.push(item[0])
           gg.push(index)
           res.unshift(gg)
-          console.log('arr,res', res)
           return res
         })
         this.svgImages = []
@@ -703,7 +1201,6 @@ export default {
         this.svgImages.push(res.data.filelocation.file1)
         this.getRatio()
         this.littleBlockRectList = arr
-        console.log('littleBlockRectList', this.littleBlockRectList)
         this.scanData = arr // 客观题
         this.cnlocation = res.data.cnlocation // cnlocation
         this.qalocation = res.data.qalocation
@@ -711,14 +1208,13 @@ export default {
       })
     },
     // `editBlockTitle
-    editBlolckTitle (id, key) {
-      // console.log('editBlolckTitle,id', id)
+    editBlolckTitle(id, key) {
       this.editBlockTitleForm.id = id
       this.editBlockTitleForm.key = key
       this.editBlockTitleForm.isVisible = true
     },
     // `saveBlockTitle
-    async saveBlolckTitle () {
+    async saveBlolckTitle() {
       this.editBlockTitleForm.isLoading = true
       let { id, key, isAutoSave } = this.editBlockTitleForm
       this.littleBlockRectList.forEach(item => {
@@ -726,7 +1222,6 @@ export default {
           item[0][4] = key
         }
       })
-      // console.log('this.littleBlockRectList', this.littleBlockRectList)
       this.editBlockTitleForm.isVisible = false
       if (isAutoSave) {
         await this.saveBlock()
@@ -734,7 +1229,7 @@ export default {
       this.editBlockTitleForm.isLoading = false
     },
     // 扫描答题卡
-    scanAddShi () {
+    scanAddShi() {
       let data = {
         'cnlocation': this.cnlocation,
         'qalocation': this.qalocation,
@@ -749,11 +1244,10 @@ export default {
         // headers: {'Access-Control-Allow-Origin': '*'},
         data: data
       }).then(res => {
-        // console.log(res)
       })
     },
     // 删除当前模板
-    deleteTemplate () {
+    deleteTemplate() {
       this.$confirm('确定删除当前模板吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -773,27 +1267,27 @@ export default {
       })
     },
     // tabs切换
-    tabsClick (tab) {
+    tabsClick(tab) {
       this.currentSVGRef = tab.name
       this.getRatio()
     },
     // 试卷切换
-    selectPaper (index) {
+    selectPaper(index) {
       this.currentPaper = index
       this.getRatio()
     },
     // 旋转
-    changeDeg (deg = 0) {
+    changeDeg(deg = 0) {
       this.rotateDeg += deg
     },
     // 计算svg的width，height，viewbox
-    getSvgWidth () {
+    getSvgWidth() {
       return this.svgWidth * this.scaleSvg
     },
-    getSvgHeight () {
+    getSvgHeight() {
       return this.svgWidth * this.ratioWH * this.scaleSvg
     },
-    getSvgViewBox () {
+    getSvgViewBox() {
       return [0, 0, this.getSvgWidth(), this.getSvgHeight()].join(',')
     },
     /**
@@ -801,8 +1295,7 @@ export default {
      * @param data  需要换算的数据
      * @param isGet true:显示数据换算实际数据; false:实际数据换算显示数据
      */
-    convertData (data, isGet = false) {
-      // console.log(isGet)
+    convertData(data, isGet = false) {
       if (!Array.isArray(data)) {
         return data || []
       }
@@ -826,7 +1319,7 @@ export default {
       return arr
     },
     // 设置缩放等级
-    setScale (number) {
+    setScale(number) {
       if ((this.scaleSvg <= 0.5 && number < 0) || (this.scaleSvg >= 1.5 && number > 0)) {
         return
       }
@@ -850,7 +1343,7 @@ export default {
       })
     },
     // 获取当前选框数据
-    getCurrentRectList () {
+    getCurrentRectList() {
       let data = []
       switch (this.currentSVGRef) {
         case 'positionArea':
@@ -866,7 +1359,7 @@ export default {
       return data
     },
     // 设置当前选框数据
-    setCurrentRectList (data) {
+    setCurrentRectList(data) {
       switch (this.currentSVGRef) {
         case 'positionArea':
           this.locationCoord = data
@@ -880,7 +1373,7 @@ export default {
       }
     },
     // 给svg添加鼠标事件，画矩形
-    addEvent () {
+    addEvent() {
       if (this.activeTab === 'positionObjective') {
         return false
       }
@@ -890,8 +1383,6 @@ export default {
       let svg = this.$refs[this.currentSVGRef]
       // this.blockRectList = this.getCurrentRectList()
       svg.onmousedown = (ed) => {
-        console.log(ed)
-        // console.log(this.blockRectList)
         let x = ed.offsetX
         let y = ed.offsetY
         // 添加题块和矩形框
@@ -977,9 +1468,8 @@ export default {
       }
     },
     // 操作按钮事件
-    async saveBlock () {
+    async saveBlock() {
       this.setCurrentRectList(this.blockRectList)
-      console.log('id', this.currentTemplate)
 
       let data = {
         id: this.currentTemplate.id,
@@ -989,32 +1479,28 @@ export default {
         objectiveCoord: JSON.stringify(this.littleBlockRectList),
         optionalTopicTopic: JSON.stringify(this.convertData(this.optionalTopicTopic, true))
       }
-      console.log('saveBlock,data', data)
-      // console.log(this.objectiveCoord)
-      // console.log(this.examSubjectInfo.subjectName)
       await this.axios.post(API.EXAMTEMPLATE_UPDATEBYID, data).then(res => {
         this.$message({
           message: '成功',
           type: 'success'
         })
         this.getExamTemplate()
-        // console.log(this.blockRectList)
       }).catch(() => { })
     },
-    deleteBlock (index) {
+    deleteBlock(index) {
       this.blockRectList.splice(index, 1)
       // this.setCurrentRectList(this.blockRectList)
       this.saveBlock(index)
     },
-    editBlock (index) {
+    editBlock(index) {
       this.blockRectList[index].isActive = true
       // this.setCurrentRectList(this.blockRectList)
     },
-    mousedownBlock (e) {
+    mousedownBlock(e) {
       e.stopPropagation()
     },
     // 矩形移动
-    rectMousedown (e) {
+    rectMousedown(e) {
       e.stopPropagation()
       let rectDom = e.target
       // this.blockRectList = this.getCurrentRectList()
@@ -1073,7 +1559,7 @@ export default {
       }
     },
     // 矩形缩放
-    circleMouseDown (e) {
+    circleMouseDown(e) {
       e.stopPropagation()
       let circle = e.target
       // this.blockRectList = this.getCurrentRectList()
@@ -1293,7 +1779,7 @@ export default {
       }
     },
     // 矩形圆点位置计算
-    setCirclePosition (index, x, y, w, h) {
+    setCirclePosition(index, x, y, w, h) {
       // this.blockRectList = this.getCurrentRectList()
       let circleList = this.blockRectList[index].circleList
       for (let i = 0; i < circleList.length; i++) {

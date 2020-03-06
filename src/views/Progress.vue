@@ -1,31 +1,61 @@
 <template>
-  <div id="subject-main-2" v-loading="loading">
-    <el-row class="bread-crumb" type="flex" align="middle">
+  <div
+    id="subject-main-2"
+    v-loading="loading"
+  >
+    <el-row
+      class="bread-crumb"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/exam/'+examId}">{{examInfo.examName}}</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId + '/' + examSubjectId}">{{`${examGrade.gradeName}(科目ID：${examSubjectId})`}}</el-breadcrumb-item>
-          <el-breadcrumb-item >查看阅卷进度</el-breadcrumb-item>
+          <el-breadcrumb-item>查看阅卷进度</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
-        <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
+        <router-link
+          to=""
+          target="_blank"
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
       </el-col>
     </el-row>
-    <el-tabs v-model="activeName" @tab-click="handleClick" class="progress">
-      <el-tab-pane label="按题块查看" name="first">
+    <el-tabs
+      v-model="activeName"
+      @tab-click="handleClick"
+      class="progress"
+    >
+      <el-tab-pane
+        label="按题块查看"
+        name="first"
+      >
         <el-collapse accordion>
-          <el-collapse-item  v-for="(item, index) in blockData" :key="index" class="block">
+          <el-collapse-item
+            v-for="(item, index) in blockData"
+            :key="index"
+            class="block"
+          >
             <template slot="title">
               <div style="flex: 24;">
                 <el-row class="row">
-                  <el-col :span="5" class="leftCol">
+                  <el-col
+                    :span="5"
+                    class="leftCol"
+                  >
                     <div class="titleFont">{{item.titleBlockName}}(总分{{item.score}}分)</div>
                   </el-col>
                   <el-col :span="16">
                     <div class="titleFont">题块内容：
-                      <span v-for="(block, i) in item.blockContent" :key="i">{{block}}&nbsp;&nbsp;</span>
+                      <span
+                        v-for="(block, i) in item.blockContent"
+                        :key="i"
+                      >{{block}}&nbsp;&nbsp;</span>
                     </div>
                   </el-col>
                   <el-col :span="2"></el-col>
@@ -35,7 +65,15 @@
                   <el-col :span="10">
                     <el-row>
                       <el-col :span="4">总进度</el-col>
-                      <el-col :span="20" style="padding-top: 16px;"><el-progress :stroke-width="12" :percentage="item.sumRate" ></el-progress></el-col>
+                      <el-col
+                        :span="20"
+                        style="padding-top: 16px;"
+                      >
+                        <el-progress
+                          :stroke-width="12"
+                          :percentage="item.sumRate"
+                        ></el-progress>
+                      </el-col>
                     </el-row>
                   </el-col>
                   <el-col :span="6">
@@ -47,10 +85,19 @@
             </template>
             <div class="blockDetail">
               <div class="schoolProgress">
-                <el-row class="teacherProgress" v-for="(etrList, index) in item.etrList" :key="index">
+                <el-row
+                  class="teacherProgress"
+                  v-for="(etrList, index) in item.etrList"
+                  :key="index"
+                >
                   <el-col span="4">{{etrList.schoolName}}</el-col>
                   <el-col span="4">{{etrList.teacherName}}</el-col>
-                  <el-col span="10"><el-progress :stroke-width="12" :percentage="etrList.rate" ></el-progress></el-col>
+                  <el-col span="10">
+                    <el-progress
+                      :stroke-width="12"
+                      :percentage="etrList.rate"
+                    ></el-progress>
+                  </el-col>
                   <el-col span="6">进度：{{etrList.isExamine}}/{{etrList.isExamine + etrList.noExamine}}</el-col>
                 </el-row>
               </div>
@@ -99,26 +146,43 @@
           </div>
         </div>
       </el-tab-pane> -->
-      <el-tab-pane label="按班级查看" name="second">
+      <el-tab-pane
+        label="按班级查看"
+        name="second"
+      >
         <div class="select">
           <span>选择学校: </span>
-          <el-select v-model="schoolName" placeholder="请选择" size="small">
+          <el-select
+            v-model="schoolName"
+            placeholder="请选择"
+            size="small"
+          >
             <el-option
               v-for="(item, index) in schoolList"
               :key="index"
               :label="item.schoolName"
-              :value="item.schoolId">
+              :value="item.schoolId"
+            >
             </el-option>
           </el-select>
         </div>
-        <div class="showBlocksDetailDiv" v-for="(item, index) in classData" :key="index">
+        <div
+          class="showBlocksDetailDiv"
+          v-for="(item, index) in classData"
+          :key="index"
+        >
           <div class="row-block">
             <el-row class="bottom-nav">
               <el-col :span="5">{{item.className}}(考试人数：{{item.classStuNum || 0}})</el-col>
               <el-col :span="13">
                 <el-row>
                   <el-col :span="4">总进度</el-col>
-                  <el-col :span="20"><el-progress :stroke-width="12" :percentage="item.sumRate || 0" ></el-progress></el-col>
+                  <el-col :span="20">
+                    <el-progress
+                      :stroke-width="12"
+                      :percentage="item.sumRate || 0"
+                    ></el-progress>
+                  </el-col>
                 </el-row>
               </el-col>
               <el-col :span="4">
@@ -128,10 +192,19 @@
             </el-row>
             <div class="blockDetail">
               <div class="schoolProgress">
-                <el-row class="teacherProgress" v-for="(etrList, index) in item.etrList" :key="index">
+                <el-row
+                  class="teacherProgress"
+                  v-for="(etrList, index) in item.etrList"
+                  :key="index"
+                >
                   <el-col span="4">{{etrList.schoolName || 0}}</el-col>
                   <el-col span="4">{{etrList.teacherName || 0}}</el-col>
-                  <el-col span="10"><el-progress :stroke-width="12" :percentage="etrList.rate || 0" ></el-progress></el-col>
+                  <el-col span="10">
+                    <el-progress
+                      :stroke-width="12"
+                      :percentage="etrList.rate || 0"
+                    ></el-progress>
+                  </el-col>
                   <el-col span="6">进度：{{etrList.isExamine || 0}}/{{etrList.isExamine + etrList.noExamine || 0}}</el-col>
                 </el-row>
               </div>
@@ -147,7 +220,7 @@ import API from '../api/api.js'
 import API2 from '../api/api2.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       schoolCode: '',
       examId: this.$route.params.examId,
@@ -164,7 +237,7 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.schoolName = this.schoolCode || ''
     this.getSchoolList()
@@ -172,15 +245,14 @@ export default {
   },
   methods: {
     // 根据考试ID获取学校列表
-    getSchoolList () {
+    getSchoolList() {
       this.loading = true
-      console.log(API2.ADMIN_GETSCHOOLLIST)
       this.axios.post(API2.ADMIN_GETSCHOOLLIST, { examId: this.examId }).then(res => {
         this.schoolList = res.data.data
       }).catch(() => { this.loading = false })
     },
     // 获取考试信息
-    async getExamById () {
+    async getExamById() {
       this.loading = true
       await this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
@@ -190,36 +262,34 @@ export default {
       await this.getBlockProgress()
     },
     // 获取考试的年级
-    async getGradeById () {
+    async getGradeById() {
       this.loading = true
       await this.axios.post(API.GRADE_FINDBYCOMMON, { id: this.examInfo.gradeId }).then(res => {
         this.examGrade = res.data.data[0]
       }).catch(() => { this.loading = false })
     },
     // 获取题块阅卷进度
-    async getBlockProgress () {
+    async getBlockProgress() {
       this.loading = true
-      console.log(API2.ADMIN_GETBLOCKBYEXAMSUBJECTID)
       await this.axios.post(API2.ADMIN_GETBLOCKBYEXAMSUBJECTID, { examSubjectId: this.examSubjectId }).then(res => {
         this.blockData = res.data.data
         this.getClassProgress()
       }).catch(() => { this.loading = false })
     },
     // 获取班级阅卷进度
-    async getClassProgress () {
+    async getClassProgress() {
       this.loading = true
       await this.axios.post(API2.ADMIN_GETCLASSBYEXAMSUBJECTID, { examSubjectId: this.examSubjectId, examId: this.examId, schoolCode: this.schoolName }).then(res => {
         this.classData = res.data.data
       }).catch(() => { this.loading = false })
     },
     // showHidden
-    showHidden (index) {
+    showHidden(index) {
       // let div = document.getElementById(index)
-      // console.log(div)
     }
   },
   watch: {
-    '$route' (to, from) {
+    '$route'(to, from) {
     }
   }
 }
@@ -245,7 +315,7 @@ export default {
     margin-bottom: 20px;
     color: #8d8d8d;
     .row-block {
-      box-shadow: 0 0 10px 0 rgba(32,151,255,.2);
+      box-shadow: 0 0 10px 0 rgba(32, 151, 255, 0.2);
       .row {
         height: 45px;
         line-height: 45px;
@@ -307,7 +377,7 @@ export default {
     }
   }
   .el-collapse-item__wrap {
-    box-shadow: 0 0 10px 0 rgba(32,151,255,.2);
+    box-shadow: 0 0 10px 0 rgba(32, 151, 255, 0.2);
   }
   // .el-tabs__header {
   //   padding: 0 30px;
@@ -350,7 +420,7 @@ export default {
 }
 .el-collapse-item__header {
   height: auto;
-  box-shadow: 0 0 10px 0 rgba(32,151,255,.2);
+  box-shadow: 0 0 10px 0 rgba(32, 151, 255, 0.2);
   padding: 0 20px;
 }
 .el-collapse {
