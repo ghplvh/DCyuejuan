@@ -366,6 +366,7 @@
 import R from 'ramda'
 import { resOfScan } from '../mock'
 import API from '../api/api.js'
+import { mapState, mapActions } from 'vuex'
 export default {
   data() {
     return {
@@ -420,6 +421,10 @@ export default {
     }
   },
   async mounted() {
+    this.saveAdminInfo();
+    const login = this.$store.state
+    console.log('login', login)
+
     await this.getTemp()
     if (this.tempData.list.length > 0) {
       this.tempData.id = this.tempData.list[0].id
@@ -427,11 +432,13 @@ export default {
     this.changeTemp(this.tempData.id)
   },
   computed: {
+    ...mapState(['adminInfo']),
     mainSvgHeight() {
       return { height: (window.innerHeight - 145) + 'px' }
     }
   },
   methods: {
+    ...mapActions(['removeAdminInfo', 'saveAdminInfo']),
     onTab(tab) {
 
       this.svg.current = tab.name
@@ -670,6 +677,7 @@ export default {
         examId,
         examSubjectId
       }
+      console.log('data,', data)
       await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
         const list = res?.data?.data
         if (list?.length > 0) {
@@ -684,9 +692,10 @@ export default {
         } else {
           this.tempData.list = []
         }
-      }).catch(e => {
-        throw new Error(e)
       })
+        .catch(e => {
+          throw new Error(e)
+        })
     },
     // api
     async addTemp() {

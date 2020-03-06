@@ -6,13 +6,10 @@
 - [bug][on] /personManager http://120.24.181.77:10003/web/teacher/addTeacher 名称已存在造成api 500
 - [dev][done] /personMananger 单个新增老师, 角色列表添加优化
 - [bug][] /examDetail 选择班级， 全选bug
-<<<<<<< HEAD
 2020-03-02 
 - [bug][done] /home 当年级选择全部时，点击第二页，这时，切换年级到初三等无数据年级， 请求的pageIndex也是2
+- [bug][] /setTemplate 刷新页面，login丢失；
 
-
-=======
->>>>>>> 63c1d8f9932e0fa07ebeaccf80828f3beabf1022
 # xshell
 120.24.181.77
 cd /data/files/dc_test/dckj-ec-exam/target
