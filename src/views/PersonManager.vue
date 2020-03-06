@@ -1308,7 +1308,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.axios.post(API.STUDENT_DELSTUDENTS, { ...this.multiStudentSelection, schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode }).then(res => {
+        this.axios.post(API.EXAMINEE_DELETELISTBYID, { ...this.multiStudentSelection, schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'

@@ -134,7 +134,7 @@
                     </div>
                     <div class="exam-time-create">
                       <p><i class="el-icon-time"></i><span>考试时间: {{exam.dateFrom}}-{{exam.dateTo}}</span></p>
-                      <p><i class="el-icon-setting"></i><span>创建人: {{exam.userName}}</span></p>
+                      <p><i class="el-icon-setting"></i><span>创建人: {{exam.establishName}}</span></p>
                       <p><i class="el-icon-info"></i><span>考试ID: {{exam.id}}</span></p>
                     </div>
                   </div>
