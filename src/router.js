@@ -65,222 +65,227 @@ const router = new VueRouter({
   mode: 'hash',
   base: '/yuejuan/',
   routes: [{
+    path: '/',
+    name: 'login',
+    meta: {
+      title: '登录'
+    },
+    component: Login
+  }, {
+    path: '/forgetPassword',
+    name: 'forgetPassword',
+    meta: {
+      title: '忘记密码'
+    },
+    component: ForgetPassword
+  }, {
+    path: '/mainMenu',
+    meta: {
+      title: '首页'
+    },
+    component: MainMenu,
+    children: [{
       path: '/',
-      name: 'login',
-      meta: {
-        title: '登录'
-      },
-      component: Login
-    }, {
-      path: '/forgetPassword',
-      name: 'forgetPassword',
-      meta: {
-        title: '忘记密码'
-      },
-      component: ForgetPassword
-    }, {
-      path: '/mainMenu',
+      name: 'home',
       meta: {
         title: '首页'
       },
-      component: MainMenu,
-      children: [{
-        path: '/',
-        name: 'home',
-        meta: {
-          title: '首页'
-        },
-        component: Home
-      }, {
-        path: '/home',
-        name: 'Home',
-        meta: {
-          title: '首页'
-        },
-        component: Home
-      }, {
-        path: '/personManager',
-        name: 'personManager',
-        meta: {
-          title: '人员信息管理'
-        },
-        component: PersonManager
-      }, {
-        path: '/subjectMain/:examId/:examSubjectId',
-        name: 'subjectMain',
-        meta: {
-          title: '科目首页'
-        },
-        component: SubjectMain
-      }, {
-        path: '/exam/:examId',
-        name: 'exam',
-        meta: {
-          title: '考试详情'
-        },
-        component: Exam
-      }, {
-        path: '/createExam',
-        name: 'createExam',
-        meta: {
-          title: '创建考试'
-        },
-        component: CreateExam
-      }, {
-        path: '/editExam/:examId',
-        name: 'editExam',
-        meta: {
-          title: '编辑考试'
-        },
-        component: EditExam
-      }, {
-        path: '/examDetail/:examId',
-        name: 'examDetail',
-        meta: {
-          title: '考生信息管理'
-        },
-        component: ExamDetail
-      }, {
-        path: '/examPaperStructure/:examId/:examSubjectId',
-        name: 'examPaperStructure',
-        meta: {
-          title: '试卷结构'
-        },
-        component: ExamPaperStructure
-      }, {
-        path: '/settingAnswer/:examId/:examSubjectId',
-        name: 'settingAnswer',
-        meta: {
-          title: '设置答案'
-        },
-        component: SettingAnswer
-      }, {
-        path: '/scanPaper/:examId/:examSubjectId/:batchNumber',
-        name: 'scanPaper',
-        meta: {
-          title: '扫描答题卡'
-        },
-        component: ScanPaper
-      }, {
-        path: '/questionBlock/:examId/:examSubjectId',
-        name: 'questionBlock',
-        meta: {
-          title: '题块与阅卷任务'
-        },
-        component: QuestionBlock
-      }, {
-        path: '/checkPaperBlock/:examId/:examSubjectId/:examineId',
-        name: 'checkPaperBlock',
-        meta: {
-          title: '待阅题块'
-        },
-        component: CheckPaperBlock
-      }, {
-        path: '/checkPaper/:examId/:examSubjectId/:examineId/:blockId',
-        name: 'checkPaper',
-        meta: {
-          title: '试卷打分'
-        },
-        component: CheckPaper
-      }, {
-        path: '/uploadYuanJuan/:examId/:examSubjectId',
-        name: 'uploadYuanJuan',
-        meta: {
-          title: '上传原卷'
-        },
-        component: UploadYuanJuan
-      }, {
-        path: '/manager',
-        name: 'manager',
-        meta: {
-          title: '后台管理'
-        },
-        component: Manager
-        // children: [{
-        //   path: '/banner',
-        //   name: 'banner',
-        //   meta: {
-        //     title: '设置Banner'
-        //   },
-        //   component: Banner
-        // }]
-      }, {
-        path: '/updatePassword',
-        name: 'updatePassword',
-        meta: {
-          title: '修改密码'
-        },
-        component: UpdatePassword
-      }, {
-        path: '/progress/:examId/:examSubjectId',
-        name: 'progress',
-        meta: {
-          title: '阅卷进度'
-        },
-        component: Progress
-      }]
+      component: Home
     }, {
-      path: '/blockStyle/:examId/:examSubjectId',
-      name: 'blockStyle',
+      path: '/home',
+      name: 'Home',
       meta: {
-        title: '框选题块'
+        title: '首页'
       },
-      component: BlockStyle
+      component: Home
     }, {
-      path: '/examAnalyze',
-      name: 'examAnalyze',
+      path: '/personManager',
+      name: 'personManager',
       meta: {
-        title: '考试分析'
+        title: '人员信息管理'
       },
-      component: ExamAnalyze
+      component: PersonManager
+    }, {
+      path: '/subjectMain/:examId/:examSubjectId',
+      name: 'subjectMain',
+      meta: {
+        title: '科目首页'
+      },
+      component: SubjectMain
+    }, {
+      path: '/exam/:examId',
+      name: 'exam',
+      meta: {
+        title: '考试详情'
+      },
+      component: Exam
+    }, {
+      path: '/createExam',
+      name: 'createExam',
+      meta: {
+        title: '创建考试'
+      },
+      component: CreateExam
+    }, {
+      path: '/editExam/:examId',
+      name: 'editExam',
+      meta: {
+        title: '编辑考试'
+      },
+      component: EditExam
+    }, {
+      path: '/examDetail/:examId',
+      name: 'examDetail',
+      meta: {
+        title: '考生信息管理'
+      },
+      component: ExamDetail
+    }, {
+      path: '/examPaperStructure/:examId/:examSubjectId',
+      name: 'examPaperStructure',
+      meta: {
+        title: '试卷结构'
+      },
+      component: ExamPaperStructure
+    }, {
+      path: '/settingAnswer/:examId/:examSubjectId',
+      name: 'settingAnswer',
+      meta: {
+        title: '设置答案'
+      },
+      component: SettingAnswer
+    }, {
+      path: '/scanPaper/:examId/:examSubjectId/:batchNumber',
+      name: 'scanPaper',
+      meta: {
+        title: '扫描答题卡'
+      },
+      component: ScanPaper
+    }, {
+      path: '/questionBlock/:examId/:examSubjectId',
+      name: 'questionBlock',
+      meta: {
+        title: '题块与阅卷任务'
+      },
+      component: QuestionBlock
+    }, {
+      path: '/checkPaperBlock/:examId/:examSubjectId/:examineId',
+      name: 'checkPaperBlock',
+      meta: {
+        title: '待阅题块'
+      },
+      component: CheckPaperBlock
+    }, {
+      path: '/checkPaper/:examId/:examSubjectId/:examineId/:blockId',
+      name: 'checkPaper',
+      meta: {
+        title: '试卷打分'
+      },
+      component: CheckPaper
+    }, {
+      path: '/uploadYuanJuan/:examId/:examSubjectId',
+      name: 'uploadYuanJuan',
+      meta: {
+        title: '上传原卷'
+      },
+      component: UploadYuanJuan
+    }, {
+      path: '/manager',
+      name: 'manager',
+      meta: {
+        title: '后台管理'
+      },
+      component: Manager
+      // children: [{
+      //   path: '/banner',
+      //   name: 'banner',
+      //   meta: {
+      //     title: '设置Banner'
+      //   },
+      //   component: Banner
+      // }]
+    }, {
+      path: '/updatePassword',
+      name: 'updatePassword',
+      meta: {
+        title: '修改密码'
+      },
+      component: UpdatePassword
+    }, {
+      path: '/progress/:examId/:examSubjectId',
+      name: 'progress',
+      meta: {
+        title: '阅卷进度'
+      },
+      component: Progress
+    }]
+  }, {
+    path: '/blockStyle/:examId/:examSubjectId',
+    name: 'blockStyle',
+    meta: {
+      title: '框选题块'
     },
-    // {
-    //   path: '/answerSheet',
-    //   name: 'answerSheet',
-    //   meta: {
-    //     title: '制作答题卡'
-    //   },
-    //   component: AnswerSheet
-    // },
-    {
-      path: '/setTemplate/:examId/:examSubjectId',
-      name: 'setTemplate',
+    component: BlockStyle
+  }, {
+    path: '/examAnalyze',
+    name: 'examAnalyze',
+    meta: {
+      title: '考试分析'
+    },
+    component: ExamAnalyze
+  },
+  // {
+  //   path: '/answerSheet',
+  //   name: 'answerSheet',
+  //   meta: {
+  //     title: '制作答题卡'
+  //   },
+  //   component: AnswerSheet
+  // },
+  {
+    path: '/setTemplate/:examId/:examSubjectId',
+    name: 'setTemplate',
+    meta: {
+      title: '创建模板'
+    },
+    component: SetTemplate
+  }, {
+    path: '/bankMenu',
+    meta: {
+      title: '知识库'
+    },
+    component: BankMenu,
+    children: [{
+      path: '/',
+      name: 'questionBank',
       meta: {
-        title: '创建模板'
+        title: '教材选题'
       },
-      component: SetTemplate
+      component: QuestionBank
     }, {
-      path: '/bankMenu',
+      path: '/questionBank',
+      name: 'QuestionBank',
       meta: {
-        title: '知识库'
+        title: '教材选题'
       },
-      component: BankMenu,
-      children: [{
-        path: '/',
-        name: 'questionBank',
-        meta: {
-          title: '教材选题'
-        },
-        component: QuestionBank
-      }, {
-        path: '/questionBank',
-        name: 'QuestionBank',
-        meta: {
-          title: '教材选题'
-        },
-        component: QuestionBank
-      }]
-    }, {
-      path: '/test',
-      name: 'test',
-      meta: {
-        title: '题库'
-      },
-      component: test
-    }
+      component: QuestionBank
+    }]
+  }, {
+    path: '/test',
+    name: 'test',
+    meta: {
+      title: '题库'
+    },
+    component: test
+  }
   ]
 })
 router.beforeEach((to, from, next) => {
+  console.log({
+    to,
+    from,
+    next
+  })
   NProgress.start()
   /* 路由发生变化修改页面title */
   if (to.meta.title) {

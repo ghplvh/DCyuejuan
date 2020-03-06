@@ -1,22 +1,68 @@
 <template>
   <div class="app-wrapper">
     <el-row class="nav-bar">
-      <el-row class="layout" type="flex">
-        <el-col :span="3" class="layout-logo">
-          <router-link to="" class="bar-logo"></router-link>
+      <el-row
+        class="layout"
+        type="flex"
+      >
+        <el-col
+          :span="3"
+          class="layout-logo"
+        >
+          <router-link
+            to=""
+            class="bar-logo"
+          ></router-link>
         </el-col>
-        <el-col :span="11" class="layout-menu">
-          <el-menu :default-active="defaultActive" mode="horizontal" text-color="#303133" active-text-color="#409EFF" router>
-            <el-menu-item index="home" :route="{path:'/home'}" v-if="this.menuList.includes('index')">首页</el-menu-item>
-            <el-menu-item index="personManager" :route="{path: '/personManager'}" v-if="this.menuList.includes('personManagement')">人员信息管理</el-menu-item>
-            <el-menu-item index="" @click="toFenxi()" v-if="this.menuList.includes('examinationAnalysis')">考试分析</el-menu-item>
+        <el-col
+          :span="11"
+          class="layout-menu"
+        >
+          <el-menu
+            :default-active="defaultActive"
+            mode="horizontal"
+            text-color="#303133"
+            active-text-color="#409EFF"
+            router
+          >
+            <el-menu-item
+              index="home"
+              :route="{path:'/home'}"
+              v-if="this.menuList.includes('index')"
+            >首页</el-menu-item>
+            <el-menu-item
+              index="personManager"
+              :route="{path: '/personManager'}"
+              v-if="this.menuList.includes('personManagement')"
+            >人员信息管理</el-menu-item>
+            <el-menu-item
+              index=""
+              @click="toFenxi()"
+              v-if="this.menuList.includes('examinationAnalysis')"
+            >考试分析</el-menu-item>
             <!-- <el-menu-item index="answerSheet" :route="{path: '/questionBank'}" v-if="this.menuList.includes('repository')">知识库</el-menu-item> -->
-            <el-menu-item index="manager" :route="{path: '/manager'}" v-if="this.menuList.includes('backStageManagement')">后台管理</el-menu-item>
+            <el-menu-item
+              index="manager"
+              :route="{path: '/manager'}"
+              v-if="this.menuList.includes('backStageManagement')"
+            >后台管理</el-menu-item>
           </el-menu>
         </el-col>
-        <el-col :span="5" class="layout-btn" v-if="this.menuList.includes('createTheTest')">
-          <router-link :to="{path: '/createExam'}" class="create-exam-btn">
-            <el-button type="primary" size="medium" icon="el-icon-plus" round>创建考试</el-button>
+        <el-col
+          :span="5"
+          class="layout-btn"
+          v-if="this.menuList.includes('createTheTest')"
+        >
+          <router-link
+            :to="{path: '/createExam'}"
+            class="create-exam-btn"
+          >
+            <el-button
+              type="primary"
+              size="medium"
+              icon="el-icon-plus"
+              round
+            >创建考试</el-button>
           </router-link>
           <!-- <a class="app-btn">
             <el-popover placement="top-start" width="100" trigger="hover">
@@ -25,8 +71,14 @@
             </el-popover>
           </a> -->
         </el-col>
-        <el-col :span="5" class="layout-dropdown">
-          <div class="avatar-box"><img src="../assets/icon/user.png" alt=""></div>
+        <el-col
+          :span="5"
+          class="layout-dropdown"
+        >
+          <div class="avatar-box"><img
+              src="../assets/icon/user.png"
+              alt=""
+            ></div>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
               <span>{{adminInfo.teacherInfo.name || adminInfo.phone}}</span>
@@ -48,7 +100,10 @@
       </el-row>
     </el-row>
 
-    <el-row id="app-main" class="app-container">
+    <el-row
+      id="app-main"
+      class="app-container"
+    >
       <router-view />
     </el-row>
     <foot-bar />
@@ -61,7 +116,7 @@ import CustomerService from '../components/CustomerService'
 import API from '../api/api.js'
 import { mapActions, mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       schoolInfo: ''
     }
@@ -74,16 +129,17 @@ export default {
     ...mapState(['adminInfo', 'menuList']),
     // 默认激活菜单
     defaultActive: function () {
+      console.log(this.$route.path.replace('/', ''))
       return this.$route.path.replace('/', '')
     }
   },
-  created () {
+  created() {
     this.saveAdminInfo()
     this.getSchoolByCode()
   },
   methods: {
     ...mapActions(['saveAdminInfo', 'removeAdminInfo']),
-    getSchoolByCode () {
+    getSchoolByCode() {
       let data = {
         schoolCode: this.adminInfo && this.adminInfo.teacherInfo.schoolCode
       }
@@ -91,7 +147,7 @@ export default {
         this.schoolInfo = res.data.data[0]
       }).catch(() => { })
     },
-    toFenxi () {
+    toFenxi() {
       const elink = document.createElement('a')
       elink.style.display = 'none'
       elink.target = '_blank'
@@ -102,7 +158,7 @@ export default {
       URL.revokeObjectURL(elink.href) // 释放URL 对象
       document.body.removeChild(elink)
     },
-    lgout () {
+    lgout() {
       this.$store.dispatch('removeAdminInfo')
       console.log(this.$store.state.isLogin)
       this.$router.push('/')

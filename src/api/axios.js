@@ -14,6 +14,7 @@ import {
 const axios = Axios.create({
 })
 // 获取CancelToken
+
 const CancelToken = Axios.CancelToken
 const source = CancelToken.source()
 // 请求拦截器
@@ -29,6 +30,7 @@ axios.interceptors.request.use(function (config) {
   //     path: '/'
   //   })
   // }
+  // `login
   if (!store.state.isLogin && arr[arr.length - 1] !== 'login') {
     // 全局添加cancelToken
     config.cancelToken = source.token
