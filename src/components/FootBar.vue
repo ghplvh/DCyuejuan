@@ -17,7 +17,7 @@ export default {
     this.footData = [
       {
         href: '#',
-        title: '©2018-2019  湖南都成科技有限公司'
+        title: '©2018-2020  湖南都成科技有限公司'
       },
       {
         href: '#',
@@ -27,7 +27,7 @@ export default {
         title: '湘公网安备12345678901234'
       }, {
         href: '',
-        title: '公司名公司名公司名公司名 ©2018-' + new Date().getFullYear()
+        title: '湖南都成科技有限公司 ©2018-' + new Date().getFullYear()
       }
     ]
   }

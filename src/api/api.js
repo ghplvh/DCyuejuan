@@ -23,6 +23,8 @@ const API = {
   STUDENT_DELSTUDENTS: 'web/student/delStudents',
   // 查询学生信息
   STUDENT_FINDCONDITIONSTUDENT: 'web/student/findConditionStudent',
+  // 查询学生信息（Person）
+  STUDENT_SEARCH: 'web/student/search',
   // 更新学生信息
   STUDENT_UPDATESTUDENT: 'web/student/updateStudent',
   // 获取角色信息

@@ -140,6 +140,7 @@
         <el-button @click="ExamStudentVisible = false">取消</el-button>
       </div>
     </el-dialog>
+    <!-- 选择班级 -->
     <el-dialog title="选择班级" :visible.sync="gradeVisible" center custom-class="grade-dialog">
       <el-row class="grade-row">
         <span>选择年级：</span>
@@ -164,6 +165,7 @@
         <el-button @click="gradeVisible = false">取消</el-button>
       </div>
     </el-dialog>
+
     <el-dialog title="导入考生信息" :visible.sync="quickUploadVisible" center custom-class="quick-upload-dialog" width="410px">
       <span class="quick-upload-title">请根据实际情况选择导入方式:</span>
       <el-radio-group v-model="quickUploadType">
@@ -344,6 +346,7 @@ export default {
     },
     // 根据选择的年级获取班级列表
     getClassByGrade (gradeId) {
+      this.classCheckAll = false
       this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + gradeId).then(res => {
         this.classList = res.data.data
       }).catch(() => { })
@@ -569,8 +572,20 @@ export default {
       this.gradeVisible = true
     },
     classCheckAllChange (val = false) {
+      if (this.classList.length === 0) {
+        return false
+      }
+      if (!val) {
+        this.checkedStudentCount = 0
+        this.checkedClass = []
+      }
+      console.log(this.classList)
       this.checkedClass = val ? this.classList : []
       this.classIsIndeterminate = false
+      // 根据班级集合获取学生数量
+      if (val) {
+        this.getStudentCountByClass()
+      }
     },
     checkedClassChange (value = []) {
       console.log(value)
