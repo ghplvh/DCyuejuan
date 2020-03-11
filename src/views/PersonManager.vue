@@ -1255,7 +1255,6 @@ export default {
       })
     },
     search() {
-<<<<<<< HEAD
       console.log(this.searchInputStudent)
       if (this.searchInputStudent) {
         this.loading = true
@@ -1275,8 +1274,6 @@ export default {
           }
         })
       }
-=======
->>>>>>> dc0fa5f0a99fa37b3d614382860c5d03a7cdbbb7
     },
     // 学生信息导入成功
     uploadSuccessStudent(response, file, fileList) {

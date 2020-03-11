@@ -376,17 +376,8 @@
         <el-button @click="ExamStudentVisible = false">取消</el-button>
       </div>
     </el-dialog>
-<<<<<<< HEAD
     <!-- 选择班级 -->
     <el-dialog title="选择班级" :visible.sync="gradeVisible" center custom-class="grade-dialog">
-=======
-    <el-dialog
-      title="选择班级"
-      :visible.sync="gradeVisible"
-      center
-      custom-class="grade-dialog"
-    >
->>>>>>> dc0fa5f0a99fa37b3d614382860c5d03a7cdbbb7
       <el-row class="grade-row">
         <span>选择年级：</span>
         <el-select
@@ -434,10 +425,6 @@
         <el-button @click="gradeVisible = false">取消</el-button>
       </div>
     </el-dialog>
-<<<<<<< HEAD
-
-    <el-dialog title="导入考生信息" :visible.sync="quickUploadVisible" center custom-class="quick-upload-dialog" width="410px">
-=======
     <el-dialog
       title="导入考生信息"
       :visible.sync="quickUploadVisible"
@@ -445,7 +432,6 @@
       custom-class="quick-upload-dialog"
       width="410px"
     >
->>>>>>> dc0fa5f0a99fa37b3d614382860c5d03a7cdbbb7
       <span class="quick-upload-title">请根据实际情况选择导入方式:</span>
       <el-radio-group v-model="quickUploadType">
         <el-radio
@@ -675,12 +661,8 @@ export default {
       }).catch(() => { })
     },
     // 根据选择的年级获取班级列表
-<<<<<<< HEAD
     getClassByGrade (gradeId) {
       this.classCheckAll = false
-=======
-    getClassByGrade(gradeId) {
->>>>>>> dc0fa5f0a99fa37b3d614382860c5d03a7cdbbb7
       this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + gradeId).then(res => {
         this.classList = res.data.data
       }).catch(() => { })
@@ -905,7 +887,6 @@ export default {
     selectClass() {
       this.gradeVisible = true
     },
-<<<<<<< HEAD
     classCheckAllChange (val = false) {
       if (this.classList.length === 0) {
         return false
@@ -915,9 +896,6 @@ export default {
         this.checkedClass = []
       }
       console.log(this.classList)
-=======
-    classCheckAllChange(val = false) {
->>>>>>> dc0fa5f0a99fa37b3d614382860c5d03a7cdbbb7
       this.checkedClass = val ? this.classList : []
       this.classIsIndeterminate = false
       // 根据班级集合获取学生数量
