@@ -100,17 +100,14 @@ export default {
   methods: {
     // ...mapActions(['saveAdminInfo']),
     submitForm(form) {
-      console.log(this.adminInfo.id)
       this.$refs[form].validate(valid => {
         if (valid) {
-          console.log(this.form.oldPassword, this.form.newPassword)
           let param = {
             userId: this.adminInfo.id,
             newPassword: this.form.newPassword,
             password: this.form.oldPassword
           }
           this.axios.post(API.ADMINUPDATE_PASSWORD, param).then(res => {
-            console.log(res)
             if (res.data.message === 'success') {
               this.$message({
                 message: '修改成功，请重新登录!',

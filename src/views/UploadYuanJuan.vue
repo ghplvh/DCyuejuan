@@ -699,7 +699,6 @@ export default {
         this.tnumberList = res.data.data.map(item => {
           return { id: item.id, tnumber: item.tnumber }
         })
-        // console.log(this.tnumberList)
       }).catch(() => { })
     },
     // 获取原题列表
@@ -741,7 +740,6 @@ export default {
     },
     // 分数改变
     difficultyChange(val) {
-      // console.log(val)
     },
     // 新增选项
     addOption() {
@@ -758,7 +756,6 @@ export default {
       })
     },
     selectOption(nlg) {
-      // // console.log(nlg)
       this.editNlgList.push(nlg)
     },
     // 删除选项
@@ -784,7 +781,6 @@ export default {
     ytImgSuccess(response, file, fileList) {
       let list = []
       this.ytImgList = []
-      // console.log(fileList)
       fileList.forEach(item => {
         list.push(item.response.data.data)
         this.ytImgList.push(
@@ -813,7 +809,6 @@ export default {
     // 提交原题
     addOriginal(formName) {
       this.$refs[formName].validate((valid) => {
-        // // console.log(valid)
         if (valid) {
           this.buttonLoading = true
           let reg = new RegExp('(<p>|</p>)', 'g')
@@ -826,7 +821,6 @@ export default {
               return enlg.name === item || enlg.id === item
             })
             if (nlg) {
-              // console.log(nlg)
               return nlg.id
             }
           })
@@ -900,7 +894,6 @@ export default {
     },
     // 编辑原题
     editYt(yt) {
-      // console.log(yt)
       let options = []
       Object.keys(yt.options).forEach(key => {
         options.push({
@@ -909,7 +902,6 @@ export default {
         })
       })
       this.editNlgList = yt.knowledgePoints
-      // console.log(yt.knowledgePoints)
       let knowledgePoints = yt.knowledgePoints.map(item => {
         return item.name
       })
@@ -929,7 +921,6 @@ export default {
         difficulty: yt.difficulty, // 难度五星级
         knowledgePoints: knowledgePoints // 知识点
       }
-      // console.log(this.ytForm)
       this.ytImgList = []
       if (yt.imgPathOne) {
         yt.imgPathOne.split(',').map(item => {

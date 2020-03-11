@@ -729,7 +729,6 @@ export default {
     // },
     // 操作按钮事件
     async saveBlock() {
-      // const debug = R.tap(x => { console.log(x) })
       // 抽取属性
       // pickAllFrom :: Object => Object
       const pickAllFrom = R.pickAll(['cnlocation', 'qalocation', 'qrlocation', 'imgUrl', 'id', 'examSubjectId', 'tempName'])
@@ -747,7 +746,6 @@ export default {
       const getDataFrom = R.pipe(pickAllFrom, assocQustionloc, assocFilelocation, dissocImgUrl)
       // 应用至currentTemplate
       const data = getDataFrom(this.currentTemplate)
-      console.log('data', data)
       await this.axios.post(API.EXAMTEMPLATE_UPDATEBYID, data).then(res => {
         this.$message({
           message: '成功',

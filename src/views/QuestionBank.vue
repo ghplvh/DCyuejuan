@@ -20,7 +20,11 @@
                         <span>版本</span>
                       </div>
                       <div class="version-ul">
-                        <span :class="activeV === v.id ? 'is-active version-item':'version-item'" v-for="v in versions" :key="v.id">{{v.name}}</span>
+                        <span
+                          :class="activeV === v.id ? 'is-active version-item':'version-item'"
+                          v-for="v in versions"
+                          :key="v.id"
+                        >{{v.name}}</span>
                       </div>
                     </div>
                     <div class="detail-item">
@@ -29,7 +33,12 @@
                         <span>年级</span>
                       </div>
                       <div class="version-ul">
-                        <span :class="activeVg === vg.id ? 'is-active version-item':'version-item'" class="version-item" v-for="vg in versionGrades" :key="vg.id">{{vg.name}}</span>
+                        <span
+                          :class="activeVg === vg.id ? 'is-active version-item':'version-item'"
+                          class="version-item"
+                          v-for="vg in versionGrades"
+                          :key="vg.id"
+                        >{{vg.name}}</span>
                       </div>
                     </div>
                   </div>
@@ -39,7 +48,10 @@
           </el-row>
           <el-row>
             <el-col>
-              <el-tree :data="treeData" icon-class=""></el-tree>
+              <el-tree
+                :data="treeData"
+                icon-class=""
+              ></el-tree>
             </el-col>
           </el-row>
         </div>
@@ -52,25 +64,41 @@
                 <div class="filter-select">
                   <div class="fl-select-title">难度</div>
                   <div class="fl-select-con">
-                    <span :class="condition.difficulty === df.id ? 'is-active fl-sel-item':'fl-sel-item'" v-for="df in difficultys" :key="df.id">{{df.name}}</span>
+                    <span
+                      :class="condition.difficulty === df.id ? 'is-active fl-sel-item':'fl-sel-item'"
+                      v-for="df in difficultys"
+                      :key="df.id"
+                    >{{df.name}}</span>
                   </div>
                 </div>
                 <div class="filter-select">
                   <div class="fl-select-title">题型</div>
                   <div class="fl-select-con">
-                    <span :class="condition.difficulty === df.id ? 'is-active fl-sel-item':'fl-sel-item'" v-for="df in difficultys" :key="df.id">{{df.name}}</span>
+                    <span
+                      :class="condition.difficulty === df.id ? 'is-active fl-sel-item':'fl-sel-item'"
+                      v-for="df in difficultys"
+                      :key="df.id"
+                    >{{df.name}}</span>
                   </div>
                 </div>
                 <div class="filter-select">
                   <div class="fl-select-title">来源</div>
                   <div class="fl-select-con">
-                    <span :class="condition.difficulty === df.id ? 'is-active fl-sel-item':'fl-sel-item'" v-for="df in difficultys" :key="df.id">{{df.name}}</span>
+                    <span
+                      :class="condition.difficulty === df.id ? 'is-active fl-sel-item':'fl-sel-item'"
+                      v-for="df in difficultys"
+                      :key="df.id"
+                    >{{df.name}}</span>
                   </div>
                 </div>
                 <div class="filter-select">
                   <div class="fl-select-title">类型</div>
                   <div class="fl-select-con">
-                    <span :class="condition.difficulty === df.id ? 'is-active fl-sel-item':'fl-sel-item'" v-for="df in difficultys" :key="df.id">{{df.name}}</span>
+                    <span
+                      :class="condition.difficulty === df.id ? 'is-active fl-sel-item':'fl-sel-item'"
+                      v-for="df in difficultys"
+                      :key="df.id"
+                    >{{df.name}}</span>
                   </div>
                 </div>
               </div>
@@ -96,10 +124,26 @@
           </el-row>
           <el-row>
             <el-col>
-              <div id="questions" class="question-list" element-loading-text="加载中..." v-loading="questionLoading">
-                <el-card shadow="never" class="question-card">
-                  <div class="card-center" v-html="gs"></div>
-                  <el-row class="card-footer" type="flex" align="middle" justify="space-between">
+              <div
+                id="questions"
+                class="question-list"
+                element-loading-text="加载中..."
+                v-loading="questionLoading"
+              >
+                <el-card
+                  shadow="never"
+                  class="question-card"
+                >
+                  <div
+                    class="card-center"
+                    v-html="gs"
+                  ></div>
+                  <el-row
+                    class="card-footer"
+                    type="flex"
+                    align="middle"
+                    justify="space-between"
+                  >
                     <el-col :span="12">
                       <span>题型：选择题</span>
                       <span class="footer-split">|</span>
@@ -110,17 +154,45 @@
                       <span>组卷次数：19</span>
                     </el-col>
                     <el-col :span="12">
-                      <el-button type="text" size="mini" icon="el-icon-document">查看解析</el-button>
-                      <el-button type="text" size="mini" icon="el-icon-warning">报错</el-button>
-                      <el-button type="text" size="mini" icon="el-icon-download">下载</el-button>
-                      <el-button type="text" size="mini" icon="el-icon-star-off">收藏</el-button>
-                      <el-button type="primary" size="mini" icon="el-icon-plus">加入试题篮</el-button>
+                      <el-button
+                        type="text"
+                        size="mini"
+                        icon="el-icon-document"
+                      >查看解析</el-button>
+                      <el-button
+                        type="text"
+                        size="mini"
+                        icon="el-icon-warning"
+                      >报错</el-button>
+                      <el-button
+                        type="text"
+                        size="mini"
+                        icon="el-icon-download"
+                      >下载</el-button>
+                      <el-button
+                        type="text"
+                        size="mini"
+                        icon="el-icon-star-off"
+                      >收藏</el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        icon="el-icon-plus"
+                      >加入试题篮</el-button>
                     </el-col>
                   </el-row>
                 </el-card>
-                <el-card shadow="never" class="question-card">
+                <el-card
+                  shadow="never"
+                  class="question-card"
+                >
                   <div class="card-center"></div>
-                  <el-row class="card-footer" type="flex" align="middle" justify="space-between">
+                  <el-row
+                    class="card-footer"
+                    type="flex"
+                    align="middle"
+                    justify="space-between"
+                  >
                     <el-col :span="12">
                       <span>题型：选择题</span>
                       <span class="footer-split">|</span>
@@ -131,11 +203,31 @@
                       <span>组卷次数：19</span>
                     </el-col>
                     <el-col :span="12">
-                      <el-button type="text" size="mini" icon="el-icon-document">查看解析</el-button>
-                      <el-button type="text" size="mini" icon="el-icon-warning">报错</el-button>
-                      <el-button type="text" size="mini" icon="el-icon-download">下载</el-button>
-                      <el-button type="text" size="mini" icon="el-icon-star-off">收藏</el-button>
-                      <el-button type="primary" size="mini" icon="el-icon-plus">加入试题篮</el-button>
+                      <el-button
+                        type="text"
+                        size="mini"
+                        icon="el-icon-document"
+                      >查看解析</el-button>
+                      <el-button
+                        type="text"
+                        size="mini"
+                        icon="el-icon-warning"
+                      >报错</el-button>
+                      <el-button
+                        type="text"
+                        size="mini"
+                        icon="el-icon-download"
+                      >下载</el-button>
+                      <el-button
+                        type="text"
+                        size="mini"
+                        icon="el-icon-star-off"
+                      >收藏</el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        icon="el-icon-plus"
+                      >加入试题篮</el-button>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -143,7 +235,15 @@
             </el-col>
           </el-row>
         </div>
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
       </el-col>
     </el-row>
   </div>
@@ -152,7 +252,7 @@
 import '../assets/css/questionBank.scss'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       isMathjaxConfig: false, // 防止重复调用Config，造成性能损耗
       gs: '$f(x) = {x^2} - 3x - 18,x \\in \\left[ {1,8} \\right]$',
@@ -197,26 +297,24 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () { },
-  mounted () {
+  created() { },
+  mounted() {
     this.$nextTick(() => {
-      // console.log(window.MathJax)
       if (this.isMathjaxConfig === false) { // 如果：没有配置MathJax
         this.initMathjaxConfig()
-        // console.log(window.MathJax)
       }
       // 如果，不传入第三个参数，则渲染整个document
       // 因为使用的Vuejs，所以指明#app，以提高速度
       window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, document.getElementById('questions')])
     })
   },
-  updated () {
+  updated() {
     this.$nextTick(() => {
       window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, document.getElementById('questions')])
     })
   },
   methods: {
-    initMathjaxConfig () {
+    initMathjaxConfig() {
       if (!window.MathJax) {
         return
       }
@@ -236,11 +334,9 @@ export default {
       })
       this.isMathjaxConfig = true // 防止重复调用Config，造成性能损耗
     },
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+    handleSizeChange(val) {
     },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+    handleCurrentChange(val) {
     }
   }
 }

@@ -8,9 +8,9 @@ import {
 // Axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'http://yuejuan.duchengedu.com/' : 'http://192.168.99.209:10003/web'
 // 配置跨域前缀
 // Axios.defaults.baseURL = '/api'
-// Axios.defaults.headers = {
-//   'Access-Control-Allow-Origin': '*'
-// }
+Axios.defaults.headers = {
+  'Access-Control-Allow-Origin': '*'
+}
 const axios = Axios.create({
 })
 // 获取CancelToken

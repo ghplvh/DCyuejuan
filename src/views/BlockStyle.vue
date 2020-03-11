@@ -1,46 +1,154 @@
 <template>
-  <div id="block-style" element-loading-text="加载图片中" v-loading="loading">
+  <div
+    id="block-style"
+    element-loading-text="加载图片中"
+    v-loading="loading"
+  >
     <el-container>
       <el-main>
-        <el-row type="flex" align="middle" class="main-header">
+        <el-row
+          type="flex"
+          align="middle"
+          class="main-header"
+        >
           <el-col :span="15">
-            <el-pagination :current-page="currentPage+1" @current-change="pageChange" @prev-click="prevPage" @next-click="nextPage" class="page" background layout="prev, pager, next" prev-text="上一页" next-text="下一页" :page-size="1" :total="svgImages.length" small></el-pagination>
+            <el-pagination
+              :current-page="currentPage+1"
+              @current-change="pageChange"
+              @prev-click="prevPage"
+              @next-click="nextPage"
+              class="page"
+              background
+              layout="prev, pager, next"
+              prev-text="上一页"
+              next-text="下一页"
+              :page-size="1"
+              :total="svgImages.length"
+              small
+            ></el-pagination>
           </el-col>
-          <el-col :span="2" :offset="7" class="zoom">
+          <el-col
+            :span="2"
+            :offset="7"
+            class="zoom"
+          >
             <!-- <i class="el-icon-remove-outline" @click="setScale(-0.05)"></i>
             <i class="el-icon-circle-plus-outline" @click="setScale(0.05)"></i> -->
           </el-col>
         </el-row>
-        <div class="main-svg" :style="mainSvgHeight" ref="mainSVG">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :width="getSvgWidth()" :viewBox="getSvgViewBox()">
+        <div
+          class="main-svg"
+          :style="mainSvgHeight"
+          ref="mainSVG"
+        >
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            :width="getSvgWidth()"
+            :viewBox="getSvgViewBox()"
+          >
             <template v-for="(img,index) in svgImages">
-              <image :width="getSvgWidth()" :xlink:href="img" :key="index" v-if="currentPage === index"></image>
+              <image
+                :width="getSvgWidth()"
+                :xlink:href="img"
+                :key="index"
+                v-if="currentPage === index"
+              ></image>
             </template>
-            <g v-for="(block,brlIndex) in blockRectList[currentPage]" :key="block" :id="brlIndex" :class="block.isActive ? 'is-active' : ''">
-              <rect class="cut-rect" :x="block.rect.x" :y="block.rect.y" :width="block.rect.width" :height="block.rect.height" :index="brlIndex" @mousedown="rectMousedown"></rect>
+            <g
+              v-for="(block,brlIndex) in blockRectList[currentPage]"
+              :key="block"
+              :id="brlIndex"
+              :class="block.isActive ? 'is-active' : ''"
+            >
+              <rect
+                class="cut-rect"
+                :x="block.rect.x"
+                :y="block.rect.y"
+                :width="block.rect.width"
+                :height="block.rect.height"
+                :index="brlIndex"
+                @mousedown="rectMousedown"
+              ></rect>
               <template v-if="block.isActive">
-                <circle v-for="(circle,cIndex) in block.circleList" :key="cIndex" :class="'point ' + circle.className" :brl-index="brlIndex" :index="cIndex" :cx="circle.cx" :cy="circle.cy" :r="circle.r" :fill="circle.fill" @mousedown="circleMouseDown"></circle>
+                <circle
+                  v-for="(circle,cIndex) in block.circleList"
+                  :key="cIndex"
+                  :class="'point ' + circle.className"
+                  :brl-index="brlIndex"
+                  :index="cIndex"
+                  :cx="circle.cx"
+                  :cy="circle.cy"
+                  :r="circle.r"
+                  :fill="circle.fill"
+                  @mousedown="circleMouseDown"
+                ></circle>
               </template>
-              <text :x="block.text.x" :y="block.text.y" class="text-center" style="font-size:11px;" @mousedown="mousedownBlock">{{block.text.textString}}</text>
+              <text
+                :x="block.text.x"
+                :y="block.text.y"
+                class="text-center"
+                style="font-size:11px;"
+                @mousedown="mousedownBlock"
+              >{{block.text.textString}}</text>
 
-              <foreignObject v-if="block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height">
-                <span class="save-button" @click.stop="saveBlock(brlIndex)" @mousedown="mousedownBlock">保存</span>
-                <span class="delete-button" @click.stop="deleteBlock(brlIndex)" @mousedown="mousedownBlock">删除</span>
+              <foreignObject
+                v-if="block.isActive"
+                :x="block.foreignObject.x"
+                :y="block.foreignObject.y"
+                :width="block.foreignObject.width"
+                :height="block.foreignObject.height"
+              >
+                <span
+                  class="save-button"
+                  @click.stop="saveBlock(brlIndex)"
+                  @mousedown="mousedownBlock"
+                >保存</span>
+                <span
+                  class="delete-button"
+                  @click.stop="deleteBlock(brlIndex)"
+                  @mousedown="mousedownBlock"
+                >删除</span>
               </foreignObject>
-              <foreignObject v-if="!block.isActive" :x="block.foreignObject.x" :y="block.foreignObject.y" :width="block.foreignObject.width" :height="block.foreignObject.height">
-                <span class="edit-button" @click.stop="editBlock(brlIndex)" @mousedown="mousedownBlock">编辑</span>
+              <foreignObject
+                v-if="!block.isActive"
+                :x="block.foreignObject.x"
+                :y="block.foreignObject.y"
+                :width="block.foreignObject.width"
+                :height="block.foreignObject.height"
+              >
+                <span
+                  class="edit-button"
+                  @click.stop="editBlock(brlIndex)"
+                  @mousedown="mousedownBlock"
+                >编辑</span>
               </foreignObject>
             </g>
           </svg>
         </div>
       </el-main>
       <el-aside width="240px">
-        <el-collapse v-model="activeBlock" @change="changeBlock" accordion>
-          <el-collapse-item v-for="(block) in blockList" :key="block.id" :name="block.id" :class="( getCutStatus(block.id,1) && activeBlock !== block.id) ? 'has-cut': ''">
+        <el-collapse
+          v-model="activeBlock"
+          @change="changeBlock"
+          accordion
+        >
+          <el-collapse-item
+            v-for="(block) in blockList"
+            :key="block.id"
+            :name="block.id"
+            :class="( getCutStatus(block.id,1) && activeBlock !== block.id) ? 'has-cut': ''"
+          >
             <template slot="title">
-              {{block.titleBlockName + '('+block.score+'分)'}}<i class="el-icon-success" v-if="( getCutStatus(block.id,2)  && activeBlock !== block.id)"></i>
+              {{block.titleBlockName + '('+block.score+'分)'}}<i
+                class="el-icon-success"
+                v-if="( getCutStatus(block.id,2)  && activeBlock !== block.id)"
+              ></i>
             </template>
-            <div v-for="question in block.questions" :key="question.id">{{question.tnumber}}</div>
+            <div
+              v-for="question in block.questions"
+              :key="question.id"
+            >{{question.tnumber}}</div>
           </el-collapse-item>
         </el-collapse>
       </el-aside>
@@ -52,7 +160,7 @@ import API from '../api/api.js'
 import { mapState } from 'vuex'
 import Utils from '../utils/Utils.js'
 export default {
-  data () {
+  data() {
     return {
       A3: { w: 1191, h: 842 },
       loading: false,
@@ -76,20 +184,20 @@ export default {
   },
   computed: {
     ...mapState(['adminInfo']),
-    mainSvgHeight () {
+    mainSvgHeight() {
       return { height: (window.innerHeight - 45) + 'px' }
     }
   },
-  created () {
+  created() {
     this.getTemplateInfo()
   },
-  mounted () {
+  mounted() {
     if (this.$refs['mainSVG']) {
       this.svgWidth = this.$refs['mainSVG'].clientWidth
     }
   },
   methods: {
-    async getTemplateInfo () {
+    async getTemplateInfo() {
       let data = {
         examId: this.examId,
         examSubjectId: this.examSubjectId
@@ -104,10 +212,9 @@ export default {
       await this.getBlockRect()
     },
     // 获取图片宽高比
-    getRatio (refresh = true) {
+    getRatio(refresh = true) {
       this.$nextTick(() => {
         let image = document.querySelector('image')
-        console.log(image)
         let imageWidth = parseInt(image.getAttribute('width')) || 0
         let img = new Image()
         img.src = this.svgImages[this.currentPage]
@@ -116,14 +223,9 @@ export default {
         }
         this.svgImages.forEach((src, index) => {
           let srcImg = new Image()
-          console.log(src)
           srcImg.src = src
           srcImg.onload = () => {
             let ratio = srcImg.width / (imageWidth === 0 ? this.imageWidth : imageWidth)
-            console.log(srcImg.width, '---------srcImgWidth')
-            console.log(this.imageWidth, '---------this.imageWidth')
-            console.log(imageWidth, '---------imageWidth')
-            console.log(ratio)
             this.$set(this.ratio, index, ratio)
             this.addEvent()
             if (index === this.svgImages.length - 1 && refresh) {
@@ -134,7 +236,7 @@ export default {
       })
     },
     // 获取题块信息
-    async getTitleBlock () {
+    async getTitleBlock() {
       this.loading = true
       await this.axios.post(`${API.TITLEBLOCK_FINDBYEXAMSUBJECTID}/${this.examSubjectId}`).then(res => {
         let data = []
@@ -209,17 +311,14 @@ export default {
       this.getBlockRect()
     },
     // 获取题块框
-    getBlockRect () {
+    getBlockRect() {
       this.axios.post(`${API.TOPLIC_FINDBYEXAMSUBJECTID}/${this.examSubjectId}`).then(res => {
-        console.log(res.data.data.length)
-        console.log(res.data.data)
         if (res.data.data.length > 0) {
           let list = res.data.data
           let tempArr = []
           // list.forEach(item => {
           for (let i = 0; i < list.length; i++) {
             let item = list[i]
-            console.log(item)
             let ratio = this.ratio[item.zoom]
             let newX = item.abscissa / ratio
             let newY = item.ordinate / ratio
@@ -245,34 +344,30 @@ export default {
               },
               isActive: false
             }
-            console.log(blockRect)
             if (tempArr[item.zoom]) {
               tempArr[item.zoom].push(blockRect)
             } else {
               tempArr[item.zoom] = []
               tempArr[item.zoom].push(blockRect)
             }
-            console.log(blockRect)
           }
-          console.log(tempArr)
           this.tempList = tempArr
           this.blockRectList = tempArr
         } else {
           this.blockRectList = []
         }
-        console.log(this.blockRectList)
         this.loading = false
       }).catch(() => { this.loading = false })
     },
     // 获取题块框的名称
-    getBlockNameById (blockId) {
+    getBlockNameById(blockId) {
       let block = this.blockList.find(item => {
         return item.id === blockId
       })
       return block.titleBlockName || ''
     },
     // 获取题块框选状态
-    getCutStatus (blockId, id) {
+    getCutStatus(blockId, id) {
       let hasCut = false
       this.blockRectList.forEach(item => {
         item.forEach(rect => {
@@ -284,20 +379,20 @@ export default {
       return hasCut
     },
     // 翻页
-    pageChange (val) {
+    pageChange(val) {
       this.currentPage = val - 1
       this.getRatio()
     },
-    prevPage (val) {
+    prevPage(val) {
       this.currentPage = val - 1
       this.getRatio()
     },
-    nextPage (val) {
+    nextPage(val) {
       this.currentPage = val - 1
       this.getRatio()
     },
     // 选择题块
-    changeBlock (activeBlock) {
+    changeBlock(activeBlock) {
       let block = this.blockList.find((item, index) => {
         if (item.id === activeBlock) {
           this.currentBlockIndex = index
@@ -322,17 +417,17 @@ export default {
       })
     },
     // 计算svg的width，height，viewbox
-    getSvgWidth () {
+    getSvgWidth() {
       return this.svgWidth * this.scaleSvg
     },
-    getSvgHeight () {
+    getSvgHeight() {
       return this.svgWidth * this.ratioWH * this.scaleSvg
     },
-    getSvgViewBox () {
+    getSvgViewBox() {
       return [0, 0, this.getSvgWidth(), this.getSvgHeight()].join(',')
     },
     // 设置缩放等级
-    setScale (number) {
+    setScale(number) {
       if ((this.scaleSvg <= 0.5 && number < 0) || (this.scaleSvg >= 1.5 && number > 0)) {
         return
       }
@@ -341,7 +436,6 @@ export default {
       let data = Utils.deepCopy(this.tempList)
       this.blockRectList = data.map(item => {
         item = item.map(g => {
-          console.log(g)
           Object.keys(g.rect).forEach(k => {
             g.rect[k] = g.rect[k] * this.scaleSvg
           })
@@ -368,7 +462,7 @@ export default {
       // })
     },
     // 给svg添加鼠标事件，画矩形
-    addEvent () {
+    addEvent() {
       let svg = document.querySelector('svg')
       svg.onmousedown = (ed) => {
         if (!this.activeBlock) {
@@ -480,7 +574,7 @@ export default {
       }
     },
     // 操作按钮事件
-    async saveBlock (index) {
+    async saveBlock(index) {
       // let image = document.querySelector('image')
       // let imageWidth = parseInt(image.getAttribute('width'))
       // let img = new Image()
@@ -490,8 +584,6 @@ export default {
       // img.onload = () => {
       //   ratio = img.width / imageWidth
       // }
-      console.log(this.ratio)
-      console.log(ratio)
       let block = this.blockRectList[this.currentPage][index]
       let data = [
         {
@@ -505,7 +597,6 @@ export default {
           zoom: this.currentPage // 第几张图片
         }
       ]
-      console.log(data)
       if (block.id) {
         await this.axios.post(API.TOPLIC_UPDATEBATCH, data).then(res => {
           this.$message({
@@ -527,8 +618,7 @@ export default {
       }
       this.activeBlock = ''
     },
-    deleteBlock (index) {
-      console.log(index, this.blockRectList[this.currentPage])
+    deleteBlock(index) {
       this.axios.post(API.TOPLIC_DELETEBYID, { id: this.blockRectList[this.currentPage][index].id }).then(res => {
         this.$message({
           message: '删除成功',
@@ -538,15 +628,15 @@ export default {
         this.getBlockRect()
       }).catch(() => { })
     },
-    editBlock (index) {
+    editBlock(index) {
       this.blockRectList[this.currentPage][index].isActive = true
       this.activeBlock = this.blockRectList[this.currentPage][index].titleBlockId
     },
-    mousedownBlock (e) {
+    mousedownBlock(e) {
       e.stopPropagation()
     },
     // 矩形移动
-    rectMousedown (e) {
+    rectMousedown(e) {
       e.stopPropagation()
       let rectDom = e.target
       let index = rectDom.attributes.index.value * 1
@@ -615,7 +705,7 @@ export default {
       }
     },
     // 矩形缩放
-    circleMouseDown (e) {
+    circleMouseDown(e) {
       e.stopPropagation()
       let circle = e.target
       let brlIndex = circle.attributes['brl-index'].value * 1
@@ -683,7 +773,6 @@ export default {
             blockRect.text.x = newX + newWidth / 2
             blockRect.text.y = newY + newHeight / 2
             pageRectList.splice(brlIndex, 1, blockRect)
-            // console.log(pageRectList)
             this.blockRectList.splice(this.currentPage, 1, pageRectList)
             this.setCirclePosition(brlIndex, newX, newY, newWidth, newHeight)
             svg.onmouseup = (eu) => {
@@ -843,7 +932,7 @@ export default {
       }
     },
     // 矩形圆点位置计算
-    setCirclePosition (index, x, y, w, h) {
+    setCirclePosition(index, x, y, w, h) {
       let circleList = this.blockRectList[this.currentPage][index].circleList
       for (let i = 0; i < circleList.length; i++) {
         let cx = x
@@ -872,7 +961,7 @@ export default {
         }
       }
     },
-    getCirclePosition (x, y, w, h) {
+    getCirclePosition(x, y, w, h) {
       let list = []
       for (let i = 0; i < 8; i++) {
         let cx = x

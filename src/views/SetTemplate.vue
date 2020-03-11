@@ -423,7 +423,6 @@ export default {
   async mounted() {
     this.saveAdminInfo();
     const login = this.$store.state
-    console.log('login', login)
 
     await this.getTemp()
     if (this.tempData.list.length > 0) {
@@ -445,7 +444,6 @@ export default {
       this.getRatio()
     },
     beforeTabLeave(tab) {
-      console.log('cur', Object.keys(this.tempData.current).length)
       if (Object.keys(this.tempData.current).length === 0) {
         this.$message({
           message: '请先扫描上传答题卡模板',
@@ -462,7 +460,6 @@ export default {
     getRatio() {
       if (this.tempData.list.length <= 0) return
       if (this.svg.hasRatio) return
-      console.log('getratioid', this.tempData.id)
       this.$nextTick(setTimeout(() => {
         const svgWidth = this.$refs[this.svg.current]?.clientWidth
         const image = document.getElementById('setTemplate-image')
@@ -491,7 +488,6 @@ export default {
     changeTemp(value) {
       const list = this.tempData.list.filter(item => item.id === value)
       list.length > 0 ? this.tempData.current = list[0] : this.tempData.current = {}
-      console.log('curre', this.tempData.current)
       this.svg.hasRatio = false
     },
     // 试卷切换
@@ -528,7 +524,6 @@ export default {
     },
     // api
     async updateEdit() {
-      // const debug = R.tap(x => { console.log(x) })
       // 抽取属性
       // pickAllFrom :: Object => Object
       const pickAllFrom = R.pickAll(['cnlocation', 'qalocation', 'qrlocation', 'imgUrl', 'id', 'examSubjectId', 'tempName'])
@@ -677,7 +672,6 @@ export default {
         examId,
         examSubjectId
       }
-      console.log('data,', data)
       await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, data).then(res => {
         const list = res?.data?.data
         if (list?.length > 0) {
@@ -743,7 +737,6 @@ export default {
         'ids': ({ "subjectId": this.examSubjectId, "examId": this.examId }),
         'options': ({ "questionsloc": json(questionsloc), "type": 1 })
       }
-      console.log('data', data)
       await this.axios({
         // url: '/api/test',
         url: 'http://127.0.0.1:8082',

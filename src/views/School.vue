@@ -1,54 +1,159 @@
 <template>
   <div id="news">
-    <el-row class="opra-row" type="flex" align="middle">
+    <el-row
+      class="opra-row"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="6">
-        <el-button type="primary" size="medium" @click="showAddDialog()">新增学校</el-button>
+        <el-button
+          type="primary"
+          size="medium"
+          @click="showAddDialog()"
+        >新增学校</el-button>
       </el-col>
     </el-row>
     <el-row class="table-row">
-      <el-table :data="schoolList" border :loading="loading">
-        <el-table-column prop="schoolCode" label="学校编号" align="center"></el-table-column>
-        <el-table-column prop="schoolName" label="学校名称" align="center"></el-table-column>
-        <el-table-column prop="address" label="学校地址" align="center">
+      <el-table
+        :data="schoolList"
+        border
+        :loading="loading"
+      >
+        <el-table-column
+          prop="schoolCode"
+          label="学校编号"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="schoolName"
+          label="学校名称"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="address"
+          label="学校地址"
+          align="center"
+        >
           <template slot-scope="scope">
             {{scope.row.address ? scope.row.address.split(',').join('') : ''}}
           </template>
         </el-table-column>
-        <el-table-column prop="contact" label="联系方式" align="center"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间" align="center"></el-table-column>
-        <el-table-column prop="modifyTime" label="最后修改时间" align="center"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
+        <el-table-column
+          prop="contact"
+          label="联系方式"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="创建时间"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          prop="modifyTime"
+          label="最后修改时间"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          label="操作"
+          width="180"
+          align="center"
+        >
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" icon="el-icon-edit" @click="editRow(scope.row)">修改</el-button>
-            <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteRow(scope.row)">删除</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-edit"
+              @click="editRow(scope.row)"
+            >修改</el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              icon="el-icon-delete"
+              @click="deleteRow(scope.row)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-row>
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" center width="600px" custom-class="banner-dialog">
-      <el-form :model="form" :rules="formRules" ref="newsForm" label-width="80px">
-        <el-form-item label="学校名称" prop="schoolName">
-          <el-input v-model="form.schoolName" placeholder="请输入新闻标题"></el-input>
+    <el-dialog
+      :title="dialogTitle"
+      :visible.sync="dialogVisible"
+      center
+      width="600px"
+      custom-class="banner-dialog"
+    >
+      <el-form
+        :model="form"
+        :rules="formRules"
+        ref="newsForm"
+        label-width="80px"
+      >
+        <el-form-item
+          label="学校名称"
+          prop="schoolName"
+        >
+          <el-input
+            v-model="form.schoolName"
+            placeholder="请输入新闻标题"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="学校编号" prop="schoolCode">
-          <el-input v-model.number="form.schoolCode" placeholder="请输入学校编号"></el-input>
+        <el-form-item
+          label="学校编号"
+          prop="schoolCode"
+        >
+          <el-input
+            v-model.number="form.schoolCode"
+            placeholder="请输入学校编号"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="学校地址" prop="address">
-          <el-cascader size="large" :options="options" v-model="form.address"></el-cascader>
+        <el-form-item
+          label="学校地址"
+          prop="address"
+        >
+          <el-cascader
+            size="large"
+            :options="options"
+            v-model="form.address"
+          ></el-cascader>
         </el-form-item>
-        <el-form-item label="联系方式" prop="contact">
-          <el-input v-model="form.contact" placeholder="请输入联系方式"></el-input>
+        <el-form-item
+          label="联系方式"
+          prop="contact"
+        >
+          <el-input
+            v-model="form.contact"
+            placeholder="请输入联系方式"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button size="medium" @click="dialogVisible = false">取 消</el-button>
-        <el-button size="medium" type="primary" @click="submitForm('newsForm')">确 定</el-button>
+        <el-button
+          size="medium"
+          @click="dialogVisible = false"
+        >取 消</el-button>
+        <el-button
+          size="medium"
+          type="primary"
+          @click="submitForm('newsForm')"
+        >确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :visible.sync="dialogImgVisible" width="750px" top="80px">
-      <img width="100%" :src="dialogImageUrl" alt="">
+    <el-dialog
+      :visible.sync="dialogImgVisible"
+      width="750px"
+      top="80px"
+    >
+      <img
+        width="100%"
+        :src="dialogImageUrl"
+        alt=""
+      >
       <span slot="footer">
-        <el-button type="primary" size="small" @click="dialogImgVisible = false">关闭</el-button>
+        <el-button
+          type="primary"
+          size="small"
+          @click="dialogImgVisible = false"
+        >关闭</el-button>
       </span>
     </el-dialog>
   </div>
@@ -58,7 +163,7 @@ import API from '../api/api.js'
 import { regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
 import { mapActions, mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       schoolList: [],
       loading: false,
@@ -95,7 +200,7 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
+  created() {
     this.saveAdminInfo()
     // this.getBanners()
     this.getSchools()
@@ -103,7 +208,7 @@ export default {
   methods: {
     ...mapActions(['saveAdminInfo']),
     // 查询Banner
-    getSchools () {
+    getSchools() {
       this.loading = true
       return this.axios.post(API.ADMINSCHOOL_GETSCHOOL, {}).then((res) => {
         this.schoolList = res.data.data
@@ -111,13 +216,13 @@ export default {
       }).catch(() => { this.loading = false })
     },
     // 显示新增弹窗
-    showAddDialog () {
+    showAddDialog() {
       this.dialogType = 'add'
       this.dialogTitle = '新增学校'
       this.dialogVisible = true
     },
     // 显示修改弹窗
-    editRow (row) {
+    editRow(row) {
       this.dialogType = 'edit'
       this.bannerDialogTitle = '修改学校'
       this.form = {
@@ -129,23 +234,21 @@ export default {
       }
       this.dialogVisible = true
     },
-    getAddressCodeArray (addressArr) {
+    getAddressCodeArray(addressArr) {
       let arr = []
       for (let i = 0; i < addressArr.length; i++) {
         arr[i] = arr[i - 1] ? arr[i - 1][addressArr[i]] : TextToCode[addressArr[i]]
       }
-      // console.log(arr)
       return arr.map(item => {
         return item ? item.code : ''
       })
     },
     // 新增或修改Banner
-    async submitForm (formName) {
+    async submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
           let isSuccess = false
           let data = Object.assign({}, this.form)
-          console.log(data)
           data.address = data.address.map(item => {
             return CodeToText[item]
           }).join(',')
@@ -183,7 +286,7 @@ export default {
       })
     },
     // 删除Banner
-    deleteRow (row) {
+    deleteRow(row) {
       this.$confirm('确定删除这个学校吗？', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

@@ -344,7 +344,6 @@ export default {
     }
   },
   mounted() {
-    console.log('logingg', this.$store.state)
     // `dev
     if (this.$store.state.dev) {
       setTimeout(() => {
