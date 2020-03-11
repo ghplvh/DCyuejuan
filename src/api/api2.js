@@ -20,15 +20,15 @@ const API = {
   /**
    *  @description 根据考试科目ID查询阅卷题块进度
    */
-  ADMIN_GETBLOCKBYEXAMSUBJECTID: 'web/webExamExamine/getBlockByExamSubjectId',
+  ADMIN_GETBLOCKBYEXAMSUBJECTID: '/web/webExamExamine/getBlockByExamSubjectId',
   /**
    *  @description 根据考试科目ID查询阅卷题块进度
    */
-  ADMIN_GETCLASSBYEXAMSUBJECTID: 'web/webExamExamine/getClassByExamSubjectId',
+  ADMIN_GETCLASSBYEXAMSUBJECTID: '/web/webExamExamine/getClassByExamSubjectId',
   /**
    *  @description 根据考试id获取学校列表
    */
-  ADMIN_GETSCHOOLLIST: 'web/webExamExamine/getSchoolList',
+  ADMIN_GETSCHOOLLIST: '/web/webExamExamine/getSchoolList',
   /**
    *  @description 根据考试科目id发布成绩
    */

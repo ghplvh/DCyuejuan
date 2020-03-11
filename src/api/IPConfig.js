@@ -9,7 +9,7 @@ const IP = {
   // EXAM_IP: 'http://47.107.116.88:8023/dckj-ec-exam/',
   // EXAM_IP: 'http://120.24.181.77:10003/',
   // 分析端口IP
-  // ANALYZE_IP: 'http://192.168.0.162:10004/'  //  小项
+  // ANALYZE_IP: 'http://192.168.0.162:10004'  //  小项
   ANALYZE_IP: 'http://192.168.0.176:10004' // 彭进
   // 线上地址
   // ANALYZE_IP: 'http://47.107.116.88:8023/dckj-ec-analyze'
