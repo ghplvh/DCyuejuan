@@ -5,10 +5,10 @@
         :span="18"
         class="school-name"
       >{{schoolInfo ? schoolInfo.schoolName : '学校'}}</el-col>
-      <el-col
+      <!-- <el-col
         :span="6"
         class="opra-video"
-      ><a href="#"><i class="el-icon-caret-right"></i><span>操作视频</span></a></el-col>
+      ><a href="#"><i class="el-icon-caret-right"></i><span>操作视频</span></a></el-col> -->
     </el-row>
     <el-tabs
       class="person-info"
@@ -110,7 +110,7 @@
           >
             <span>共{{studentCount}}人</span>
             <el-input
-              placeholder="请输入姓名/学号/学籍"
+              placeholder="请输入姓名进行查询"
               v-model="searchInputStudent"
               size="medium"
             >
@@ -2114,7 +2114,7 @@ export default {
           margin-top: 20px;
           box-shadow: 0 2px 8px 0 rgba(83, 158, 224, 0.23);
           border-radius: 9px;
-          height: 140px;
+          height: 160px;
           width: 1116px;
           margin-left: 1px;
           .item-head {
