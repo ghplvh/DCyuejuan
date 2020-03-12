@@ -281,11 +281,7 @@ const router = new VueRouter({
   ]
 })
 router.beforeEach((to, from, next) => {
-  console.log({
-    to,
-    from,
-    next
-  })
+
   NProgress.start()
   /* 路由发生变化修改页面title */
   if (to.meta.title) {

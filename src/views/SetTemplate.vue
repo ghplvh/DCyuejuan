@@ -744,8 +744,9 @@ export default {
         // headers: {'Access-Control-Allow-Origin': '*'},
         data: data
       }).then(res => {
+      }).catch(err => {
+        this.isScanPaperLoading = false
       })
-      this.isScanPaperLoading = false
     },
     // api 删除当前模板
     async delTemp() {

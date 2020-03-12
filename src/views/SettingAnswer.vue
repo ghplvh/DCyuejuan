@@ -1,6 +1,10 @@
 <template>
   <el-row>
-    <el-row class="bread-crumb" type="flex" align="middle">
+    <el-row
+      class="bread-crumb"
+      type="flex"
+      align="middle"
+    >
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
@@ -9,11 +13,18 @@
             <span>{{examGrade.gradeName + examSubjectInfo.subjectName}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
-                <i class="el-icon-caret-bottom el-icon--right" style="color:#409EFF;"></i>
+                <i
+                  class="el-icon-caret-bottom el-icon--right"
+                  style="color:#409EFF;"
+                ></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <template v-for="sub in examSubjectList">
-                  <router-link :to="{ path: '/subjectMain/' + examId + '/' + sub.id}" :key="sub.id" v-if="sub.id !== examSubjectInfo.id">
+                  <router-link
+                    :to="{ path: '/subjectMain/' + examId + '/' + sub.id}"
+                    :key="sub.id"
+                    v-if="sub.id !== examSubjectInfo.id"
+                  >
                     <el-dropdown-item>{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
                   </router-link>
                 </template>
@@ -24,24 +35,50 @@
           <el-breadcrumb-item>设置答案</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
-        <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
+        <router-link
+          to=""
+          target="_blank"
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
       </el-col>
     </el-row>
     <el-row id="setting-answer">
       <div class="tabs">
         <el-tabs v-model="activeTab">
-          <el-tab-pane label="客观题答案" name="objAnswer">
+          <el-tab-pane
+            label="客观题答案"
+            name="objAnswer"
+          >
             <el-card>
               <div slot="header">
                 <span class="tixing_header">单选题答案</span>
               </div>
               <template v-if="singleQuestions.length > 0">
-                <el-row class="answer-item" type="flex" align="middle" v-for="(single,sqIndex) in singleQuestions" :key="sqIndex">
+                <el-row
+                  class="answer-item"
+                  type="flex"
+                  align="middle"
+                  v-for="(single,sqIndex) in singleQuestions"
+                  :key="sqIndex"
+                >
                   <el-col :span="1">{{single.tnumber}}</el-col>
-                  <el-col :span="11" :offset="2">
-                    <el-radio-group v-model="single.answer" size="mini" :disabled="!canEdit">
-                      <el-radio-button v-for="label in getAnswerArr(parseInt(single.optionCount))" :label="label" :key="label"></el-radio-button>
+                  <el-col
+                    :span="11"
+                    :offset="2"
+                  >
+                    <el-radio-group
+                      v-model="single.answer"
+                      size="mini"
+                      :disabled="!canEdit"
+                    >
+                      <el-radio-button
+                        v-for="label in getAnswerArr(parseInt(single.optionCount))"
+                        :label="label"
+                        :key="label"
+                      ></el-radio-button>
                     </el-radio-group>
                   </el-col>
                   <!-- <template v-if="canEdit">
@@ -53,23 +90,46 @@
                 </template>
                 <template v-else>
                 </template> -->
-                  <el-col :span="7" :offset="3">
+                  <el-col
+                    :span="7"
+                    :offset="3"
+                  >
                     正确答案分数: {{single.score}}分
                   </el-col>
                 </el-row>
               </template>
-              <div v-else class="font-fade">暂无数据</div>
+              <div
+                v-else
+                class="font-fade"
+              >暂无数据</div>
             </el-card>
             <el-card>
               <div slot="header">
                 <span class="tixing_header">多选题答案</span>
               </div>
               <template v-if="multipleQuestions.length > 0">
-                <el-row class="answer-item" type="flex" align="middle" v-for="(multiple,mqIndex) in multipleQuestions" :key="mqIndex">
+                <el-row
+                  class="answer-item"
+                  type="flex"
+                  align="middle"
+                  v-for="(multiple,mqIndex) in multipleQuestions"
+                  :key="mqIndex"
+                >
                   <el-col :span="1">{{multiple.tnumber}}</el-col>
-                  <el-col :span="11" :offset="2">
-                    <el-checkbox-group v-model="multiple.answer" size="mini" :disabled="!canEdit">
-                      <el-checkbox-button v-for="label in getAnswerArr(parseInt(multiple.optionCount))" :label="label" :key="label">{{label}}</el-checkbox-button>
+                  <el-col
+                    :span="11"
+                    :offset="2"
+                  >
+                    <el-checkbox-group
+                      v-model="multiple.answer"
+                      size="mini"
+                      :disabled="!canEdit"
+                    >
+                      <el-checkbox-button
+                        v-for="label in getAnswerArr(parseInt(multiple.optionCount))"
+                        :label="label"
+                        :key="label"
+                      >{{label}}</el-checkbox-button>
                     </el-checkbox-group>
                   </el-col>
                   <!-- <template v-if="canEdit">
@@ -81,67 +141,143 @@
                 </template>
                 <template v-else>
                 </template> -->
-                  <el-col :span="3" :offset="3">
+                  <el-col
+                    :span="3"
+                    :offset="3"
+                  >
                     正确答案分数: {{multiple.score}}分
                   </el-col>
-                  <el-col :span="3" :offset="1">
+                  <el-col
+                    :span="3"
+                    :offset="1"
+                  >
                     漏选得分: {{multiple.minscore}}分
                   </el-col>
                 </el-row>
               </template>
-              <div v-else class="font-fade">暂无数据</div>
+              <div
+                v-else
+                class="font-fade"
+              >暂无数据</div>
             </el-card>
             <el-card>
               <div slot="header">
                 <span class="tixing_header">判断题答案</span>
               </div>
               <template v-if="judgeQuestions.length > 0">
-                <el-row class="answer-item" type="flex" align="middle" v-for="(judge,jqIndex) in judgeQuestions" :key="jqIndex">
+                <el-row
+                  class="answer-item"
+                  type="flex"
+                  align="middle"
+                  v-for="(judge,jqIndex) in judgeQuestions"
+                  :key="jqIndex"
+                >
                   <el-col :span="1">{{judge.tnumber}}</el-col>
-                  <el-col :span="11" :offset="2">
-                    <el-radio-group v-model="judge.answer" size="mini" :disabled="!canEdit">
+                  <el-col
+                    :span="11"
+                    :offset="2"
+                  >
+                    <el-radio-group
+                      v-model="judge.answer"
+                      size="mini"
+                      :disabled="!canEdit"
+                    >
                       <el-radio-button label="T"></el-radio-button>
                       <el-radio-button label="F"></el-radio-button>
                     </el-radio-group>
                   </el-col>
-                  <el-col :span="7" :offset="3">
+                  <el-col
+                    :span="7"
+                    :offset="3"
+                  >
                     正确答案分数: {{judge.score}}分
                   </el-col>
                 </el-row>
               </template>
-              <div v-else class="font-fade">暂无数据</div>
+              <div
+                v-else
+                class="font-fade"
+              >暂无数据</div>
               <div>
                 <div class="footer">
                   <template v-if="canEdit">
-                    <el-button size="mini" @click="canEdit = false">取消</el-button>
-                    <el-button type="primary" size="mini" @click="saveAnswer()">确定</el-button>
+                    <el-button
+                      size="mini"
+                      @click="canEdit = false"
+                    >取消</el-button>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="saveAnswer()"
+                    >确定</el-button>
                   </template>
                   <template v-else>
-                    <el-button size="mini" @click="showExportDialog()">批量导入</el-button>
-                    <el-button type="primary" size="mini" @click="canEdit = true">手动编辑</el-button>
+                    <el-button
+                      size="mini"
+                      @click="showExportDialog()"
+                    >批量导入</el-button>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="canEdit = true"
+                    >手动编辑</el-button>
                   </template>
                 </div>
               </div>
             </el-card>
           </el-tab-pane>
-          <el-tab-pane label="主观题答案" name="subAnswer">
+          <el-tab-pane
+            label="主观题答案"
+            name="subAnswer"
+          >
             <el-row class="subjective">
-              <el-row type="flex" align="middle">
+              <el-row
+                type="flex"
+                align="middle"
+              >
                 <el-col :span="16">
                   <span>若扫描效果较差，点击</span>
                   <el-button type="text">设置扫描仪参数</el-button>
                 </el-col>
-                <el-col :span="8" class="text-right">
+                <el-col
+                  :span="8"
+                  class="text-right"
+                >
                   <!-- <el-button type="primary" size="small">开始扫描</el-button> -->
-                  <el-button type="danger" size="small" @click="deleteZgAnswer()">删除答案</el-button>
-                  <el-upload :action="imgUploadUrl" :data="{filedir: 'answer/'}" class="local-upload" :before-upload="zgqUploadBefore" :on-success="zgqUploadSuccess" :show-file-list="false">
-                    <el-button type="primary" size="small" plain>本地上传</el-button>
+                  <el-button
+                    type="danger"
+                    size="small"
+                    @click="deleteZgAnswer()"
+                  >删除答案</el-button>
+                  <el-upload
+                    :action="imgUploadUrl"
+                    :data="{filedir: 'answer/'}"
+                    class="local-upload"
+                    :before-upload="zgqUploadBefore"
+                    :on-success="zgqUploadSuccess"
+                    :show-file-list="false"
+                  >
+                    <el-button
+                      type="primary"
+                      size="small"
+                      plain
+                    >本地上传</el-button>
                   </el-upload>
                 </el-col>
               </el-row>
-              <el-row element-loading-text="拼命加载中..." v-loading="subLoading">
-                <el-row class="subjective-tips" type="flex" align="middle">
-                  <el-col class="text-center" v-if="zgQuestionAnswers.length <= 0">
+              <el-row
+                element-loading-text="拼命加载中..."
+                v-loading="subLoading"
+              >
+                <el-row
+                  class="subjective-tips"
+                  type="flex"
+                  align="middle"
+                >
+                  <el-col
+                    class="text-center"
+                    v-if="zgQuestionAnswers.length <= 0"
+                  >
                     <!-- <el-col>1.推荐使用扫描图片的方式，直接将答案扫描即可</el-col> -->
                     <el-col class="mgt-20">
                       1.本地上传支持<span class="danger">图片</span>格式文件
@@ -149,7 +285,12 @@
                   </el-col>
                   <el-col v-if="zgQuestionAnswers.length > 0">
                     <template v-for="(zgq,index) in zgQuestionAnswers">
-                      <img v-if="zgq.pdfPath" :key="index" :src="zgq.pdfPath" alt="">
+                      <img
+                        v-if="zgq.pdfPath"
+                        :key="index"
+                        :src="zgq.pdfPath"
+                        alt=""
+                      >
                     </template>
                   </el-col>
                 </el-row>
@@ -159,11 +300,21 @@
         </el-tabs>
       </div>
     </el-row>
-    <el-dialog title="批量导入" :visible.sync="exportDialogVisible" width="400px">
+    <el-dialog
+      title="批量导入"
+      :visible.sync="exportDialogVisible"
+      width="400px"
+    >
       <div>通过导入excel的方式批量设置客观题答案:</div>
       <div slot="footer">
         <el-button @click="downloadTemplate()">下载模板</el-button>
-        <el-upload class="dialog-upload" :action="answerImportUrl" accept=".xls,.xlsx" :show-file-list="false">
+        <el-upload
+          :on-success="handleUploadAnswersSuccess"
+          class="dialog-upload"
+          :action="answerImportUrl"
+          accept=".xls,.xlsx"
+          :show-file-list="false"
+        >
           <el-button type="primary">选择文件</el-button>
         </el-upload>
       </div>
@@ -174,7 +325,7 @@
 import API from '../api/api.js'
 import { mapState } from 'vuex'
 export default {
-  data () {
+  data() {
     return {
       schoolCode: '',
       examId: this.$route.params.examId,
@@ -208,7 +359,7 @@ export default {
   computed: {
     ...mapState(['adminInfo'])
   },
-  created () {
+  created() {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.initBigQuestionNoList()
     this.getExamById()
@@ -217,18 +368,28 @@ export default {
     this.getExamStructureZg()
   },
   methods: {
-    showExportDialog () {
+    // 批量导入答案成功
+    handleUploadAnswersSuccess(response, file, fileList) {
+      console.log({
+        response,
+        file,
+        fileList
+      })
+      this.exportDialogVisible = false
+      this.getExamStructureKg()
+    },
+    showExportDialog() {
       this.exportDialogVisible = true
     },
     // 获取考试信息
-    getExamById () {
+    getExamById() {
       this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
         this.getGradeById()
       }).catch(() => { })
     },
     // 查询所有考试科目
-    getExamSubject () {
+    getExamSubject() {
       this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.examSubjectList = res.data.data
         this.examSubjectInfo = this.examSubjectList.filter(item => {
@@ -237,13 +398,13 @@ export default {
       }).catch(() => { })
     },
     // 获取考试的年级
-    getGradeById () {
+    getGradeById() {
       this.axios.post(API.GRADE_FINDBYCOMMON, { id: this.examInfo.gradeId }).then(res => {
         this.examGrade = res.data.data[0]
       }).catch(() => { })
     },
     // 查询试卷结构(科目id/题型类型(0客观题，1主观题)
-    getExamStructureKg () {
+    getExamStructureKg() {
       this.loading = true
       this.singleQuestions = []
       this.multipleQuestions = []
@@ -286,7 +447,7 @@ export default {
         this.loading = false
       }).catch(() => { this.loading = false })
     },
-    getExamStructureZg () {
+    getExamStructureZg() {
       this.subLoading = true
       this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 1, {}).then(res => {
         let list = res.data.data
@@ -300,7 +461,7 @@ export default {
       }).catch(() => { this.subLoading = false })
     },
     // 获取答案选项
-    getAnswerArr (count, start = 'A') {
+    getAnswerArr(count, start = 'A') {
       let startCodeA = start.charCodeAt()
       let arr = []
       for (let i = startCodeA; i < startCodeA + count; i++) {
@@ -309,7 +470,7 @@ export default {
       return arr
     },
     // 初始化大题题号到80
-    initBigQuestionNoList () {
+    initBigQuestionNoList() {
       for (let i = 1; i <= 80; i++) {
         let bigNo = ''
         if (i <= 10) {
@@ -323,7 +484,7 @@ export default {
       }
     },
     // 数字转汉字大写
-    getNumberUpper (number = 0) {
+    getNumberUpper(number = 0) {
       let numberStr = ''
       switch (number) {
         case 1:
@@ -360,7 +521,7 @@ export default {
       return numberStr
     },
     // 根据汉字大题号获取对应的数字
-    getNumberByTnumber (tnumber) {
+    getNumberByTnumber(tnumber) {
       let bigNo = this.bigQuestionNoList.find(item => {
         return item.bigNo === tnumber
       })
@@ -371,7 +532,7 @@ export default {
       }
     },
     // 保存答案
-    saveAnswer () {
+    saveAnswer() {
       let noAnswer = []
       let answers = []
       this.singleQuestions.forEach(item => {
@@ -406,14 +567,14 @@ export default {
       }
     },
     // 保存答案
-    updateAnswer (answerArr) {
+    updateAnswer(answerArr) {
       this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHANSWER, answerArr).then(res => {
         this.getExamStructureKg()
         this.canEdit = false
       }).catch(() => { })
     },
     // 上传主观题答案前
-    zgqUploadBefore (file) {
+    zgqUploadBefore(file) {
       if (this.zgQuestionAnswers.length <= 0) {
         this.$message({
           message: '请先设置主观题',
@@ -423,7 +584,7 @@ export default {
       }
     },
     // 上传主观题答案成功
-    zgqUploadSuccess (response, file, fileList) {
+    zgqUploadSuccess(response, file, fileList) {
       let url = response.data.data
       let zgq = this.zgQuestionAnswers[0]
       let data = [
@@ -438,7 +599,7 @@ export default {
       }).catch(() => { })
     },
     // 删除主观题答案
-    deleteZgAnswer () {
+    deleteZgAnswer() {
       let zgq = this.zgQuestionAnswers[0]
       if (!zgq || !zgq.pdfPath) {
         this.$message({
@@ -469,11 +630,11 @@ export default {
         })
       })
     },
-    downloadTemplate () {
+    downloadTemplate() {
       let url = API.EXAMSTRUCTURE_EXPORTSETTHEANSWER + '/' + this.examSubjectId
       this.download(url)
     },
-    download (apiUrl) {
+    download(apiUrl) {
       const elink = document.createElement('a')
       elink.style.display = 'none'
       elink.target = '_blank'
