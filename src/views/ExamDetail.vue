@@ -16,10 +16,10 @@
         :span="3"
         class="operation-video"
       >
-        <router-link
+        <!-- <router-link
           to=""
           target="_blank"
-        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link> -->
       </el-col>
     </el-row>
     <el-row class="exam-info">
@@ -376,12 +376,8 @@
         <el-button @click="ExamStudentVisible = false">取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog
-      title="选择班级"
-      :visible.sync="gradeVisible"
-      center
-      custom-class="grade-dialog"
-    >
+    <!-- 选择班级 -->
+    <el-dialog title="选择班级" :visible.sync="gradeVisible" center custom-class="grade-dialog">
       <el-row class="grade-row">
         <span>选择年级：</span>
         <el-select
@@ -665,7 +661,8 @@ export default {
       }).catch(() => { })
     },
     // 根据选择的年级获取班级列表
-    getClassByGrade(gradeId) {
+    getClassByGrade (gradeId) {
+      this.classCheckAll = false
       this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + gradeId).then(res => {
         this.classList = res.data.data
       }).catch(() => { })
@@ -890,9 +887,21 @@ export default {
     selectClass() {
       this.gradeVisible = true
     },
-    classCheckAllChange(val = false) {
+    classCheckAllChange (val = false) {
+      if (this.classList.length === 0) {
+        return false
+      }
+      if (!val) {
+        this.checkedStudentCount = 0
+        this.checkedClass = []
+      }
+      console.log(this.classList)
       this.checkedClass = val ? this.classList : []
       this.classIsIndeterminate = false
+      // 根据班级集合获取学生数量
+      if (val) {
+        this.getStudentCountByClass()
+      }
     },
     checkedClassChange(value = []) {
       if (value.length === 0) {

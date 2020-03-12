@@ -35,14 +35,8 @@
           <el-breadcrumb-item>设置答案</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col
-        :span="3"
-        class="operation-video"
-      >
-        <router-link
-          to=""
-          target="_blank"
-        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      <el-col :span="3" class="operation-video">
+        <!-- <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link> -->
       </el-col>
     </el-row>
     <el-row id="setting-answer">

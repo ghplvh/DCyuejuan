@@ -41,10 +41,10 @@
         :span="3"
         class="operation-video"
       >
-        <router-link
+        <!-- <router-link
           to=""
           target="_blank"
-        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link> -->
       </el-col>
     </el-row>
     <el-row class="content">

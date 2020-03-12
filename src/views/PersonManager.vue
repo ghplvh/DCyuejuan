@@ -5,10 +5,10 @@
         :span="18"
         class="school-name"
       >{{schoolInfo ? schoolInfo.schoolName : '学校'}}</el-col>
-      <el-col
+      <!-- <el-col
         :span="6"
         class="opra-video"
-      ><a href="#"><i class="el-icon-caret-right"></i><span>操作视频</span></a></el-col>
+      ><a href="#"><i class="el-icon-caret-right"></i><span>操作视频</span></a></el-col> -->
     </el-row>
     <el-tabs
       class="person-info"
@@ -110,7 +110,7 @@
           >
             <span>共{{studentCount}}人</span>
             <el-input
-              placeholder="请输入姓名/学号/学籍"
+              placeholder="请输入姓名进行查询"
               v-model="searchInputStudent"
               size="medium"
             >
@@ -1255,6 +1255,25 @@ export default {
       })
     },
     search() {
+      console.log(this.searchInputStudent)
+      if (this.searchInputStudent) {
+        this.loading = true
+        this.axios.post(API.STUDENT_SEARCH, { schoolCode: this.schoolNumber, name: this.searchInputStudent }).then(res=> {
+          console.log(res)
+          if (res.data.code === 0) {
+            this.tableDataStudent = res.data.data
+            this.total = res.data.data.length
+            this.studentCount = res.data.data.length
+            this.loading = false
+          } else {
+            this.$message({
+              message: res.data.message,
+              type: 'error'
+            })
+            this.loading = false
+          }
+        })
+      }
     },
     // 学生信息导入成功
     uploadSuccessStudent(response, file, fileList) {
@@ -1308,7 +1327,8 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        this.axios.post(API.EXAMINEE_DELETELISTBYID, { ...this.multiStudentSelection, schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode }).then(res => {
+        console.log(this.multiStudentSelection)
+        this.axios.post(API.STUDENT_DELSTUDENTS, this.multiStudentSelection).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -2094,7 +2114,7 @@ export default {
           margin-top: 20px;
           box-shadow: 0 2px 8px 0 rgba(83, 158, 224, 0.23);
           border-radius: 9px;
-          height: 140px;
+          height: 160px;
           width: 1116px;
           margin-left: 1px;
           .item-head {
