@@ -42,6 +42,7 @@ axios.interceptors.request.use(function (config) {
   return config
 }, function (error) {
   // Do something with request error
+  console.error(error);
   return Promise.reject(error)
 })
 
@@ -66,6 +67,7 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   // Do something with response error
   if (error.message) {
+    console.error(error);
     Message({
       message: '' + error.message,
       type: 'error'

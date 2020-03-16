@@ -15,6 +15,10 @@
 - [bug][] /subjectMain 下路由， 面包屑丢失subjectMain
 - [bug][] /personManager 添加学生，姓名过长，报错
 - [bug][] /questionBlock 全部分配allocationTask 500
+2020-03-10 11:01:27
+- [bug][done] ~~/settingAnswer 批量导入答案失败， 导入以后没有调用接口获取新数据~~
+- [bug][] /subjectMain 进度按钮， 获取提块为空。（应该为未设置提块）。
+- [bug][] /questionBlock 题块框选，如果没有扫描答题卡，界面空白。无返回上一页按钮
 
 # xshell
 120.24.181.77
