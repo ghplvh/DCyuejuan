@@ -196,15 +196,15 @@
                     <el-col :span="15">需导入考生并完成模板后才可以设置</el-col>
                     <el-col :span="5">
                       <router-link
-                        v-if="examSubjectInfo.templateType === 1 && studentCount > 0 && examSubjectInfo.frameType === 1"
                         :to="{path:`/scanPaper/${examId}/${examSubjectId}/${batchNumber}`}"
                         class="btn active-btn"
                       >扫描答题卡</router-link>
-                      <router-link
+                      <!-- <router-link
+                        v-if="examSubjectInfo.templateType === 1 && studentCount > 0 && examSubjectInfo.frameType === 1"
                         v-else
                         to=""
                         class="btn fade-btn"
-                      >扫描答题卡</router-link>
+                      >扫描答题卡</router-link> -->
                     </el-col>
                   </el-row>
                 </div>
@@ -306,8 +306,10 @@ export default {
         if (this.examSubjectInfo.templateType === 1) {
           this.activeStep = 3
         }
-        if (this.examSubjectInfo.frameType === 1) {
+        console.log(this.examSubjectInfo.frameType)
+        if (this.examSubjectInfo.frameType != 99) {
           this.activeStep = 5
+          console.log(this.activeStep)
         }
       }).catch(() => { this.loading = false })
     },

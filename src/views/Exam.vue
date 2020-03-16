@@ -157,7 +157,7 @@
       <div class="tab-right">
         <el-button type="text" size="mini" class="edit-exam" icon="el-icon-edit" @click="editExam()">编辑</el-button>
         <el-button type="text" size="mini" class="delete-exam" icon="el-icon-delete" @click="delExam()">删除</el-button>
-        <el-button type="text" size="mini" class="view-exam" icon="el-icon-view">查看动态</el-button>
+        <!-- <el-button type="text" size="mini" class="view-exam" icon="el-icon-view">查看动态</el-button> -->
       </div>
     </div>
     <el-dialog title="添加考试人员" :visible.sync="addVisible" width="600px" center custom-class="add-dialog">

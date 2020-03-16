@@ -433,8 +433,39 @@ export default {
       })
       return tab.name
     },
-    scanBegin() {
+    async scanBegin() {
+      const { examId, examSubjectId } = this
+      const params = {
+        examId,
+        examSubjectId
+      }
+      await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, params).then(res => {
+        console.log(res)
+        if (res.data.data.length > 0) {
+          let data = {
+            'cnlocation': res.data.data[0].cnlocation,
+            'qalocation': res.data.data[0].qalocation,
+            'qrlocation': res.data.data[0].qrlocation,
+            'ids': { 'subjectId': this.examSubjectId, 'examId': this.examId },
+            'options': { 'questionsloc': res.data.data[0].questionsloc, 'type': 1 }
+          }
+          this.axios({
+            url: 'http://127.0.0.1:8082',
+            method: 'post',
+            data: data
+          }).then(res => {
+          })
+        }
+      })
       // 获取当前科目
+      // let data = {
+      //   'cnlocation': this.cnlocation,
+      //   'qalocation': this.qalocation,
+      //   'qrlocation': this.qrlocation,
+      //   'ids': { 'subjectId': this.examSubjectId, 'examId': this.examId },
+      //   'options': { 'questionsloc': this.scanData, 'type': 1 }
+      // }
+
     }
   }
 }

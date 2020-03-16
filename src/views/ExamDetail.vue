@@ -44,6 +44,7 @@
             <el-select
               v-model="schoolInfo.schoolName"
               size="medium"
+              disabled
             >
               <el-option
                 :label="schoolInfo.schoolName"
@@ -65,7 +66,7 @@
             :span="11"
             class="join-school-filter"
           >
-            <el-select
+            <!-- <el-select
               size="medium"
               v-model="filterClassId"
               placeholder="请选择班级"
@@ -81,7 +82,7 @@
                 :label="clazz.className"
                 :value="clazz.id"
               ></el-option>
-            </el-select>
+            </el-select> -->
             <el-input
               size="medium"
               v-model="filterInput"
@@ -263,6 +264,7 @@
             size="medium"
             v-model="examineeGrade"
             value-key="id"
+            disabled
             @change="getClassByGrade(examineeGrade.id)"
           >
             <el-option
@@ -383,6 +385,7 @@
         <el-select
           size="medium"
           v-model="examClassGrade"
+          disabled
           @change="getClassByGrade(examClassGrade)"
         >
           <el-option
@@ -492,7 +495,7 @@
               placeholder="请输入考号"
             ></el-input>
           </el-form-item>
-          <el-form-item
+          <!-- <el-form-item
             label="考场:"
             prop="examroomNumber"
           >
@@ -500,8 +503,8 @@
               v-model="examInfoForm.examroomNumber"
               placeholder="请输入考场号"
             ></el-input>
-          </el-form-item>
-          <el-form-item
+          </el-form-item> -->
+          <!-- <el-form-item
             label="座号:"
             prop="seatNumber"
           >
@@ -509,7 +512,7 @@
               v-model="examInfoForm.seatNumber"
               placeholder="请输入座号"
             ></el-input>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
       </div>
       <div slot="footer">
@@ -629,6 +632,9 @@ export default {
     getExamInfo() {
       this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
+        this.examineeGrade.id = res.data.data[0].gradeId
+        this.examClassGrade = res.data.data[0].gradeId
+        this.getClassByGrade(this.examineeGrade.id)
         this.getGradeById()
       }).catch(() => { })
     },
