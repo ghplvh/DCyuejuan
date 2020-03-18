@@ -11,9 +11,10 @@
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/exam/'+examId}">{{examInfo.examName}}</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId + '/' + examSubjectId}">
-            <span>{{`${examGrade.gradeName}${examSubjectInfo.subjectName}(科目ID：${examSubjectId})`}}</span>
+          <el-breadcrumb-item :to="{ path: '/exam/'+examId||''}">{{examInfo.examName||''}}</el-breadcrumb-item>
+          <!-- <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId || '' + '/' + examSubjectId||''}"> -->
+          <el-breadcrumb-item>
+            <span>{{`${examGrade.gradeName|| ''}${examSubjectInfo.subjectName||''}(科目ID：${examSubjectId|| ''})`}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
                 <i
@@ -234,7 +235,7 @@
             >立即开始阅卷</router-link>
           </div>
         </el-row>
-        <el-row class="aside-right mgt-10">
+        <!-- <el-row class="aside-right mgt-10">
           <section>
             <h1 class="font-bold">原卷</h1>
             <div class="fade">
@@ -247,7 +248,7 @@
               class="btn blue-btn"
             >上传原卷</router-link>
           </div>
-        </el-row>
+        </el-row> -->
       </el-col>
     </el-row>
   </div>

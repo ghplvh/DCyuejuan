@@ -35,7 +35,10 @@
           <el-breadcrumb-item>设置答案</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col :span="3" class="operation-video">
+      <el-col
+        :span="3"
+        class="operation-video"
+      >
         <!-- <router-link to="" target="_blank"><i class="el-icon-caret-right"></i><span>操作视频</span></router-link> -->
       </el-col>
     </el-row>
@@ -220,7 +223,7 @@
               </div>
             </el-card>
           </el-tab-pane>
-          <el-tab-pane
+          <!-- <el-tab-pane
             label="主观题答案"
             name="subAnswer"
           >
@@ -237,7 +240,6 @@
                   :span="8"
                   class="text-right"
                 >
-                  <!-- <el-button type="primary" size="small">开始扫描</el-button> -->
                   <el-button
                     type="danger"
                     size="small"
@@ -272,7 +274,6 @@
                     class="text-center"
                     v-if="zgQuestionAnswers.length <= 0"
                   >
-                    <!-- <el-col>1.推荐使用扫描图片的方式，直接将答案扫描即可</el-col> -->
                     <el-col class="mgt-20">
                       1.本地上传支持<span class="danger">图片</span>格式文件
                     </el-col>
@@ -290,7 +291,7 @@
                 </el-row>
               </el-row>
             </el-row>
-          </el-tab-pane>
+          </el-tab-pane> -->
         </el-tabs>
       </div>
     </el-row>

@@ -11,9 +11,10 @@
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/exam/'+examId}">{{examInfo.examName}}</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId + '/' + examSubjectId}">
-            <span>{{examGrade.gradeName + examSubjectInfo.subjectName}}</span>
+          <el-breadcrumb-item :to="{ path: '/exam/'+examId||''}">{{examInfo.examName||'考试名称'}}</el-breadcrumb-item>
+          <!-- <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId ||''+ '/' + examSubjectId||''}"> -->
+          <el-breadcrumb-item :to="{ path: `/subjectMain/${examId ||''}/${examSubjectId||''}`}">
+            <span>{{examGrade.gradeName||'年级'}}{{examSubjectInfo.subjectName||'科目'}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
                 <i
@@ -1493,7 +1494,7 @@ export default {
           return item
         })
       }
-      console.log("allActionTask",data)
+      console.log("allActionTask", data)
       this.axios.post(API.TITLEBLOCK_ALLOCATIONTASK, data).then(res => {
         this.$message({
           message: '分配方式修改成功',

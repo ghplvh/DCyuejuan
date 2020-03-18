@@ -9,9 +9,9 @@
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: `/exam/${examId}`}">{{examInfo.examName}}</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: `/exam/${examId}`}">{{examInfo.examName||"考试名称"}}</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId + '/' + examSubjectId}">
-            <span>{{`${examGrade.gradeName}${examSubjectInfo.subjectName}(${examSubjectId})`}}</span>
+            <span>{{`${examGrade.gradeName||'年级'}${examSubjectInfo.subjectName||'科目'}(${examSubjectId||''})`}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
                 <i
@@ -42,7 +42,8 @@
         <router-link
           to=""
           target="_blank"
-        <!-- ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link> -->
+          <!--
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link> -->
       </el-col>
     </el-row>
     <el-row>
@@ -190,12 +191,12 @@
               @click="addZgQuestion()"
             >新增主观题</el-button>
             <!-- <el-button type="text" icon="el-icon-edit">设置附加题</el-button> -->
-            <router-link :to="{path: '/settingAnswer/' + examId + '/' + examSubjectId, query: {tabname: 'subAnswer'}}">
+            <!-- <router-link :to="{path: '/settingAnswer/' + examId + '/' + examSubjectId, query: {tabname: 'subAnswer'}}">
               <el-button
                 type="text"
                 icon="el-icon-tickets"
               >上传主观题答案</el-button>
-            </router-link>
+            </router-link> -->
             <!-- <el-button type="text" icon="el-icon-plus" @click="subjectSettingReuse()">科目设置复用</el-button> -->
           </el-col>
           <el-col
@@ -380,7 +381,7 @@
                 type="flex"
                 align="middle"
               >
-                <el-col :span="1">&nbsp;&nbsp;{{kgqMini.tnumber}}</el-col>
+                <el-col :span="4">&nbsp;&nbsp;{{kgqMini.tnumber}}</el-col>
                 <el-col
                   :span="1.5"
                   :offset="7"
@@ -388,7 +389,7 @@
                 >答案：</el-col>
                 <el-col
                   :span="1.5"
-                  :offset="12"
+                  :offset="8"
                   v-else
                 >答案：</el-col>
                 <el-col :span="3">
