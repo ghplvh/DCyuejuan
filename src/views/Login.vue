@@ -1,40 +1,51 @@
 <template>
   <div id="login">
-    <el-form
-      :model="form"
-      :rules="rules"
-      ref="form"
-      label-width="60px"
-    >
-      <el-form-item
-        label="账号"
-        prop="phone"
+    <section class="form-wrap">
+      <div class="img">
+        <img src="../assets/left.png">
+      </div>
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="form"
+        label-width="60px"
       >
-        <el-input
-          v-model="form.phone"
-          placeholder="请输入账号"
-          maxlength="11"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        label="密码"
-        prop="password"
-      >
-        <el-input
-          type="password"
-          @keyup.enter.native="login('form')"
-          v-model="form.password"
-          placeholder="请输入密码"
-        ></el-input>
-      </el-form-item>
-      <el-button
-        type="primary"
-        @click="login('form')"
-        v-loading.fullscreen.lock="fullscreenLoading"
-        element-loading-text="登录中"
-      >登录</el-button>
-      <!-- <router-link to="/forgetPassword" class="forget">忘记密码？</router-link> -->
-    </el-form>
+        <h1 class="title">用户登录</h1>
+        <el-form-item prop="phone">
+          <span slot="label"> <img
+              class="icon"
+              src="../assets/phone.png"
+              alt=""
+            ></span>
+          <el-input
+            v-model="form.phone"
+            placeholder="请输入账号"
+            maxlength="11"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <span slot="label"> <img
+              class="icon"
+              src="../assets/password.png"
+              alt=""
+            ></span>
+          <el-input
+            type="password"
+            @keyup.enter.native="login('form')"
+            v-model="form.password"
+            placeholder="请输入密码"
+          ></el-input>
+        </el-form-item>
+        <el-button
+          type="primary"
+          @click="login('form')"
+          v-loading.fullscreen.lock="fullscreenLoading"
+          element-loading-text="登录中"
+        >登录</el-button>
+        <!-- <router-link to="/forgetPassword" class="forget">忘记密码？</router-link> -->
+      </el-form>
+    </section>
+
   </div>
 </template>
 <script>
@@ -112,21 +123,65 @@ export default {
 }
 </script>
 <style lang="scss">
+@mixin flex-row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+@mixin flex($direction, $justify) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: $justify;
+}
 #login {
+  background: url("../assets/background.png") no-repeat fixed top;
+  background-size: cover;
   min-height: 100vh;
+  min-width: 1148px;
+  @include flex-row-center();
   height: 100%;
   overflow: hidden;
+  .form-wrap {
+    @include flex-row-center();
+    width: 1148px;
+    .img {
+      width: 620px;
+      height: 550px;
+    }
+  }
   .el-form {
-    width: 500px;
-    margin: 200px auto 0;
+    width: 528px;
+    height: 550px;
+    @include flex(column, flex-start);
+    background-color: #fff;
+    .title {
+      margin-top: 76px;
+      margin-bottom: 92px;
+      @include flex-row-center();
+      font-size: 34px;
+      font-family: FZDHTJW--GB1-0, FZDHTJW--GB1;
+      font-weight: 600;
+      color: rgba(64, 158, 255, 1);
+      line-height: 38px;
+    }
     .el-form-item {
-      border: 1px solid #cccccc;
-      background-color: #fafafa;
-      border-radius: 4px;
+      width: 320px;
+      border-bottom: #f1f1f1 2px solid;
+      .el-input__inner {
+        border: none;
+      }
+      .icon {
+        width: 24px;
+        height: 24px;
+        padding: 1px 2px;
+      }
     }
     .el-button {
-      width: 100%;
-      margin-bottom: 22px;
+      width: 320px;
+      height: 60px;
+      margin-top: 80px;
     }
     .forget {
       text-decoration: none;
