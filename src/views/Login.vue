@@ -181,7 +181,7 @@ export default {
     .el-button {
       width: 320px;
       height: 60px;
-      margin-bottom: 22px;
+      margin-top: 80px;
     }
     .forget {
       text-decoration: none;
