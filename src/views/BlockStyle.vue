@@ -157,7 +157,7 @@
 </template>
 <script>
 import API from '../api/api.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import Utils from '../utils/Utils.js'
 export default {
   data() {
@@ -192,11 +192,13 @@ export default {
     this.getTemplateInfo()
   },
   mounted() {
+    this.saveAdminInfo();
     if (this.$refs['mainSVG']) {
       this.svgWidth = this.$refs['mainSVG'].clientWidth
     }
   },
   methods: {
+    ...mapActions(['removeAdminInfo', 'saveAdminInfo']),
     async getTemplateInfo() {
       let data = {
         examId: this.examId,
