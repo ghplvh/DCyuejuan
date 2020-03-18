@@ -265,6 +265,7 @@
   </div>
 </template>
 <script>
+import R from 'ramda'
 import API from '../api/api.js'
 import { mapState } from 'vuex'
 export default {
@@ -296,6 +297,8 @@ export default {
       imgList: [],
       // 试卷扫描结果相关
       batchList: [],
+      dtList: [], // 正常
+      dseList: [], // 异常
       maxIndex: 0,
       exceptionMaxIndex: 0
     }
@@ -326,21 +329,22 @@ export default {
       })
     },
     // 获取试卷图片
-    getImg() {
+    getImg(maxIndex = 0, exceptionMaxIndex = 0) {
+      console.log(maxIndex, exceptionMaxIndex)
       const data = {
-        examSubjectId: this.examSubjectId,
-        maxIndex: this.maxIndex,
-        exceptionMaxIndex: this.exceptionMaxIndex
+        examSubjectId: this.$route.params.examSubjectId,
+        maxIndex,
+        exceptionMaxIndex
       }
       this.axios.post(API.GETEXCEPTIONLIST, data).then(res => {
         const ress = res.data.data
-        this.maxIndex = ress.dtList ? ress.dtList.length : 0
-        this.exceptionMaxIndex = ress.dseList ? ress.dseList.length : 0
-        let batchList = ress.dseList ? ress.dseList.concat(res.dtList) : ress.dtList
-        batchList.forEach(element => {
+        this.maxIndex = ress?.dtList?.length || 0
+        this.exceptionMaxIndex = ress.dseList?.length || 0
+        let batchList = ress.dseList && ress.dtList ? ress.dseList.concat(res.dtList) : ress.dtList ? ress.dtList : []
+        batchList?.forEach(element => {
           element.answerSheetImg = element.answerSheetImg.split(',')
         });
-        this.batchList = batchList
+        this.batchList = this.batchList.concat(batchList)
         console.log(this.maxIndex, this.exceptionMaxIndex)
         if (this.maxIndex === 0 && this.exceptionMaxIndex === 0) {
           console.log('nononono')
@@ -358,7 +362,7 @@ export default {
     // 获取考试信息
     async getExamById() {
       this.loading = true
-      await this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
+      await this.axios.post(API.EXAM_FINDBYID + '/' + this.$route.params.examId).then(res => {
         this.examInfo = res.data.data[0]
         this.school = res.data.data[0].schoolCode
         let data = {
@@ -401,6 +405,7 @@ export default {
       return tab.name
     },
     async scanBegin() {
+      this.globalLoading = true
       const { examId, examSubjectId } = this
       const params = {
         examId,
@@ -422,20 +427,16 @@ export default {
             data: data
           }).then(res => {
             window.InitSetInterval = setInterval(() => {
+<<<<<<< HEAD
               this.getImg()
             }, 2000);
+=======
+              this.getImg(this.maxIndex, this.exceptionMaxIndex)    
+            }, 15000);
+>>>>>>> 45aa6d22bdc503c55ca8bb3d2efb04d7e34380fd
           })
         }
       })
-      // 获取当前科目
-      // let data = {
-      //   'cnlocation': this.cnlocation,
-      //   'qalocation': this.qalocation,
-      //   'qrlocation': this.qrlocation,
-      //   'ids': { 'subjectId': this.examSubjectId, 'examId': this.examId },
-      //   'options': { 'questionsloc': this.scanData, 'type': 1 }
-      // }
-
     }
   }
 }
