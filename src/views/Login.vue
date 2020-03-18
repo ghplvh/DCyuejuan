@@ -11,24 +11,30 @@
         label-width="60px"
       >
         <h1 class="title">用户登录</h1>
-        <el-form-item prop="phone">
-          <span slot="label"> <img
+        <el-form-item
+          prop="phone"
+          label="账户"
+        >
+          <!-- <span slot="label"> <img
               class="icon"
               src="../assets/phone.png"
               alt=""
-            ></span>
+            ></span> -->
           <el-input
             v-model="form.phone"
             placeholder="请输入账号"
             maxlength="11"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="password">
-          <span slot="label"> <img
+        <el-form-item
+          prop="password"
+          label="密码"
+        >
+          <!-- <span slot="label"> <img
               class="icon"
               src="../assets/password.png"
               alt=""
-            ></span>
+            ></span> -->
           <el-input
             type="password"
             @keyup.enter.native="login('form')"
