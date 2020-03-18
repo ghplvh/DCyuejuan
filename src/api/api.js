@@ -276,7 +276,9 @@ const API = {
   // 获取班级列表
   ADMIN_GETCLASSLIST: '/web/dcClass/getClassList',
   // 乱七八糟
-  LUANQIBAZHAO: '/web/importWrongQuestions/saveDcHfsRelation'
+  LUANQIBAZHAO: '/web/importWrongQuestions/saveDcHfsRelation',
+  // 获取扫描试卷
+  GETEXCEPTIONLIST: 'web/importWrongQuestions/getExceptionList'
 }
 Object.keys(API).map(key => {
   API[key] = IP.EXAM_IP + API[key]

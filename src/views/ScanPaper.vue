@@ -1,6 +1,9 @@
  /* eslint-disable */
 <template>
-  <div id="scan-paper">
+  <div id="scan-paper"
+       element-loading-text="加载中,请勿操作"
+       v-loading="globalLoading"
+    >
     <el-row
       class="bread-crumb"
       type="flex"
@@ -61,14 +64,9 @@
                 <el-row>
                   <el-row class="school-select">
                     <span class="select-span">学校</span>
-                    <el-select
-                      size="small"
-                      v-model="school"
-                    >
-                      <el-option></el-option>
-                    </el-select>
+                    <el-input size="small" v-model="school" disabled style="width: 70%"></el-input>
                   </el-row>
-                  <el-row
+                  <!-- <el-row
                     class="template-wrapper"
                     type="flex"
                     align="middle"
@@ -96,25 +94,21 @@
                         >考号位数：0</el-col>
                       </el-row>
                     </el-row>
-                  </el-row>
+                  </el-row> -->
                 </el-row>
                 <el-row class="batch-info">
-                  <el-row class="batch-info-title">批次信息</el-row>
-                  <el-row class="batch-info-wrapper">
+                  <!-- <el-row class="batch-info-title">统计信息</el-row> -->
+                  <!-- <el-row class="batch-info-wrapper" style="text-align">
                     <el-table
                       :row-style="{width:'250px'}"
                       :header-row-style="{width:'250px'}"
                     >
                       <el-table-column
-                        label="批次"
-                        width="56px"
-                      ></el-table-column>
-                      <el-table-column
                         label="已扫描"
                         width="70px"
                       ></el-table-column>
                       <el-table-column
-                        label="已上传"
+                        label="正常"
                         width="70px"
                       ></el-table-column>
                       <el-table-column
@@ -122,17 +116,11 @@
                         width="54px"
                       ></el-table-column>
                     </el-table>
-                  </el-row>
+                  </el-row> -->
                 </el-row>
               </el-aside>
               <el-main class="right-content">
                 <el-row>
-                  <!-- <div class="scanner-status">
-                    <span>扫描仪状态：</span>
-                    <span class="red-font">未运行好分数阅卷扫描端</span>
-                    <span>，点击</span>
-                    <el-button type="text">下载扫描客户端</el-button>
-                  </div> -->
                   <div class="steps-wrapper">
                     <el-steps
                       :active="active"
@@ -159,15 +147,6 @@
                           </el-row>
                         </div>
                       </el-step>
-                      <!-- <el-step title="2.识别定位点及考号" icon="el-icon-circle-check">
-                        <div slot="description">
-                          <el-row class="desc-row-1">
-                          </el-row>
-                          <el-row class="desc-row-2">
-                            <el-button type="primary" size="small">定位/考号异常处理</el-button>
-                          </el-row>
-                        </div>
-                      </el-step> -->
                       <el-step
                         title="2.上传试卷"
                         icon="el-icon-circle-check"
@@ -212,7 +191,7 @@
                   shadow="never"
                 >
                   <div slot="header">
-                    <span>扫描批次：{{Number(batchNumber) + 1}}</span>
+                    <span>扫描结果：总人数{{maxIndex + exceptionMaxIndex}},异常{{exceptionMaxIndex}}</span>
                   </div>
                   <div
                     v-if="batchList.length === 0"
@@ -228,11 +207,15 @@
                       v-for="image in batchList"
                       :key="image"
                     >
+                    <div v-for="img in image.answerSheetImg" :key="img" style="text-align:center">
+                      <div class="label" v-if="image.studentExamId">{{image.studentName}}{{image.studentExamId}}</div>
+                      <div class="label" style="color: red" v-else>考号异常</div>
                       <img
-                        :src="image"
+                        :src="img"
                         alt=""
-                        @click="previewImage(image)"
+                        @click="previewImage(img)"
                       >
+                    </div>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -240,63 +223,6 @@
             </el-container>
           </div>
         </el-tab-pane>
-        <!-- <el-tab-pane label="扫描进度" :name="2">
-          <el-container class="scan-progress" direction="vertical">
-            <el-header class="progress-top" height="155px">
-              <el-row class="progress-info" type="flex" align="middle" justify="space-between">
-                <el-col :span="8">
-                  <div class="scan-desc">
-                    <div class="desc">需扫描试卷总数</div>
-                    <div class="count">100</div>
-                  </div>
-                  <div class="scan-img">
-                    <img src="../assets/icon/scanimg.png" alt="">
-                  </div>
-                </el-col>
-                <el-col :span="8">
-                  <div class="scan-desc">
-                    <div class="desc">已完成扫描数</div>
-                    <div class="count">0</div>
-                  </div>
-                  <div class="scan-img">
-                    <img src="../assets/icon/scancount.png" alt="">
-                  </div>
-                </el-col>
-                <el-col :span="8">
-                  <div class="scan-desc">
-                    <div class="desc">已完成比例</div>
-                    <div class="count">0%</div>
-                  </div>
-                  <div class="scan-img">
-                    <img src="../assets/icon/scanrate.png" alt="">
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row class="progress-bar">
-                <el-progress :text-inside="true" :stroke-width="18" :percentage="0"></el-progress>
-              </el-row>
-            </el-header>
-            <el-main class="scan-progress-content">
-              <el-row class="scan-details">
-                <el-col :span="3">扫描进度详情</el-col>
-                <el-col :span="9" class="details-right">报名考试人数:{{57}}，实际参加考试人数:{{0}}，缺考人数:{{57}}</el-col>
-              </el-row>
-              <el-table class="details-table" border>
-                <el-table-column label="学校" align="center" width="250px"></el-table-column>
-                <el-table-column label="扫描人" align="center" width="223px"></el-table-column>
-                <el-table-column label="上传进度" align="center" width="223px"></el-table-column>
-                <el-table-column label="异常卷" align="center" width="223px"></el-table-column>
-                <el-table-column label="操作" align="center" width="250px"></el-table-column>
-              </el-table>
-              <el-row class="other-exceptions">
-                <el-col :span="3">其它异常卷：{{0}}</el-col>
-                <router-link to="">
-                  <el-button type="text" icon="el-icon-view">查看异常卷</el-button>
-                </router-link>
-              </el-row>
-            </el-main>
-          </el-container>
-        </el-tab-pane> -->
       </el-tabs>
     </el-row>
     <el-dialog
@@ -319,22 +245,15 @@
         >确定</el-button>
       </div>
     </el-dialog>
-    <!-- <el-form ref="formform" :model="form" label-width="80px">
-      <el-form-item label="附件上传" label-width="80px">
-        <el-upload style="padding-left:0px" class="upload-demo" action="http://47.107.116.88:10003/web/upload/uploadImgAndFileName" multiple :auto-upload="true" accept="image" :http-request="uploadFile" ref="uploadImg" :limit="100" >
-          <el-button size="small" type="primary">上传图片</el-button>
-        </el-upload>
-      </el-form-item>
-    </el-form> -->
   </div>
 </template>
 <script>
 import API from '../api/api.js'
-// import cookie from '../api/requestHeader.js'
 import { mapState } from 'vuex'
 export default {
   data() {
     return {
+      globalLoading: false,
       form: {
         examSubjectId: this.$route.params.examSubjectId,
         examId: this.$route.params.examId
@@ -356,18 +275,22 @@ export default {
       ],
       tabPaneLoading: false,
       active: 1,
-      batchList: [],
       previewVisible: false,
-      imgList: []
+      imgList: [],
+      // 试卷扫描结果相关
+      batchList: [],
+      maxIndex: 0,
+      exceptionMaxIndex: 0
     }
   },
   computed: {
     ...mapState(['adminInfo'])
   },
   created() {
+    this.globalLoading = true
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.getExamById()
-    this.getBatch()
+    this.getImg()
   },
   methods: {
     UploadUrl() {
@@ -385,10 +308,30 @@ export default {
         })
       })
     },
-    getBatch() {
-      this.loading = true
-      this.axios.get(`${API.ADMIN_GETIMAGE}?filename=answersheet/${this.examSubjectId}/${Number(this.batchNumber) + 1}/`).then(res => {
-        this.batchList = res.data.data
+    // 获取试卷图片
+    getImg() {
+      const data = {
+        examSubjectId: this.examSubjectId,
+        maxIndex: this.maxIndex,
+        exceptionMaxIndex: this.exceptionMaxIndex
+      }
+      this.axios.post(API.GETEXCEPTIONLIST, data).then(res => {
+        const ress = res.data.data
+        this.maxIndex = ress.dtList ? ress.dtList.length : 0
+        this.exceptionMaxIndex = ress.dseList ? ress.dseList.length : 0
+        let batchList = ress.dseList ? ress.dseList.concat(res.dtList) : ress.dtList
+        batchList.forEach(element => {
+          element.answerSheetImg = element.answerSheetImg.split(',')
+        });
+        this.batchList = batchList
+        console.log(this.maxIndex, this.exceptionMaxIndex)
+        if(this.maxIndex === 0 && this.exceptionMaxIndex === 0) {
+          console.log('nononono')
+          clearInterval(window.InitSetInterval)
+        }
+        setTimeout(() => {
+          this.globalLoading = false
+        }, 2000)
       })
     },
     previewImage(img) {
@@ -400,6 +343,13 @@ export default {
       this.loading = true
       await this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
+        this.school = res.data.data[0].schoolCode
+        let data = {
+          schoolCode: res.data.data[0].schoolCode
+        }
+        this.axios.post(API.SCHOOL_FINDBYCOMMON, data).then(res => {
+          this.school = res.data.data[0].schoolName
+        }).catch(() => { })
         this.getGradeById()
         this.loading = false
       }).catch(() => { this.loading = false })
@@ -443,9 +393,9 @@ export default {
         console.log(res)
         if (res.data.data.length > 0) {
           let data = {
-            'cnlocation': res.data.data[0].cnlocation,
-            'qalocation': res.data.data[0].qalocation,
-            'qrlocation': res.data.data[0].qrlocation,
+            'cnlocation': JSON.parse(res.data.data[0].cnlocation),
+            'qalocation': JSON.parse(res.data.data[0].qalocation),
+            'qrlocation': JSON.parse(res.data.data[0].qrlocation),
             'ids': { 'subjectId': this.examSubjectId, 'examId': this.examId },
             'options': { 'questionsloc': res.data.data[0].questionsloc, 'type': 1 }
           }
@@ -454,6 +404,9 @@ export default {
             method: 'post',
             data: data
           }).then(res => {
+            window.InitSetInterval = setInterval(() => {
+              this.getImg()    
+            }, 2000);
           })
         }
       })
@@ -471,6 +424,16 @@ export default {
 }
 </script>
 <style lang="scss">
+.label {
+  position: absolute;
+  width: 92%;
+  text-align: center;
+  background-color: #999;
+  opacity: 0.7;
+  color: #13d1be;
+  top: 5px;
+  line-height: 30px;
+}
 #scan-paper {
   .bread-crumb {
     background-color: #ffffff;
