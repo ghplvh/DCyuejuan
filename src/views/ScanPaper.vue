@@ -427,13 +427,8 @@ export default {
             data: data
           }).then(res => {
             window.InitSetInterval = setInterval(() => {
-<<<<<<< HEAD
               this.getImg()
             }, 2000);
-=======
-              this.getImg(this.maxIndex, this.exceptionMaxIndex)    
-            }, 15000);
->>>>>>> 45aa6d22bdc503c55ca8bb3d2efb04d7e34380fd
           })
         }
       })
