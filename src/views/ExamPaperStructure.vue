@@ -35,16 +35,15 @@
           <el-breadcrumb-item>设置试卷结构</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <el-col
+      <!-- <el-col
         :span="3"
         class="operation-video"
       >
         <router-link
           to=""
           target="_blank"
-          <!--
-        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link> -->
-      </el-col>
+        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
+      </el-col> -->
     </el-row>
     <el-row>
       <el-row

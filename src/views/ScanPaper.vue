@@ -1,9 +1,10 @@
  /* eslint-disable */
 <template>
-  <div id="scan-paper"
-       element-loading-text="加载中,请勿操作"
-       v-loading="globalLoading"
-    >
+  <div
+    id="scan-paper"
+    element-loading-text="加载中,请勿操作"
+    v-loading="globalLoading"
+  >
     <el-row
       class="bread-crumb"
       type="flex"
@@ -12,9 +13,9 @@
       <el-col :span="21">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item :to="{ path: '/mainMenu' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item :to="{ path: '/exam/'+examId}">{{examInfo.examName}}</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/exam/'+examId}">{{examInfo.examName || '考试名称'}}</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId + '/' + examSubjectId}">
-            <span>{{`${examGrade.gradeName}${examSubjectInfo.subjectName}(科目ID：${examSubjectId})`}}</span>
+            <span>{{`${examGrade.gradeName ||'年级'}${examSubjectInfo.subjectName||'科目'}(科目ID：${examSubjectId||''})`}}</span>
             <el-dropdown>
               <span class="el-dropdown-link">
                 <i
@@ -64,7 +65,12 @@
                 <el-row>
                   <el-row class="school-select">
                     <span class="select-span">学校</span>
-                    <el-input size="small" v-model="school" disabled style="width: 70%"></el-input>
+                    <el-input
+                      size="small"
+                      v-model="school"
+                      disabled
+                      style="width: 70%"
+                    ></el-input>
                   </el-row>
                   <!-- <el-row
                     class="template-wrapper"
@@ -207,15 +213,26 @@
                       v-for="image in batchList"
                       :key="image"
                     >
-                    <div v-for="img in image.answerSheetImg" :key="img" style="text-align:center">
-                      <div class="label" v-if="image.studentExamId">{{image.studentName}}{{image.studentExamId}}</div>
-                      <div class="label" style="color: red" v-else>考号异常</div>
-                      <img
-                        :src="img"
-                        alt=""
-                        @click="previewImage(img)"
+                      <div
+                        v-for="img in image.answerSheetImg"
+                        :key="img"
+                        style="text-align:center"
                       >
-                    </div>
+                        <div
+                          class="label"
+                          v-if="image.studentExamId"
+                        >{{image.studentName}}{{image.studentExamId}}</div>
+                        <div
+                          class="label"
+                          style="color: red"
+                          v-else
+                        >考号异常</div>
+                        <img
+                          :src="img"
+                          alt=""
+                          @click="previewImage(img)"
+                        >
+                      </div>
                     </el-col>
                   </el-row>
                 </el-card>
@@ -325,7 +342,7 @@ export default {
         });
         this.batchList = batchList
         console.log(this.maxIndex, this.exceptionMaxIndex)
-        if(this.maxIndex === 0 && this.exceptionMaxIndex === 0) {
+        if (this.maxIndex === 0 && this.exceptionMaxIndex === 0) {
           console.log('nononono')
           clearInterval(window.InitSetInterval)
         }
@@ -405,7 +422,7 @@ export default {
             data: data
           }).then(res => {
             window.InitSetInterval = setInterval(() => {
-              this.getImg()    
+              this.getImg()
             }, 2000);
           })
         }
