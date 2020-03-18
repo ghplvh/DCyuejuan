@@ -337,16 +337,21 @@ export default {
         exceptionMaxIndex
       }
       this.axios.post(API.GETEXCEPTIONLIST, data).then(res => {
-        const ress = res.data.data
-        this.maxIndex = ress?.dtList?.length || 0
-        this.exceptionMaxIndex = ress.dseList?.length || 0
-        let batchList = ress.dseList && ress.dtList ? ress.dseList.concat(res.dtList) : ress.dtList ? ress.dtList : []
+        const response = res.data.data
+        if (!response.dtList) {
+          response.dtList = []
+        }
+        if (!response.dseList) {
+          response.dseList = []
+        }
+        this.maxIndex = this.maxIndex + response.dtList.length
+        this.exceptionMaxIndex = this.exceptionMaxIndex + this.dseList.length
+        let batchList = response.dseList.concat(response.dtList)
         batchList?.forEach(element => {
           element.answerSheetImg = element.answerSheetImg.split(',')
         });
         this.batchList = this.batchList.concat(batchList)
-        console.log(this.maxIndex, this.exceptionMaxIndex)
-        if (this.maxIndex === 0 && this.exceptionMaxIndex === 0) {
+        if (response.dtList.length === 0 && response.dseList.length === 0) {
           console.log('nononono')
           clearInterval(window.InitSetInterval)
         }
@@ -405,7 +410,7 @@ export default {
       return tab.name
     },
     async scanBegin() {
-      this.globalLoading = true
+      // this.globalLoading = true
       const { examId, examSubjectId } = this
       const params = {
         examId,
@@ -427,8 +432,9 @@ export default {
             data: data
           }).then(res => {
             window.InitSetInterval = setInterval(() => {
-              this.getImg()
-            }, 2000);
+              console.log(this.maxIndex, '-0--', this.exceptionMaxIndex)
+              this.getImg(this.maxIndex, this.exceptionMaxIndex)
+            }, 30000);
           })
         }
       })
