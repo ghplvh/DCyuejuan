@@ -154,7 +154,7 @@
                         </div>
                       </el-step>
                       <el-step
-                        title="2.上传试卷"
+                        title="2.题块分割"
                         icon="el-icon-circle-check"
                       >
                         <div slot="description">
@@ -162,22 +162,7 @@
                             <div>本机扫描人数：37</div>
                           </el-row> -->
                           <el-row class="desc-row-1">
-                            <div>已经上传人数：{{examSubjectInfo.scanStuNum}}</div>
-                          </el-row>
-                          <el-row class="desc-row-1">
-                            <el-button
-                              type="primary"
-                              size="small"
-                            >上传进度</el-button>
-                          </el-row>
-                        </div>
-                      </el-step>
-                      <el-step
-                        title="3.切图"
-                        icon="el-icon-circle-check"
-                      >
-                        <div slot="description">
-                          <el-row class="desc-row-1">
+                            <div>扫描完成后进行主观题切图</div>
                           </el-row>
                           <el-row class="desc-row-1">
                             <el-button
@@ -188,8 +173,24 @@
                           </el-row>
                         </div>
                       </el-step>
+                      <el-step
+                        title="3.阅卷任务"
+                        icon="el-icon-circle-check"
+                      >
+                        <div slot="description">
+                          <el-row class="desc-row-1">
+                            <div>切图完成后分配阅卷任务</div>
+                          </el-row>
+                          <el-row class="desc-row-1">
+                            <el-button
+                              type="primary"
+                              size="small"
+                            >分配阅卷</el-button>
+                          </el-row>
+                        </div>
+                      </el-step>
                     </el-steps>
-                    <el-row class="wrapper-desc">说明：已上传试卷为无定位异常和考号异常的试卷。点击上传进度可以查看本机扫描的试卷是否全部上传至云端，并可以发起重新上传。</el-row>
+                    <!-- <el-row class="wrapper-desc">说明：已上传试卷为无定位异常和考号异常的试卷。点击上传进度可以查看本机扫描的试卷是否全部上传至云端，并可以发起重新上传。</el-row> -->
                   </div>
                 </el-row>
                 <el-card
@@ -266,6 +267,7 @@
 </template>
 <script>
 import R from 'ramda'
+import Axios from 'axios'
 import API from '../api/api.js'
 import { mapState } from 'vuex'
 export default {
@@ -300,7 +302,10 @@ export default {
       dtList: [], // 正常
       dseList: [], // 异常
       maxIndex: 0,
-      exceptionMaxIndex: 0
+      exceptionMaxIndex: 0,
+      // 扫描仪状态
+      clientStatus: true,
+      scanStatus: false
     }
   },
   computed: {
@@ -309,6 +314,7 @@ export default {
   created() {
     this.globalLoading = true
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
+    this.scanLoad()
     this.getExamById()
     this.getImg()
   },
@@ -326,6 +332,20 @@ export default {
           message: '切图成功。',
           type: 'success'
         })
+      })
+    },
+    scanLoad() {
+    // 先判断客户端是否启动
+      Axios({
+        url: 'http://127.0.0.1:8082',
+        method: 'post',
+        data: {'querystatus': ''}
+      }).then(res => {
+        console.log(res.data.scanner)
+        this.scanStatus = res.data.scanner
+      }).catch(error => {
+        console.log(error)
+        this.clientStatus = false
       })
     },
     // 获取试卷图片
@@ -411,33 +431,49 @@ export default {
     },
     async scanBegin() {
       // this.globalLoading = true
+      await this.scanLoad()
+      // 判断客户端是否正常
+      if (!this.clientStatus) {
+        this.$message({
+          message: '请先打开客户端！',
+          type: 'error'
+        })
+        return false
+      }
+      if (!this.scanStatus) {
+        this.$message({
+          message: '请先确保客户端连接状态正常！',
+          type: 'error'
+        })
+        return false
+      }
       const { examId, examSubjectId } = this
       const params = {
         examId,
         examSubjectId
       }
-      await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, params).then(res => {
-        console.log(res)
-        if (res.data.data.length > 0) {
-          let data = {
-            'cnlocation': JSON.parse(res.data.data[0].cnlocation),
-            'qalocation': JSON.parse(res.data.data[0].qalocation),
-            'qrlocation': JSON.parse(res.data.data[0].qrlocation),
-            'ids': { 'subjectId': this.examSubjectId, 'examId': this.examId },
-            'options': { 'questionsloc': res.data.data[0].questionsloc, 'type': 1 }
-          }
-          this.axios({
-            url: 'http://127.0.0.1:8082',
-            method: 'post',
-            data: data
-          }).then(res => {
-            window.InitSetInterval = setInterval(() => {
-              console.log(this.maxIndex, '-0--', this.exceptionMaxIndex)
-              this.getImg(this.maxIndex, this.exceptionMaxIndex)
-            }, 30000);
-          })
-        }
-      })
+      // await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, params).then(res => {
+      //   console.log(res)
+      //   if (res.data.data.length > 0) {
+      //     let data = {
+      //       'cnlocation': JSON.parse(res.data.data[0].cnlocation),
+      //       'qalocation': JSON.parse(res.data.data[0].qalocation),
+      //       'qrlocation': JSON.parse(res.data.data[0].qrlocation),
+      //       'ids': { 'subjectId': this.examSubjectId, 'examId': this.examId },
+      //       'options': { 'questionsloc': res.data.data[0].questionsloc, 'type': 1 }
+      //     }
+      //     this.axios({
+      //       url: 'http://127.0.0.1:8082',
+      //       method: 'post',
+      //       data: data
+      //     }).then(res => {
+      //       window.InitSetInterval = setInterval(() => {
+      //         console.log(this.maxIndex, '-0--', this.exceptionMaxIndex)
+      //         this.getImg(this.maxIndex, this.exceptionMaxIndex)
+      //       }, 30000);
+      //     })
+      //   }
+      // })
     }
   }
 }
