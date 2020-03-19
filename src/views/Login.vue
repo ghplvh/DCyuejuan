@@ -122,9 +122,6 @@ export default {
     }
   },
   mounted() {
-    // `dev
-    if (this.$store.state.dev) {
-      this.login('form')    }
   }
 }
 </script>

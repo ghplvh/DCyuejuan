@@ -270,12 +270,12 @@
           :loading="addDialog.isLoading"
           @click="scanTemp"
         >扫描</el-button>
-        <el-button
+        <!-- <el-button
           type="primary"
           size="medium"
           :loading="addDialog.isLoading"
           @click="devScanTemp"
-        >dev扫描</el-button>
+        >dev扫描</el-button> -->
       </div>
     </el-dialog>
 
@@ -566,18 +566,14 @@ export default {
     },
     // 扫描上传模板 `scan
     async scanTemp() {
-      // `dev
       this.addDialog.isLoading = true
       let param = {
         subjectId: this.examSubjectId,
         examId: this.examId
       }
       console.log({ list: this.tempData.list })
-      // 已存在的模板
+      // 已存在的模板id，预备删除
       const delList = this.tempData.list.map(i => i.id)
-      // for (let i = 0; i < this.tempData.list.length; i++) {
-      //   await this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, { id: this.tempData.list[i].id }).then(res => { }).catch(() => { })
-      // }
       await this.axios({
         // url: '/api/test',
         url: 'http://127.0.0.1:8082',
