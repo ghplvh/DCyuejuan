@@ -572,6 +572,10 @@ export default {
         subjectId: this.examSubjectId,
         examId: this.examId
       }
+      console.log({ list: this.tempData.list })
+      for (let i = 0; i < this.tempData.list.length; i++) {
+        await this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, { id: this.tempData.list[i].id }).then(res => { }).catch(() => { })
+      }
       await this.axios({
         // url: '/api/test',
         url: 'http://127.0.0.1:8082',
@@ -623,6 +627,9 @@ export default {
     // `dev
     async devScanTemp() {
       this.addDialog.isLoading = true
+      for (let i = 0; i < this.tempData.list.length; i++) {
+        await this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, { id: this.tempData.list[i].id }).then(res => { }).catch(() => { })
+      }
       const res = {
         data: resOfScan
       }
