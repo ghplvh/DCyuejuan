@@ -335,11 +335,11 @@ export default {
       })
     },
     scanLoad() {
-    // 先判断客户端是否启动
+      // 先判断客户端是否启动
       Axios({
         url: 'http://127.0.0.1:8082',
         method: 'post',
-        data: {'querystatus': ''}
+        data: { 'querystatus': '' }
       }).then(res => {
         console.log(res.data.scanner)
         this.scanStatus = res.data.scanner

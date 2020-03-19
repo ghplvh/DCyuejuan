@@ -573,9 +573,11 @@ export default {
         examId: this.examId
       }
       console.log({ list: this.tempData.list })
-      for (let i = 0; i < this.tempData.list.length; i++) {
-        await this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, { id: this.tempData.list[i].id }).then(res => { }).catch(() => { })
-      }
+      // 已存在的模板
+      const delList = this.tempData.list.map(i => i.id)
+      // for (let i = 0; i < this.tempData.list.length; i++) {
+      //   await this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, { id: this.tempData.list[i].id }).then(res => { }).catch(() => { })
+      // }
       await this.axios({
         // url: '/api/test',
         url: 'http://127.0.0.1:8082',
@@ -619,9 +621,17 @@ export default {
         this.addDialog.qalocation = res.data.qalocation
         this.addDialog.qrlocation = res.data.qrlocation
         this.addDialog.filelocation = res.data.filelocation
-      }).catch(() => { })
+        this.addTemp()
+        delList.forEach(i => {
+          this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, { id: i }).then(res => { }).catch(() => { })
+        })
+      }).catch(() => {
+        this.$message({
+          message: '请先确保扫描仪及其客户端连接状态正常！',
+          type: 'error'
+        })
+      })
       // 上传扫描结果
-      await this.addTemp()
       this.addDialog.isLoading = false
     },
     // `dev
