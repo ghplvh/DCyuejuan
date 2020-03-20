@@ -235,15 +235,7 @@
           </el-row>
         </el-tab-pane>
       </el-tabs>
-      <div class="to-style">
-        <el-button
-          type="primary"
-          size="mini"
-          @click="openTarget({path: '/blockStyle/'+ examId +'/'+ examSubjectId})"
-        >题块框选</el-button>
-      </div>
     </el-row>
-
     <el-dialog
       title="设置阅卷方式"
       :visible.sync="markTypeVisible"
@@ -675,6 +667,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
     let drag = document.getElementById('drag')
     this.addMouseEvent(drag)
+
   },
   methods: {
     // 获取考试信息
@@ -1135,8 +1128,9 @@ export default {
       }
     },
     // 修改评阅方式
-    saveReadWay() {
-      this.axios.post(API.TITLEBLOCK_UPDATECOMMON, this.markType).then(res => {
+    saveReadWay(id) {
+      console.log({ markType: this.markType });
+      this.axios.post(API.TITLEBLOCK_UPDATECOMMON, { ...this.markType, id }).then(res => {
         this.$message({
           message: '评阅方式修改成功',
           type: 'success'
@@ -1388,6 +1382,7 @@ export default {
     },
     // 修改分配方式
     saveTaskWay() {
+      this.saveReadWay(this.taskAway.id)
       let data = {
         examBlockId: this.taskAway.id,
         examSubjectId: this.examSubjectId,
@@ -1434,6 +1429,40 @@ export default {
       this.$router.push({ path: router.path })
     },
     async copySetting() {
+      let block = this.blockList.find(item => {
+        return item.id === this.copy.id
+      })
+      console.log({ block })
+      console.log({ thisblock: this.blockList })
+      const { appraiseReadWay, distributionType, teacherId, arbitramentTearcherId } = block
+      const data = { appraiseReadWay, distributionType, teacherId, arbitramentTearcherId }
+      console.log({ copy: this.copy })
+
+      const promiseList = this.copy.copyIdList.map(id => {
+        const apiData = { id, ...data }
+        console.log({ apiData })
+        return
+        // 修改阅卷、仲裁老师
+        // this.axios.post(API.TITLEBLOCK_UPDATECOMMON, {
+        //   ip: apiData.id,
+        //   arbitramentTearcherId: apiData.arbitramentTearcherId,
+        //   teacherId: apiData.teacherId
+        // }).then(res => {
+        // }).catch(() => { })
+      })
+      await Promise.all([])
+
+      // this.copy.copyIdList.forEach(id => {
+      //   dataList.push({
+      //     id: id,
+      //     appraiseReadWay: block.appraiseReadWay,
+      //     distributionType: block.distributionType,
+      //     teacherId: block.teacherId,
+      //     arbitramentTearcherId: block.arbitramentTearcherId
+      //   })
+      // })
+    },
+    async copySetting2() {
       let block = this.blockList.find(item => {
         return item.id === this.copy.id
       })
