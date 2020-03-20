@@ -260,25 +260,27 @@ const API = {
   // 主观题切图
   ADMIN_SLICING: 'web/examTemplate1/subjectSlicing',
   // 根据文件夹名字获取图片列表
-  ADMIN_GETPUBLISHSUBJECTLIST: '/web/exam/getPublishSubjectList/',
+  ADMIN_GETPUBLISHSUBJECTLIST: 'web/exam/getPublishSubjectList/',
   // 单个修改考生信息/web/examinee/updateSingleExaminee
-  ADMIN_UPDATESINGLEEXAMINEE: '/web/examinee/updateSingleExaminee',
+  ADMIN_UPDATESINGLEEXAMINEE: 'web/examinee/updateSingleExaminee',
   // 手动添加选择题答案
-  ADMIN_TOP: '/web/examStructure/insertTopicGetscore',
+  ADMIN_TOP: 'web/examStructure/insertTopicGetscore',
   // 导出学生模板
-  ADMIN_STUDENTDOWNLOAD: '/web/student/downloadTemplate',
+  ADMIN_STUDENTDOWNLOAD: 'web/student/downloadTemplate',
   // 导出教师模板
-  ADMIN_TEACHERDOWNLOAD: '/web/teacher/downloadTemplate',
+  ADMIN_TEACHERDOWNLOAD: 'web/teacher/downloadTemplate',
   // 传json数据给后台
-  ADMIN_POSTJSON: '/web/importWrongQuestions/saveObjectByFile',
+  ADMIN_POSTJSON: 'web/importWrongQuestions/saveObjectByFile',
   // 添加班级
-  ADMIN_ADDCLASS: '/web/dcClass/addClass',
+  ADMIN_ADDCLASS: 'web/dcClass/addClass',
   // 获取班级列表
-  ADMIN_GETCLASSLIST: '/web/dcClass/getClassList',
+  ADMIN_GETCLASSLIST: 'web/dcClass/getClassList',
   // 乱七八糟
-  LUANQIBAZHAO: '/web/importWrongQuestions/saveDcHfsRelation',
+  LUANQIBAZHAO: 'web/importWrongQuestions/saveDcHfsRelation',
   // 获取扫描试卷
-  GETEXCEPTIONLIST: 'web/importWrongQuestions/getExceptionList'
+  GETEXCEPTIONLIST: 'web/importWrongQuestions/getExceptionList',
+  // steps
+  EXAMSTEPS: 'web/exam/getExamSubjectDetail'
 }
 Object.keys(API).map(key => {
   API[key] = IP.EXAM_IP + API[key]
