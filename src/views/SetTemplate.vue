@@ -658,7 +658,7 @@ export default {
         })
       }).catch(() => {
         this.$message({
-          message: '扫描出错，请联系技术人员',
+          message: '扫描出错',
           type: 'error'
         })
       })
