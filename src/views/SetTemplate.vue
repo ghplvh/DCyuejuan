@@ -270,12 +270,12 @@
           :loading="addDialog.isLoading"
           @click="scanTemp"
         >扫描</el-button>
-        <el-button
+        <!-- <el-button
           type="primary"
           size="medium"
           :loading="addDialog.isLoading"
           @click="devScanTemp"
-        >dev扫描</el-button>
+        >dev扫描</el-button> -->
       </div>
     </el-dialog>
 
@@ -566,16 +566,14 @@ export default {
     },
     // 扫描上传模板 `scan
     async scanTemp() {
-      // `dev
       this.addDialog.isLoading = true
       let param = {
         subjectId: this.examSubjectId,
         examId: this.examId
       }
       console.log({ list: this.tempData.list })
-      for (let i = 0; i < this.tempData.list.length; i++) {
-        await this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, { id: this.tempData.list[i].id }).then(res => { }).catch(() => { })
-      }
+      // 已存在的模板id，预备删除
+      const delList = this.tempData.list.map(i => i.id)
       await this.axios({
         // url: '/api/test',
         url: 'http://127.0.0.1:8082',
@@ -619,9 +617,17 @@ export default {
         this.addDialog.qalocation = res.data.qalocation
         this.addDialog.qrlocation = res.data.qrlocation
         this.addDialog.filelocation = res.data.filelocation
-      }).catch(() => { })
+        this.addTemp()
+        delList.forEach(i => {
+          this.axios.post(API.EXAMTEMPLATE_DELETEANSWER, { id: i }).then(res => { }).catch(() => { })
+        })
+      }).catch(() => {
+        this.$message({
+          message: '请先确保扫描仪及其客户端连接状态正常！',
+          type: 'error'
+        })
+      })
       // 上传扫描结果
-      await this.addTemp()
       this.addDialog.isLoading = false
     },
     // `dev

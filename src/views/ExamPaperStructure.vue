@@ -98,15 +98,7 @@
               icon="el-icon-plus"
               @click="addKgQuestion()"
             >新增客观题</el-button>
-            <!-- ------------------------------------------------------------ -->
-            <!-- `dev -->
-            <!-- <el-button
-              type="text"
-              icon="el-icon-plus"
-              @click="devAddyingyu()"
-            >dev新增英语卷书卷结构</el-button> -->
-            <!-- `dev -->
-            <!-- ------------------------------------------------------------ -->
+      
             <router-link :to="{path: '/settingAnswer/'+ examId + '/' + examSubjectId }">
               <el-button
                 type="text"
@@ -810,10 +802,6 @@
 import API from '../api/api.js'
 import Utils from '../utils/Utils.js'
 import { mapState } from 'vuex'
-// ————————————————————————————————————————————————————————————————————
-// `dev
-import { edit_yingyu_keguan_1, edit_yingyu_zhuguan_2, edit_yingyu_zhuguan_3, edit_yingyu_zhuguan_4, add_yingyu_keguan_1, add_yingyu_zhuguan_2, add_yingyu_zhuguan_3, add_yingyu_zhuguan_4 } from '../mock'
-// ————————————————————————————————————————————————————————————————————
 
 // import TreeUtil from '../utils/TreeUtil.js'
 export default {
@@ -1240,26 +1228,7 @@ export default {
       this.dialogType = 'add'
       this.addKgVisible = true
     },
-    // ————————————————————————————————————————————————————————————————————
-    // `dev
-    async devAddyingyu() {
-      if (!this.$store.state.devAddshijuan) return
-      const add_yingyu_keguan_1data = edit_yingyu_keguan_1.map((item, index) => ({ ...item, examId: this.examId, examSubjectId: this.examSubjectId, tid: index }))
-      const edit_yingyu_zhuguan_2data = edit_yingyu_zhuguan_2.map((item, index) => ({ ...item, examId: this.examId, examSubjectId: this.examSubjectId, tid: index + 61 }))
-      const edit_yingyu_zhuguan_3data = edit_yingyu_zhuguan_3.map((item, index) => ({ ...item, examId: this.examId, examSubjectId: this.examSubjectId, tid: index + 72 }))
-      const edit_yingyu_zhuguan_4data = edit_yingyu_zhuguan_4.map((item, index) => ({ ...item, examId: this.examId, examSubjectId: this.examSubjectId, tid: index + 74 }))
-      this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, add_yingyu_keguan_1data).then(res => {
-      }).catch(() => { })
-      this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, edit_yingyu_zhuguan_2data).then(res => {
-      }).catch(() => { })
-      this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, edit_yingyu_zhuguan_3data).then(res => {
-      }).catch(() => { })
-      this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, edit_yingyu_zhuguan_4data).then(res => {
-      }).catch(() => { })
-      // this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHKE + '/' + this.editId, edit_yingyu_keguan_1data).then(res => {
-      // }).catch(() => { })
-    },
-    // ————————————————————————————————————————————————————————————————————
+   
     bigNoChange(val) {
       let qu = this.questionList.find(question => {
         return val.bigNo === question.tnumber
@@ -1483,25 +1452,7 @@ export default {
         return false
       }
       if (this.dialogType === 'add') {
-        // ——————————————————————————————————————————————————————
-        // `dev 
-        if (this.$store.state.download) {
-          function download(content, filename) {
-            // 创建隐藏的可下载链接
-            var eleLink = document.createElement('a');
-            eleLink.download = filename;
-            eleLink.style.display = 'none';
-            // 字符内容转变成blob地址
-            var blob = new Blob([content]);
-            eleLink.href = URL.createObjectURL(blob);
-            // 触发点击
-            document.body.appendChild(eleLink);
-            eleLink.click();
-            // 然后移除
-            document.body.removeChild(eleLink);
-          };
-          download(JSON.stringify(data), '新增客观题')        }
-        // ——————————————————————————————————————————————————————
+      
         await this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, data).then(res => {
           this.$message({
             message: '新增客观题成功',
@@ -1515,25 +1466,7 @@ export default {
         }).catch(() => { })
       }
       if (this.dialogType === 'edit') {
-        // —————————————————————————————————————————————  —————————
-        // `dev 
-        if (this.$store.state.download) {
-          function download(content, filename) {
-            // 创建隐藏的可下载链接
-            var eleLink = document.createElement('a');
-            eleLink.download = filename;
-            eleLink.style.display = 'none';
-            // 字符内容转变成blob地址
-            var blob = new Blob([content]);
-            eleLink.href = URL.createObjectURL(blob);
-            // 触发点击
-            document.body.appendChild(eleLink);
-            eleLink.click();
-            // 然后移除
-            document.body.removeChild(eleLink);
-          };
-          download(JSON.stringify(data), '修改客观题')        }
-        // ——————————————————————————————————————————————————————
+       
         await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHKE + '/' + this.editId, data).then(res => {
           this.$message({
             message: '修改客观题成功',
@@ -1748,25 +1681,7 @@ export default {
       }
       if (this.dialogType === 'add') {
         await this.axios.post(API.EXAMSTRUCTURE_ADDEXAMS, data).then(res => {
-          // ——————————————————————————————————————————————————————
-          // `dev 
-          if (this.$store.state.download) {
-            function download(content, filename) {
-              // 创建隐藏的可下载链接
-              var eleLink = document.createElement('a');
-              eleLink.download = filename;
-              eleLink.style.display = 'none';
-              // 字符内容转变成blob地址
-              var blob = new Blob([content]);
-              eleLink.href = URL.createObjectURL(blob);
-              // 触发点击
-              document.body.appendChild(eleLink);
-              eleLink.click();
-              // 然后移除
-              document.body.removeChild(eleLink);
-            };
-            download(JSON.stringify(data), '新增主观题')          }
-          // ——————————————————————————————————————————————————————
+      
           this.$message({
             message: '新增主观题成功',
             type: 'success'
@@ -1779,26 +1694,7 @@ export default {
         }).catch(() => { })
       }
       if (this.dialogType === 'edit') {
-        // ——————————————————————————————————————————————————————
-        // `dev 
-        if (this.$store.state.download) {
-          function download(content, filename) {
-            // 创建隐藏的可下载链接
-            var eleLink = document.createElement('a');
-            eleLink.download = filename;
-            eleLink.style.display = 'none';
-            // 字符内容转变成blob地址
-            var blob = new Blob([content]);
-            eleLink.href = URL.createObjectURL(blob);
-            // 触发点击
-            document.body.appendChild(eleLink);
-            eleLink.click();
-            // 然后移除
-            document.body.removeChild(eleLink);
-          };
-          download(JSON.stringify(data), '修改主观题')
-        }
-        // ——————————————————————————————————————————————————————
+     
         await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHZHU + '/' + this.editId, data).then(res => {
           this.$message({
             message: '修改主观题成功',

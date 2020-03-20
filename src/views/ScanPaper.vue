@@ -182,10 +182,13 @@
                             <div>切图完成后分配阅卷任务</div>
                           </el-row>
                           <el-row class="desc-row-1">
-                            <el-button
-                              type="primary"
-                              size="small"
-                            >分配阅卷</el-button>
+                            <router-link :to="{path:'/jobDistribute/'+examId+'/'+examSubjectId}">
+                              <el-button
+                                type="primary"
+                                size="small"
+                              >分配阅卷</el-button>
+                            </router-link>
+
                           </el-row>
                         </div>
                       </el-step>
@@ -335,11 +338,11 @@ export default {
       })
     },
     scanLoad() {
-    // 先判断客户端是否启动
+      // 先判断客户端是否启动
       Axios({
         url: 'http://127.0.0.1:8082',
         method: 'post',
-        data: {'querystatus': ''}
+        data: { 'querystatus': '' }
       }).then(res => {
         console.log(res.data.scanner)
         this.scanStatus = res.data.scanner
