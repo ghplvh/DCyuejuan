@@ -675,6 +675,7 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
     let drag = document.getElementById('drag')
     this.addMouseEvent(drag)
+ 
   },
   methods: {
     // 获取考试信息

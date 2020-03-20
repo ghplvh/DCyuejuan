@@ -364,6 +364,7 @@
 </template>
 <script>
 import R from 'ramda'
+import Axios from 'axios'
 import { resOfScan } from '../mock'
 import API from '../api/api.js'
 import { mapState, mapActions } from 'vuex'
@@ -375,6 +376,9 @@ export default {
       tabName: 'templateInfo',
       isScanPaperLoading: false,
       isDelTempLoading: false,
+      // 扫描仪状态
+      clientStatus: true,
+      scanStatus: false,
       tempData: {
         list: [],
         current: {},
@@ -504,6 +508,20 @@ export default {
       this.editForm.index = index
       this.editForm.isVisible = true
     },
+    // 先判断客户端是否启动
+    scanLoad() {
+      Axios({
+        url: 'http://127.0.0.1:8082',
+        method: 'post',
+        data: { 'querystatus': '' }
+      }).then(res => {
+        console.log(res.data.scanner)
+        this.scanStatus = res.data.scanner
+      }).catch(error => {
+        console.log(error)
+        this.clientStatus = false
+      })
+    },
     async saveEdit() {
       this.editForm.isLoading = true
       let { index, id, key, x, y, width, height, isAutoSave } = this.editForm
@@ -567,11 +585,28 @@ export default {
     // 扫描上传模板 `scan
     async scanTemp() {
       this.addDialog.isLoading = true
+      await this.scanLoad()
+      // 判断客户端是否正常
+      if (!this.clientStatus) {
+        this.$message({
+          message: '请先打开客户端！',
+          type: 'error'
+        })
+        this.addDialog.isLoading = false
+        return false
+      }
+      if (!this.scanStatus) {
+        this.$message({
+          message: '请先确保客户端连接状态正常！',
+          type: 'error'
+        })
+        this.addDialog.isLoading = false
+        return false
+      }
       let param = {
         subjectId: this.examSubjectId,
         examId: this.examId
       }
-      console.log({ list: this.tempData.list })
       // 已存在的模板id，预备删除
       const delList = this.tempData.list.map(i => i.id)
       await this.axios({
