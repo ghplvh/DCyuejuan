@@ -102,7 +102,10 @@
                         <el-form-item
                           label="分配方式"
                           class="width100"
-                        ><span>{{ (taskAway.viewerData|| []).map(i=>i.quantity).join(',') }}</span></el-form-item>
+                        >
+                          <span>{{ (props.row.tlist|| []).map(i=>i.number).join(",")}}</span>
+                          <!-- <span>{{ props.row}}</span> -->
+                        </el-form-item>
                         <el-form-item
                           label="阅卷老师"
                           class="width100"
@@ -179,7 +182,7 @@
                         class="setting"
                         @click.stop="setTaskAway(scope.row)"
                       >
-                        <i class="el-icon-setting"></i>{{getTaskWayNameById(scope.row)}}
+                        <i class="el-icon-setting"></i>{{ (scope.row.tlist|| []).map(i=>i.number).join(",")}}
                         <!-- <i class="el-icon-setting"></i> -->
                       </div>
                     </template>
@@ -860,6 +863,7 @@ export default {
         ]
         this.blockList = data.length > 0 ? data : nullBlock
         this.tableData = data
+        console.log({ tableData: this.tableData })
         this.selectBlock(0)
         console.log({ blockList: this.blockList, tabaleData: this.tabaleData })
         this.loading = false
