@@ -280,6 +280,7 @@ export default {
     this.schoolCode = this.adminInfo.teacherInfo.schoolCode
     this.getExamById()
     this.getStudentCount()
+    this.getSteps()
   },
   methods: {
     // 获取考试信息
@@ -291,6 +292,16 @@ export default {
         this.loading = false
       }).catch(() => { this.loading = false })
       await this.getExamSubject()
+    },
+    // 获取考试进度
+    async getSteps() {
+      const data = {
+        examId: this.examId,
+        examSubjectId: this.examSubjectId
+      }
+      await this.axios.post(API.EXAMSTEPS, data).then(res => {
+        console.log(res)
+      })
     },
     // 查询所有考试科目
     async getExamSubject() {

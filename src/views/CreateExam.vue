@@ -411,12 +411,12 @@ export default {
     },
     beginTimeChange(val) {
       if (this.examForm.examDateTo) {
-        this.examForm.examDateFrom = val - this.examForm.examDateTo > 0 ? '' : val
+        this.examForm.examDateFrom = val - this.examForm.examDateTo >= 0 ? '' : val
       }
     },
     // 结束日期改变
     endTimeChange(val) {
-      this.examForm.examDateTo = val - this.examForm.examDateFrom > 0 ? val : ''
+      this.examForm.examDateTo = val - this.examForm.examDateFrom >= 0 ? val : ''
     },
     // 查询学校所有年级
     getGradeList() {
