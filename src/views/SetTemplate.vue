@@ -427,7 +427,7 @@ export default {
   async mounted() {
     this.saveAdminInfo();
     const login = this.$store.state
-
+    this.scanLoad()
     await this.getTemp()
     if (this.tempData.list.length > 0) {
       this.tempData.id = this.tempData.list[0].id
@@ -658,7 +658,7 @@ export default {
         })
       }).catch(() => {
         this.$message({
-          message: '请先确保扫描仪及其客户端连接状态正常！',
+          message: '扫描出错，请联系技术人员',
           type: 'error'
         })
       })
