@@ -361,20 +361,26 @@ export default {
       }
       this.axios.post(API.GETEXCEPTIONLIST, data).then(res => {
         const response = res.data.data
+        this.total = response.total
+        console.log(this.total)
         if (!response.dtList) {
           response.dtList = []
         }
         if (!response.dseList) {
           response.dseList = []
         }
+        this.dtList = this.dtList.concat(response.dtList)
+        this.dseList = this.dseList.concat(response.dseList)
         this.maxIndex = this.maxIndex + response.dtList.length
         this.exceptionMaxIndex = this.exceptionMaxIndex + this.dseList.length
+        console.log(this.maxIndex, '正常----------异常', this.exceptionMaxIndex)
         let batchList = response.dseList.concat(response.dtList)
         batchList?.forEach(element => {
           element.answerSheetImg = element.answerSheetImg.split(',')
         });
         this.batchList = this.batchList.concat(batchList)
-        if (response.dtList.length === 0 && response.dseList.length === 0) {
+        console.log(!(this.batchList.length < this.total) || this.total === null)
+        if (!(this.batchList.length < this.total) || this.total === null) {
           console.log('nononono')
           clearInterval(window.InitSetInterval)
         }
@@ -455,28 +461,28 @@ export default {
         examId,
         examSubjectId
       }
-      // await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, params).then(res => {
-      //   console.log(res)
-      //   if (res.data.data.length > 0) {
-      //     let data = {
-      //       'cnlocation': JSON.parse(res.data.data[0].cnlocation),
-      //       'qalocation': JSON.parse(res.data.data[0].qalocation),
-      //       'qrlocation': JSON.parse(res.data.data[0].qrlocation),
-      //       'ids': { 'subjectId': this.examSubjectId, 'examId': this.examId },
-      //       'options': { 'questionsloc': res.data.data[0].questionsloc, 'type': 1 }
-      //     }
-      //     this.axios({
-      //       url: 'http://127.0.0.1:8082',
-      //       method: 'post',
-      //       data: data
-      //     }).then(res => {
-      //       window.InitSetInterval = setInterval(() => {
-      //         console.log(this.maxIndex, '-0--', this.exceptionMaxIndex)
-      //         this.getImg(this.maxIndex, this.exceptionMaxIndex)
-      //       }, 30000);
-      //     })
-      //   }
-      // })
+      await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, params).then(res => {
+        console.log(res)
+        if (res.data.data.length > 0) {
+          let data = {
+            'cnlocation': JSON.parse(res.data.data[0].cnlocation),
+            'qalocation': JSON.parse(res.data.data[0].qalocation),
+            'qrlocation': JSON.parse(res.data.data[0].qrlocation),
+            'ids': { 'subjectId': this.examSubjectId, 'examId': this.examId },
+            'options': { 'questionsloc': res.data.data[0].questionsloc, 'type': 1 }
+          }
+          this.axios({
+            url: 'http://127.0.0.1:8082',
+            method: 'post',
+            data: data
+          }).then(res => {
+            window.InitSetInterval = setInterval(() => {
+              console.log(this.maxIndex, '-0--', this.exceptionMaxIndex)
+              this.getImg(this.maxIndex, this.exceptionMaxIndex)
+            }, 30000);
+          })
+        }
+      })
     }
   }
 }

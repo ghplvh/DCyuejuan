@@ -96,7 +96,12 @@
                     >考生管理：</el-col>
                     <el-col :span="15">总上传考生人数为<span class="number">{{studentCount}}</span>人</el-col>
                     <el-col :span="5">
+                      <div
+                        v-if="activeStep > 4"
+                        class="btn fade-btn"
+                      >设置模板</div>
                       <router-link
+                        v-else
                         :to="{path:'/examDetail/'+examId}"
                         class="btn deal-btn"
                       >设置考生</router-link>
@@ -113,18 +118,14 @@
                     >题目设置：</el-col>
                     <el-col
                       :span="15"
-                      v-if="examSubjectInfo.structureType === 1"
-                    >
-                      当前已设置答案，点击<router-link :to="{ path: '/settingAnswer/'+ examId +'/' + examSubjectId }">
-                        <font color="#409EFF">查看</font>
-                      </router-link>
-                    </el-col>
-                    <el-col
-                      :span="15"
-                      v-else
                     >设置该科目的试卷结构和答案;</el-col>
                     <el-col :span="5">
+                      <div
+                        v-if="activeStep > 4"
+                        class="btn fade-btn"
+                      >设置模板</div>
                       <router-link
+                        v-else
                         :to="{path:'/examPaperStructure/'+examId+'/'+examSubjectId}"
                         class="btn deal-btn"
                       >设置试卷结构</router-link>
@@ -142,18 +143,13 @@
                     <el-col :span="15">需设置题目后才可设置</el-col>
                     <el-col :span="5">
                       <div
-                        v-if="examSubjectInfo.templateType === 1"
-                        @click="openTarget({path:'/setTemplate/'+examId+'/'+examSubjectId})"
-                        class="btn deal-btn"
-                      >设置模板</div>
-                      <div
-                        v-else-if="examSubjectInfo.structureType === 1"
-                        @click="openTarget({path:'/setTemplate/'+examId+'/'+examSubjectId})"
-                        class="btn active-btn"
+                        v-if="activeStep > 4"
+                        class="btn fade-btn"
                       >设置模板</div>
                       <div
                         v-else
-                        class="btn fade-btn"
+                        @click="openTarget({path:'/setTemplate/'+examId+'/'+examSubjectId})"
+                        class="btn deal-btn"
                       >设置模板</div>
                     </el-col>
                   </el-row>
@@ -270,7 +266,7 @@ export default {
       examGrade: {},
       useAnswerSheet: true,
       studentCount: 0,
-      activeStep: 1
+      activeStep: 0
     }
   },
   computed: {
@@ -301,6 +297,8 @@ export default {
       }
       await this.axios.post(API.EXAMSTEPS, data).then(res => {
         console.log(res)
+        // 考试科目阶段 0创建阶段 1设置考生阶段 2设置试卷结构 3设置模板 4设置题块 5扫描答题卡 6 切图 7分配阅卷任务 
+        this.activeStep = res.data.data.subjectStage
       })
     },
     // 查询所有考试科目
@@ -312,17 +310,17 @@ export default {
         this.examSubjectInfo = this.examSubjectList.filter(item => {
           return Number(item.id) === Number(this.examSubjectId)
         })[0]
-        if (this.examSubjectInfo.structureType === 1) {
-          this.activeStep = 2
-        }
-        if (this.examSubjectInfo.templateType === 1) {
-          this.activeStep = 3
-        }
-        console.log(this.examSubjectInfo.frameType)
-        if (this.examSubjectInfo.frameType != 99) {
-          this.activeStep = 5
-          console.log(this.activeStep)
-        }
+        // if (this.examSubjectInfo.structureType === 1) {
+        //   this.activeStep = 2
+        // }
+        // if (this.examSubjectInfo.templateType === 1) {
+        //   this.activeStep = 3
+        // }
+        // console.log(this.examSubjectInfo.frameType)
+        // if (this.examSubjectInfo.frameType != 99) {
+        //   this.activeStep = 5
+        //   console.log(this.activeStep)
+        // }
       }).catch(() => { this.loading = false })
     },
     // 获取考试的年级
