@@ -182,10 +182,13 @@
                             <div>切图完成后分配阅卷任务</div>
                           </el-row>
                           <el-row class="desc-row-1">
-                            <el-button
-                              type="primary"
-                              size="small"
-                            >分配阅卷</el-button>
+                            <router-link :to="{path:'/jobDistribute/'+examId+'/'+examSubjectId}">
+                              <el-button
+                                type="primary"
+                                size="small"
+                              >分配阅卷</el-button>
+                            </router-link>
+
                           </el-row>
                         </div>
                       </el-step>

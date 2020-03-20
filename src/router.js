@@ -52,6 +52,7 @@ const BankMenu = r => require.ensure([], () => r(require('@/views/BankMenu')), '
 const QuestionBank = r => require.ensure([], () => r(require('@/views/QuestionBank')), 'QuestionBank')
 // 后台管理
 const Manager = r => require.ensure([], () => r(require('@/views/Manager')), 'Manager')
+const jobDistribute = r => require.ensure([], () => r(require('@/views/jobDistribute')), 'jobDistribute')
 // 设置Banner
 // const Banner = r => require.ensure([], () => r(require('@/views/Banner')), 'Banner')
 // 测试题库
@@ -168,6 +169,13 @@ const router = new VueRouter({
         title: '题块与阅卷任务'
       },
       component: QuestionBlock
+    }, {
+      path: '/jobDistribute/:examId/:examSubjectId',
+      name: 'jobDistribute',
+      meta: {
+        title: '题块与阅卷任务'
+      },
+      component: jobDistribute
     }, {
       path: '/checkPaperBlock/:examId/:examSubjectId/:examineId',
       name: 'checkPaperBlock',

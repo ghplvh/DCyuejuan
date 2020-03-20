@@ -172,17 +172,17 @@
                         v-if="examSubjectInfo.frameType === 1"
                         :to="{path:'/questionBlock/'+examId+'/'+examSubjectId}"
                         class="btn deal-btn"
-                      >设置题块和任务</router-link>
+                      >设置题块</router-link>
                       <router-link
                         v-else-if="examSubjectInfo.structureType === 1"
                         :to="{path:'/questionBlock/'+examId+'/'+examSubjectId}"
                         class="btn active-btn"
-                      >设置题块和任务</router-link>
+                      >设置题块</router-link>
                       <router-link
                         v-else
                         to=""
                         class="btn fade-btn"
-                      >设置题块和任务</router-link>
+                      >设置题块</router-link>
                     </el-col>
                   </el-row>
                 </div>
