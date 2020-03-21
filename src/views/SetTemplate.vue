@@ -584,7 +584,6 @@ export default {
     },
     // 扫描上传模板 `scan
     async scanTemp() {
-      this.addDialog.isLoading = true
       await this.scanLoad()
       // 判断客户端是否正常
       if (!this.clientStatus) {
@@ -592,7 +591,6 @@ export default {
           message: '请先打开客户端！',
           type: 'error'
         })
-        this.addDialog.isLoading = false
         return false
       }
       if (!this.scanStatus) {
@@ -600,9 +598,9 @@ export default {
           message: '请先确保客户端连接状态正常！',
           type: 'error'
         })
-        this.addDialog.isLoading = false
         return false
       }
+      this.addDialog.isLoading = true
       let param = {
         subjectId: this.examSubjectId,
         examId: this.examId
