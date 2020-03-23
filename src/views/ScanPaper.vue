@@ -201,7 +201,7 @@
                   shadow="never"
                 >
                   <div slot="header">
-                    <span>扫描结果：总人数{{maxIndex + exceptionMaxIndex}},异常{{exceptionMaxIndex}}</span>
+                    <span>扫描结果：总人数{{maxIndex + exceptionMaxIndex}}：正常<span style="color: #67C23A;">{{maxIndex}}</span>,异常<span style="color: #F56C6C;">{{exceptionMaxIndex}}</span></span>
                   </div>
                   <div
                     v-if="batchList.length === 0"
@@ -220,7 +220,7 @@
                       <div
                         v-for="img in image.answerSheetImg"
                         :key="img"
-                        style="text-align:center"
+                        style="text-align:center;"
                       >
                         <div
                           class="label"
@@ -230,10 +230,9 @@
                           class="label"
                           style="color: red"
                           v-else
-                        >考号异常</div>
+                         >考号异常<span style="font-size: 10px" @click="deleteImg(image.id)">&nbsp;X</span></div>
                         <img
                           :src="img"
-                          alt=""
                           @click="previewImage(img)"
                         >
                       </div>
@@ -308,7 +307,8 @@ export default {
       exceptionMaxIndex: 0,
       // 扫描仪状态
       clientStatus: true,
-      scanStatus: false
+      scanStatus: false,
+      total: null
     }
   },
   computed: {
@@ -379,14 +379,25 @@ export default {
           element.answerSheetImg = element.answerSheetImg.split(',')
         });
         this.batchList = this.batchList.concat(batchList)
-        console.log(!(this.batchList.length < this.total) || this.total === null)
-        if (!(this.batchList.length < this.total) || this.total === null) {
+        console.log(this.batchList.length, '================', this.total)
+        if (this.batchList.length === this.total) {
           console.log('nononono')
           clearInterval(window.InitSetInterval)
         }
         setTimeout(() => {
           this.globalLoading = false
         }, 2000)
+      })
+    },
+    // 删除图片
+    async deleteImg(id) {
+      await this.axios.post(API.DELETEIMG + '?id=' + id).then(res => {
+        console.log(res)
+        if (res.data.code === 0) {
+          this.dseList.splice(this.dseList.findIndex(item => item.id === id), 1)
+          this.batchList.splice(this.batchList.findIndex(item => item.id === id), 1)
+          this.exceptionMaxIndex--
+        }
       })
     },
     previewImage(img) {
@@ -479,13 +490,16 @@ export default {
             window.InitSetInterval = setInterval(() => {
               console.log(this.maxIndex, '-0--', this.exceptionMaxIndex)
               this.getImg(this.maxIndex, this.exceptionMaxIndex)
-            }, 30000);
+            }, 2000);
           })
         }
       })
     }
+  },
+  destroyed() {
+    this.total = null
   }
-}
+} 
 </script>
 <style lang="scss">
 .label {
@@ -742,6 +756,8 @@ export default {
   }
   .batchList {
     padding: 20px;
+    max-height: 340px;
+    overflow-y: scroll;
     .sm-pic-div {
       display: inline-block;
       position: relative;

@@ -45,7 +45,7 @@
                 </el-table-column>
                 <el-table-column prop="subjectStage" label="阶段" align="center">
                   <template slot-scope="scope">
-                    {{scope.row.subjectStage === 0 ? '创建阶段': scope.row.subjectStage === 1 ? '阅卷阶段' : scope.row.subjectStage === 2 ? '已发布阶段': '' }}
+                    {{scope.row.subjectStage === 0 ? '创建阶段': scope.row.subjectStage === 7 ? '阅卷阶段' : scope.row.subjectStage === 8 ? '已发布阶段': '' }}
                   </template>
                 </el-table-column>
                 <el-table-column label="考生状态" align="center" width="150">
@@ -85,7 +85,7 @@
                 </el-table-column> -->
                 <el-table-column label="阅卷总进度" align="center">
                   <template slot-scope="scope">
-                    <a class="click-jump">{{scope.row.examinerVitesse ? scope.row.examinerVitesse : '-'}}</a>
+                    <a class="click-jump">{{scope.row.examinerVitesse}}%</a>
                   </template>
                 </el-table-column>
                 <el-table-column prop="col10" label="原卷状态" align="center">

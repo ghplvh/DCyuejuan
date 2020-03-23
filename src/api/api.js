@@ -280,7 +280,9 @@ const API = {
   // 获取扫描试卷
   GETEXCEPTIONLIST: 'web/importWrongQuestions/getExceptionList',
   // steps
-  EXAMSTEPS: 'web/exam/getExamSubjectDetail'
+  EXAMSTEPS: 'web/exam/getExamSubjectDetail',
+  // 删除答题卡图片
+  DELETEIMG: 'web/importWrongQuestions/delExceptionById'
 }
 Object.keys(API).map(key => {
   API[key] = IP.EXAM_IP + API[key]
