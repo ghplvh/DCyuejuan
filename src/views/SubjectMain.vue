@@ -99,7 +99,7 @@
                       <div
                         v-if="activeStep > 4"
                         class="btn fade-btn"
-                      >设置模板</div>
+                      >设置考生</div>
                       <router-link
                         v-else
                         :to="{path:'/examDetail/'+examId}"
@@ -123,7 +123,7 @@
                       <div
                         v-if="activeStep > 4"
                         class="btn fade-btn"
-                      >设置模板</div>
+                      >设置试卷结构</div>
                       <router-link
                         v-else
                         :to="{path:'/examPaperStructure/'+examId+'/'+examSubjectId}"
@@ -164,16 +164,10 @@
                     >题块与任务：</el-col>
                     <el-col :span="15">需完成题目设置后才可设置</el-col>
                     <el-col :span="5">
-                      <router-link
-                        v-if="examSubjectInfo.frameType === 1"
-                        :to="{path:'/questionBlock/'+examId+'/'+examSubjectId}"
-                        class="btn deal-btn"
-                      >设置题块</router-link>
-                      <router-link
-                        v-else-if="examSubjectInfo.structureType === 1"
-                        :to="{path:'/questionBlock/'+examId+'/'+examSubjectId}"
-                        class="btn active-btn"
-                      >设置题块</router-link>
+                      <div
+                        v-if="activeStep > 5"
+                        class="btn fade-btn"
+                      >设置模板</div>
                       <router-link
                         v-else
                         to=""

@@ -88,11 +88,11 @@
                     <a class="click-jump">{{scope.row.examinerVitesse}}%</a>
                   </template>
                 </el-table-column>
-                <el-table-column prop="col10" label="原卷状态" align="center">
+                <!-- <el-table-column prop="col10" label="原卷状态" align="center">
                   <template slot-scope="scope">
                     <a class="click-jump">{{scope.row.col10 ? scope.row.col10 : '未上传原卷'}}</a>
                   </template>
-                </el-table-column>
+                </el-table-column> -->
               </el-table>
             </div>
             <div class="exam-annotation">
@@ -101,7 +101,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="人员信息" name="person">
+        <!-- <el-tab-pane label="人员信息" name="person">
           <el-row type="flex" align="middle">
             <el-col :span="20" class="exam-title">{{examInfo.examName}}</el-col>
             <el-col :span="2" :offset="2">
@@ -151,8 +151,8 @@
               </el-table-column>
             </el-table>
           </el-row>
-          <!-- <el-pagination background @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="personInfoData.length"></el-pagination> -->
-        </el-tab-pane>
+          <el-pagination background @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="personInfoData.length"></el-pagination>
+        </el-tab-pane> -->
       </el-tabs>
       <div class="tab-right">
         <el-button type="text" size="mini" class="edit-exam" icon="el-icon-edit" @click="editExam()">编辑</el-button>
