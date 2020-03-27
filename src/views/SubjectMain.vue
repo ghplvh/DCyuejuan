@@ -165,19 +165,19 @@
                     <el-col :span="15">需完成题目设置后才可设置</el-col>
                     <el-col :span="5">
                       <div
-                        v-if="activeStep > 5"
+                        v-if="activeStep >= 5"
                         class="btn fade-btn"
-                      >设置模板</div>
+                      >设置题块</div>
                       <router-link
                         v-else
-                        to=""
-                        class="btn fade-btn"
+                        :to="{path:`/QuestionBlock/${examId}/${examSubjectId}`}"
+                        class="btn deal-btn"
                       >设置题块</router-link>
                     </el-col>
                   </el-row>
                 </div>
               </el-step>
-              <el-step icon="el-icon-circle-close">
+              <el-step icon="el-icon-circle-check">
                 <div slot="description">
                   <el-row class="step-list">
                     <el-col

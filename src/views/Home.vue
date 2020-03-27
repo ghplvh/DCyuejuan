@@ -182,6 +182,20 @@
                       </div>
                     </div>
                   </template>
+                  <template v-if="exam.issueList.length > 0">
+                    <div class="detail-stage">
+                      <div class="stage-title">
+                        <span class="dot"></span><span class="text">考试分析</span>
+                      </div>
+                      <div class="stage-subjects">
+                        <router-link
+                          v-for="subject in exam.issueList"
+                          :key="subject.id"
+                          :to="{path: '/subjectMain/'+exam.id+'/'+subject.id}"
+                        >{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
+                      </div>
+                    </div>
+                  </template>
                 </el-row>
               </el-row>
             </template>
@@ -521,13 +535,13 @@ export default {
           item.seeList = []
           item.issueList = []
           item.subjectDtos.forEach(subject => {
-            if (subject.subjectStage === 0) {
+            if (subject.subjectStage < 5 ) {
               item.createList.push(subject)
             }
-            if (subject.subjectStage === 1) {
+            if (subject.subjectStage > 4 && subject.subjectStage < 8 ) {
               item.seeList.push(subject)
             }
-            if (subject.subjectStage === 2) {
+            if (subject.subjectStage > 7 ) {
               item.issueList.push(subject)
             }
           })
@@ -616,13 +630,13 @@ export default {
           item.seeList = []
           item.issueList = []
           item.subjectDtos.forEach(subject => {
-            if (subject.subjectStage === 0) {
+            if (subject.subjectStage < 5 ) {
               item.createList.push(subject)
             }
-            if (subject.subjectStage === 1) {
+            if (subject.subjectStage > 4 && subject.subjectStage < 8 ) {
               item.seeList.push(subject)
             }
-            if (subject.subjectStage === 2) {
+            if (subject.subjectStage > 7 ) {
               item.issueList.push(subject)
             }
           })
