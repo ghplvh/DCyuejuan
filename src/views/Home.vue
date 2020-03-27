@@ -362,7 +362,7 @@
       <div class="help">
         <div class="pdf">
           <div class="title-box">
-            <span class="help-title">文档中心</span>
+            <span class="help-title">资源中心</span>
             <!-- <a
               href="javascript:void(0)"
               class="help-more"
@@ -376,7 +376,7 @@
               src="../assets/icon/pdf.png"
               alt=""
             > -->
-            <span>客户端下载</span>
+            <span>扫描客户端下载</span>
             <i class="el-icon-download"></i>
           </a>
           <a
