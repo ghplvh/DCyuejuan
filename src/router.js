@@ -14,6 +14,7 @@ const MainMenu = r => require.ensure([], () => r(require('@/views/MainMenu')), '
 const Home = r => require.ensure([], () => r(require('@/views/Home')), 'Home')
 // 考试详情
 const Exam = r => require.ensure([], () => r(require('@/views/Exam')), 'Exam')
+const Analysis = r => require.ensure([], () => r(require('@/views/analysis/analysis')), 'Analysis')
 // 人员信息管理
 const PersonManager = r => require.ensure([], () => r(require('@/views/PersonManager')), 'PersonManager')
 // 科目主页
@@ -99,6 +100,13 @@ const router = new VueRouter({
         title: '首页'
       },
       component: Home
+    }, {
+      path: '/analysis',
+      name: 'analysis',
+      meta: {
+        title: '考试分析'
+      },
+      component: Analysis
     }, {
       path: '/personManager',
       name: 'personManager',

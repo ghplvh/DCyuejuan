@@ -113,7 +113,7 @@
 <script>
 import FootBar from '../components/FootBar'
 import CustomerService from '../components/CustomerService'
-import API from '../api/api.js'
+import API from '../api/api'
 import { mapActions, mapState } from 'vuex'
 export default {
   data() {

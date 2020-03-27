@@ -22,7 +22,6 @@ import './assets/iconFont/iconfont.css'
 Vue.use(VueQuillEditor)
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
-
 new Vue({
   router,
   store,

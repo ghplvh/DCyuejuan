@@ -104,7 +104,6 @@
                           class="width100"
                         >
                           <span>{{ (props.row.tlist|| []).map(i=>i.number).join(",")}}</span>
-                          <!-- <span>{{ props.row}}</span> -->
                         </el-form-item>
                         <el-form-item
                           label="阅卷老师"
@@ -1432,6 +1431,7 @@ export default {
       // window.open(routeUrl.href, '_blank')
       this.$router.push({ path: router.path })
     },
+    // 复制阅卷任务
     async copySetting() {
       let block = this.blockList.find(item => {
         return item.id === this.copy.id
@@ -1441,7 +1441,6 @@ export default {
       const { appraiseReadWay, distributionType, teacherId, arbitramentTearcherId } = block
       const data = { appraiseReadWay, distributionType, teacherId, arbitramentTearcherId }
       console.log({ copy: this.copy })
-
       const promiseList = this.copy.copyIdList.map(id => {
         const apiData = { id, ...data }
         console.log({ apiData })
@@ -1454,8 +1453,6 @@ export default {
         // }).then(res => {
         // }).catch(() => { })
       })
-      await Promise.all([])
-
       // this.copy.copyIdList.forEach(id => {
       //   dataList.push({
       //     id: id,

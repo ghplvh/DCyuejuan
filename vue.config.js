@@ -8,21 +8,32 @@ module.exports = {
   assetsDir: 'static',
   productionSourceMap: false,
   // devServer: {
-  //   open: true,
-  //   port: 7777,
-  //   host: '192.168.0.174',
-  //   // host: 'http://duchengedu.com',
-  //   proxy: {
-  //     '/api': {
-  //       target: 'http://127.0.0.1:8082',
-  //       ws: true,
-  //       changOrigin: true,
-  //       pathRewrite: {
-  //         '^/api': ''
-  //       }
-  //     }
-  //   }
+  // open: true,
+  // port: 7777,
+  // host: '0.0.0.0',
+  // host: 'http://duchengedu.com',
+  // proxy: {
+  // '/api': {
+  // target: 'http://127.0.0.1:8082',
+  // ws: true,
+  // changOrigin: true,
+  // pathRewrite: {
+  //   '^/api': ''
+  // }
+  // }
+  // }
   // },
+  devServer: {
+    clientLogLevel: 'warning',
+    historyApiFallback: true,
+    hot: true,
+    compress: true,
+    host: '192.168.0.156',
+    port: '8080',
+    quiet: true, // necessary for FriendlyErrorsPlugin
+    disableHostCheck: true,
+
+  },
   pages: {
     index: {
       // page 的入口
