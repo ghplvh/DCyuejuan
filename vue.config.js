@@ -23,17 +23,17 @@ module.exports = {
   // }
   // }
   // },
-  devServer: {
-    clientLogLevel: 'warning',
-    historyApiFallback: true,
-    hot: true,
-    compress: true,
-    host: '192.168.0.156',
-    port: '8080',
-    quiet: true, // necessary for FriendlyErrorsPlugin
-    disableHostCheck: true,
+  // devServer: {
+  //   clientLogLevel: 'warning',
+  //   historyApiFallback: true,
+  //   hot: true,
+  //   compress: true,
+  //   host: '192.168.0.156',
+  //   port: '8080',
+  //   quiet: true, // necessary for FriendlyErrorsPlugin
+  //   disableHostCheck: true,
 
-  },
+  // },
   pages: {
     index: {
       // page 的入口

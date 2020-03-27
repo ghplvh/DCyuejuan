@@ -127,6 +127,7 @@ export default {
       activeName: 'first',
       loading: false,
       examId: Number(this.$route.query.examId),
+      examSubjectId: Number(this.$route.query.subjectId),
       allScoreInfo: {},
       allScoreInfoClass: {},
       screen: {
@@ -154,12 +155,12 @@ export default {
     handleClick(tab, event) {
     },
     // 获取每个科目的每个学校的每个学生的分数
-    getAllScoreInfo() {
+    async getAllScoreInfo() {
       this.loading = true
       const data = {
-        examSubjectId: ''
+        examSubjectId: this.examSubjectId
       }
-      this.axios.post(API.RANKING_GET_SCHOOL_RANK_MAP, data).then(res => {
+      await this.axios.post(API.RANKING_GET_SCHOOL_RANK_MAP, data).then(res => {
         console.log({ b: 222 })
         this.allScoreInfo = res.data.data
         this.subjectList = []
@@ -173,9 +174,9 @@ export default {
       }).catch(() => { this.loading = false })
     },
     // 获取每个科目的每个班级的每个学生的分数
-    getAllScoreInfoClass() {
+    async getAllScoreInfoClass() {
       this.loading = true
-      this.axios.post(API.RANKING_GET_CLASS_RANK_MAP, {}).then(res => {
+      await this.axios.post(API.RANKING_GET_CLASS_RANK_MAP, {}).then(res => {
         this.allScoreInfoClass = res.data.data
         if (Object.keys(this.allScoreInfo).length > 0) {
           this.loading = false

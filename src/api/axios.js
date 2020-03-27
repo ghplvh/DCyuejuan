@@ -67,7 +67,7 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   // Do something with response error
   if (error.message) {
-    console.error(error);
+    console.log(error)
     Message({
       message: '' + error.message,
       type: 'error'

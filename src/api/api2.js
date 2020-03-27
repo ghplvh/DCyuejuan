@@ -47,6 +47,10 @@ const API = {
   ANALYZE_GET_SCREEN_LIST: '/web/analyzeXiaofenTable/getScreenList',
   // 获取一场考试的各科总分
   ANALYZE_GET_SUBJECT_SCORE: '/web/analyzeXiaofenTable/GetSubjectScore',
+  // 排行榜
+  RANKING_GET_RANK: '/web/ranking/getRank',
+  // 获取本场考试各学校的所有班级
+  RANKING_GET_SCHOOL_CLASS_MAP: '/web/ranking/getSchoolClassMap'
 }
 Object.keys(API).map(key => {
   API[key] = IP.ANALYZE_IP + API[key]

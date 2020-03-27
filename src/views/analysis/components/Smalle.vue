@@ -84,7 +84,7 @@
           width="100"
         ></el-table-column>
         <el-table-column
-          prop="kaohao"
+          prop="studentExamId"
           fixed
           label="考号"
           width="100"
@@ -95,14 +95,14 @@
           label="学校"
           width="150"
         ></el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           prop="allRank"
           fixed
           sortable='custom'
           :sort-orders="sortOrders"
           label="联考排名"
           width="100"
-        ></el-table-column>
+        ></el-table-column> -->
         <el-table-column
           prop="schoolRank"
           fixed
@@ -265,7 +265,7 @@ export default {
         examSubjectId: this.subject,
         pageNum: this.currentPage,
         pageSize: this.pageSize,
-        rankType: 1
+        rankType: 2
       }
       this.loading = true
       this.axios.post(API.ANALYZE_GET_XIAOFEN_TABLE, data).then(res => {

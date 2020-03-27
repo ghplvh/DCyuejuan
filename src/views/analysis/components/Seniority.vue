@@ -12,6 +12,7 @@
               :label="sub.examSubjectId"
               :key="index"
               size="small"
+              checked
               border
             >{{sub.subjectName}}</el-radio>
           </el-radio-group>
@@ -56,16 +57,16 @@
     </div>
     <div class="ranking clearfix">
       <h3>分数排行榜详情</h3>
-      <span>(点击学科的分数 , 可查看学生的答题卡)</span>
+      <!-- <span>(点击学科的分数 , 可查看学生的答题卡)</span> -->
       <div class="ranking_right">
-        <el-input
+        <!-- <el-input
           size="small"
           placeholder="输入姓名进行搜索"
           suffix-icon="el-icon-search"
           v-model="studentName"
         >
-        </el-input>
-        <el-button type="primary">下载表格</el-button>
+        </el-input> -->
+        <!-- <el-button type="primary">下载表格</el-button> -->
       </div>
     </div>
     <div class="tabss">
@@ -174,7 +175,7 @@ export default {
     return {
       studentName: '',
       // 学科
-      subject: 1,
+      subject: 0,
       subjectList: [
         { name: '总分', id: 1 }
       ],
@@ -197,7 +198,7 @@ export default {
       pageSizes: [5, 10, 15, 25, 50, 100, 1000],
       total: 0,
       pm: 'DESC',
-      examSubjectId: '0',
+      examSubjectId: Number(this.$route.query.subjectId),
       tableData: []
     }
   },
@@ -218,9 +219,11 @@ export default {
     initScreen() {
       // 学科列表
       let subjectList = this.screen['subjectList'].slice(0)
-      subjectList.unshift({ examSubjectId: '0', subjectName: '总分' })
+      // subjectList.unshift({ examSubjectId: '0', subjectName: '总分' })
       this.subjectList = subjectList
-      this.subject = subjectList[0].examSubjectId
+      console.log(subjectList, '')
+      this.subject = this.screen['subjectList'][0] ? this.screen['subjectList'][0].examSubjectId : ''
+      console.log(this.screen['subjectList'][0], '----')
       // 学校列表
       this.schoolList = this.screen['schoolList']
       this.checkedSchool = this.schoolList
@@ -245,6 +248,7 @@ export default {
       console.log('getRank', data)
       this.loading = true
       this.axios.post(API.RANKING_GET_RANK, data).then(res => {
+        console.log(res, 'ssss')
         this.total = res.data.data.total
         let dataArr = res.data.data.list
         dataArr = dataArr.map(item => {
@@ -257,7 +261,7 @@ export default {
             }
           }
           item.rankList.sort((a, b) => { return Number(a.examSubjectId) - Number(b.examSubjectId) })
-          item.rankList.unshift(totalScoreObj)
+          // item.rankList.unshift(totalScoreObj)
           return item
         })
         this.tableData = dataArr
@@ -267,7 +271,7 @@ export default {
     },
     // 监听表格排序条件变化
     sortChange({ column, prop, order }) {
-      let conditions = prop.split('|')
+      // let conditions = prop ? prop.split('|') : ''
       this.currentPage = 1
       this.examSubjectId = conditions[0]
       this.pm = (order === 'ascending') ? 'ASC' : 'DESC'
@@ -375,6 +379,7 @@ export default {
   }
   .ranking {
     margin: 30px 0;
+    padding-bottom: 20px;
     h3 {
       font-size: 18px;
       color: #333;
