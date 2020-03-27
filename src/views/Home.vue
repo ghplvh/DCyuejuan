@@ -363,12 +363,45 @@
         <div class="pdf">
           <div class="title-box">
             <span class="help-title">文档中心</span>
-            <a
+            <!-- <a
               href="javascript:void(0)"
               class="help-more"
-            >更多</a>
+            >更多</a> -->
           </div>
           <a
+            href="https://yjxt.oss-cn-shenzhen.aliyuncs.com/client/%E5%A5%BD%E6%98%93%E5%AD%A6%E6%89%AB%E6%8F%8F%E5%AE%A2%E6%88%B7%E7%AB%AF.rar"
+            class="pdf-link"
+          >
+            <!-- <img
+              src="../assets/icon/pdf.png"
+              alt=""
+            > -->
+            <span>客户端下载</span>
+            <i class="el-icon-download"></i>
+          </a>
+          <a
+            href="http://yx-yuejuan.ks3-cn-beijing.ksyun.com/help/yunxiao/kaoshi2.0/driver/%E4%BD%B3%E8%83%BDDR-6030C.zip"
+            class="pdf-link"
+          >
+            <!-- <img
+              src="../assets/icon/pdf.png"
+              alt=""
+            > -->
+            <span>佳能DR-6030C驱动</span>
+            <i class="el-icon-download"></i>
+          </a>
+          <a
+            href="http://yx-yuejuan.ks3-cn-beijing.ksyun.com/help/yunxiao/kaoshi2.0/driver/%E6%9D%BE%E4%B8%8B%E9%A9%B1%E5%8A%A85046.exe"
+            class="pdf-link"
+          >
+            <!-- <img
+              src="../assets/icon/pdf.png"
+              alt=""
+            > -->
+            <span>松下5046驱动</span>
+            <i class="el-icon-download"></i>
+          </a>
+          <!-- <a
             href="javascript:void(0)"
             class="pdf-link"
           >
@@ -378,11 +411,12 @@
             >
             <span>阅卷产品使用说明书</span>
             <i class="el-icon-download"></i>
-          </a>
+          </a> -->
+
         </div>
-        <div class="video">
+        <!-- <div class="video">
           <div class="title-box">
-            <!-- <span class="help-title">操作视频</span> -->
+            <span class="help-title">操作视频</span>
             <a
               href="javascript:void(0)"
               class="help-more"
@@ -432,7 +466,7 @@
               class="help-more"
             >更多</a>
           </div>
-        </div>
+        </div> -->
       </div>
     </el-col>
   </el-row>

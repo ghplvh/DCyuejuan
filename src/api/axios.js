@@ -19,7 +19,7 @@ const CancelToken = Axios.CancelToken
 const source = CancelToken.source()
 // 请求拦截器
 axios.interceptors.request.use(function (config) {
-  let arr = config.url.split('/')
+  let arr = (config.url || "").split('/')
   // let token = localStorage.getItem('loginToken')
   // let account = localStorage.getItem('loginAccount')
   // if (token) {
@@ -68,10 +68,10 @@ axios.interceptors.response.use(function (response) {
   // Do something with response error
   if (error.message) {
     console.error(error);
-    Message({
-      message: '' + error.message,
-      type: 'error'
-    })
+    // Message({
+    //   message: '' + error.message,
+    //   type: 'error'
+    // })
   }
   return Promise.reject(error)
 })
