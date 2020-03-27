@@ -282,7 +282,8 @@ const API = {
   // steps
   EXAMSTEPS: 'web/exam/getExamSubjectDetail',
   // 删除答题卡图片
-  DELETEIMG: 'web/importWrongQuestions/delExceptionById'
+  DELETEIMG: 'web/importWrongQuestions/delExceptionById',
+
 }
 Object.keys(API).map(key => {
   API[key] = IP.EXAM_IP + API[key]

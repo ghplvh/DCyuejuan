@@ -35,11 +35,11 @@
               :route="{path: '/personManager'}"
               v-if="this.menuList.includes('personManagement')"
             >人员信息管理</el-menu-item>
-            <el-menu-item
+            <!-- <el-menu-item
               index=""
               @click="toFenxi()"
               v-if="this.menuList.includes('examinationAnalysis')"
-            >考试分析</el-menu-item>
+            >考试分析</el-menu-item> -->
             <!-- <el-menu-item index="answerSheet" :route="{path: '/questionBank'}" v-if="this.menuList.includes('repository')">知识库</el-menu-item> -->
             <el-menu-item
               index="manager"
@@ -113,7 +113,7 @@
 <script>
 import FootBar from '../components/FootBar'
 import CustomerService from '../components/CustomerService'
-import API from '../api/api.js'
+import API from '../api/api'
 import { mapActions, mapState } from 'vuex'
 export default {
   data() {

@@ -36,7 +36,17 @@ const API = {
   /**
    *  @description 根据考试班级id发布成绩
    */
-  ADMIN_PUBLISHGRADEBYEXAMCLASSID: '/web/webExamExamine/publishGradeByClassId'
+  ADMIN_PUBLISHGRADEBYEXAMCLASSID: '/web/webExamExamine/publishGradeByClassId',
+  // 根据条件获取小分表列表
+  ANALYZE_GET_XIAOFEN_TABLE: '/web/analyzeXiaofenTable/getAnalyzeXiaofenTable',
+  // 获取排行榜的所有信息(学校维度)
+  RANKING_GET_SCHOOL_RANK_MAP: '/web/ranking/getSchoolRankMap',
+  // 获取排行榜的所有信息(班级维度)
+  RANKING_GET_CLASS_RANK_MAP: '/web/ranking/getClassRankMap',
+  // 根据考试id获取班级,学校，学科列表,获取筛选条件列表
+  ANALYZE_GET_SCREEN_LIST: '/web/analyzeXiaofenTable/getScreenList',
+  // 获取一场考试的各科总分
+  ANALYZE_GET_SUBJECT_SCORE: '/web/analyzeXiaofenTable/GetSubjectScore',
 }
 Object.keys(API).map(key => {
   API[key] = IP.ANALYZE_IP + API[key]

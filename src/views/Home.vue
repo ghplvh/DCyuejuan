@@ -191,7 +191,7 @@
                         <router-link
                           v-for="subject in exam.issueList"
                           :key="subject.id"
-                          :to="{path: '/subjectMain/'+exam.id+'/'+subject.id}"
+                          :to="{path: `/analysis?examId=${exam.id}`}"
                         >{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
                       </div>
                     </div>
@@ -535,13 +535,13 @@ export default {
           item.seeList = []
           item.issueList = []
           item.subjectDtos.forEach(subject => {
-            if (subject.subjectStage < 5 ) {
+            if (subject.subjectStage < 5) {
               item.createList.push(subject)
             }
-            if (subject.subjectStage > 4 && subject.subjectStage < 8 ) {
+            if (subject.subjectStage > 4 && subject.subjectStage < 8) {
               item.seeList.push(subject)
             }
-            if (subject.subjectStage > 7 ) {
+            if (subject.subjectStage > 7) {
               item.issueList.push(subject)
             }
           })
@@ -630,13 +630,13 @@ export default {
           item.seeList = []
           item.issueList = []
           item.subjectDtos.forEach(subject => {
-            if (subject.subjectStage < 5 ) {
+            if (subject.subjectStage < 5) {
               item.createList.push(subject)
             }
-            if (subject.subjectStage > 4 && subject.subjectStage < 8 ) {
+            if (subject.subjectStage > 4 && subject.subjectStage < 8) {
               item.seeList.push(subject)
             }
-            if (subject.subjectStage > 7 ) {
+            if (subject.subjectStage > 7) {
               item.issueList.push(subject)
             }
           })
@@ -733,7 +733,7 @@ export default {
     // }
   },
   mounted() {
-  
+
   }
 }
 </script>
