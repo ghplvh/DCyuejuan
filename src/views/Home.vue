@@ -191,7 +191,7 @@
                         <router-link
                           v-for="subject in exam.issueList"
                           :key="subject.id"
-                          :to="{path: `/analysis?examId=${exam.id}`}"
+                          :to="{path: `/analysis?examId=${exam.id}&subjectId=${subject.id}`}"
                         >{{getGradeById(exam.gradeId) + subject.subjectName}}</router-link>
                       </div>
                     </div>

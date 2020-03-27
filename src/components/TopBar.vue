@@ -26,7 +26,7 @@
         >
           <el-menu-item index="home">首页</el-menu-item>
           <el-menu-item index="personManager">人员信息管理</el-menu-item>
-          <el-menu-item index="examAnalyze">考试分析</el-menu-item>
+          <!-- <el-menu-item index="examAnalyze">考试分析</el-menu-item> -->
           <el-menu-item index="answerSheet">答题卡工具</el-menu-item>
         </el-menu>
       </el-col>
