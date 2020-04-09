@@ -1334,7 +1334,17 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        console.log(this.multiStudentSelection)
+        console.log({ a: this.multiStudentSelection })
+        if (this.multiStudentSelection.length < 1) {
+          this.$msgbox({
+            title: '提示',
+            message: h('p', null, [
+              h('span', null, '未选择任何学生'),
+            ]),
+            confirmButtonText: '确定',
+          })
+          return
+        }
         this.axios.post(API.STUDENT_DELSTUDENTS, this.multiStudentSelection).then(res => {
           this.$message({
             message: '删除成功',
