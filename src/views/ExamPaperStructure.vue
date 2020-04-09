@@ -323,6 +323,7 @@
                   type="number"
                   autocomplete="off"
                   maxlength="4"
+                  min="0"
                   v-model.number="kgq.score"
                   @blur="calculateKgQuestion(kgq);verifyScore(kgq.score)"
                   class="el-input__inner"
@@ -338,6 +339,7 @@
                     type="number"
                     autocomplete="off"
                     maxlength="4"
+                    min="0"
                     v-model.number="kgq.minscore"
                     @blur="calculateKgQuestion(kgq);verifyScore(kgq.minscore)"
                     class="el-input__inner"
@@ -407,6 +409,7 @@
                       type="number"
                       autocomplete="off"
                       maxlength="4"
+                      min="0"
                       v-model.number="kgqMini.score"
                       @blur="verifyScore(kgqMini.score)"
                       class="el-input__inner"
@@ -421,6 +424,7 @@
                         type="number"
                         autocomplete="off"
                         maxlength="4"
+                        min="0"
                         v-model="kgqMini.minscore"
                         @blur="verifyScore(kgqMini.minscore)"
                         class="el-input__inner"
@@ -556,6 +560,7 @@
                 type="number"
                 autocomplete="off"
                 maxlength="4"
+                min="0"
                 v-model="zgScoreCount"
                 class="el-input__inner"
               >
@@ -616,6 +621,7 @@
                     type="number"
                     autocomplete="off"
                     maxlength="4"
+                    min="0"
                     v-model="zgq.score"
                     @blur="calculateZgQuestion(zgq);verifyScore(zgq.score)"
                     class="el-input__inner"
@@ -667,6 +673,7 @@
                         type="number"
                         autocomplete="off"
                         maxlength="4"
+                        min="0"
                         v-model="zgqMini.score"
                         @blur="calculateScore();verifyScore(zgqMini.score)"
                         class="el-input__inner"
@@ -713,6 +720,7 @@
                             type="number"
                             autocomplete="off"
                             maxlength="4"
+                            min="0"
                             v-model="zgqMM.score"
                             @blur="calculateScore();verifyScore(zgqMM.score)"
                             class="el-input__inner"
@@ -757,6 +765,7 @@
                                 type="number"
                                 autocomplete="off"
                                 maxlength="4"
+                                min="0"
                                 v-model="zgqMMM.score"
                                 @blur="calculateScore();verifyScore(zgqMMM.score)"
                                 class="el-input__inner"
@@ -928,39 +937,45 @@ export default {
       }).catch(() => { this.loading = false })
     },
     getExamStructureZg() {
+      console.log('getgetgetZG')
       this.loading = true
       this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 1, {}).then(res => {
         let list = res.data.data
-        let data = []
-        this.lastTid = list[list.length - 1].tid
-        list.forEach(item => {
-          this.questionList.push(item)
-          if (!item.oneDcExamStructureDtoList || item.oneDcExamStructureDtoList.length === 0) {
-            item.ssid = item.id
-            data.push(item)
-          } else {
-            item.oneDcExamStructureDtoList.forEach(question => {
-              question.ssid = item.id
-              data.push(question)
-              if (question.twoStructureList.length > 0) {
-                question.twoStructureList.forEach(tq => {
-                  tq.ssid = item.id
-                  data.push(tq)
-                  if (tq.threeStructureList.length > 0) {
-                    tq.threeStructureList.forEach(thq => {
-                      thq.ssid = item.id
-                      data.push(thq)
-                    })
-                  }
-                })
-              }
-            })
-          }
-        })
-        data.sort((a, b) => { return a.tid - b.tid })
-        this.zgTableData = data
-        this.getTableSpanZg()
-        this.loading = false
+        if (list.length === 0) {
+          this.zgTableData = []
+          this.loading = false
+        } else {
+          let data = []
+          this.lastTid = list[list.length - 1].tid
+          list.forEach(item => {
+            this.questionList.push(item)
+            if (!item.oneDcExamStructureDtoList || item.oneDcExamStructureDtoList.length === 0) {
+              item.ssid = item.id
+              data.push(item)
+            } else {
+              item.oneDcExamStructureDtoList.forEach(question => {
+                question.ssid = item.id
+                data.push(question)
+                if (question.twoStructureList.length > 0) {
+                  question.twoStructureList.forEach(tq => {
+                    tq.ssid = item.id
+                    data.push(tq)
+                    if (tq.threeStructureList.length > 0) {
+                      tq.threeStructureList.forEach(thq => {
+                        thq.ssid = item.id
+                        data.push(thq)
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          })
+          data.sort((a, b) => { return a.tid - b.tid })
+          this.zgTableData = data
+          this.getTableSpanZg()
+          this.loading = false
+        }
       }).catch(() => { this.loading = false })
     },
     // 查询试卷总分
@@ -1160,9 +1175,9 @@ export default {
       this.addZgVisible = true
     },
     // 删除行
-    deleteRow(row, type = 0) {
+    async deleteRow(row, type = 0) {
       let bigNo = row.tnumber.split('.')[0]
-      this.$confirm('确定删除' + bigNo + '大题吗？', '提示', {
+      await this.$confirm('确定删除' + bigNo + '大题吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -1174,9 +1189,7 @@ export default {
               message: '删除成功!'
             })
             this.questionList = []
-            this.getExamStructureKg()
-            this.getExamStructureZg()
-            this.getSumScore()
+            this.getExamById()
           }).catch(() => { })
         }
         if (type === 1) {
@@ -1185,12 +1198,12 @@ export default {
             return item.ssid === row.ssid
           })
           this.axios.post(API.EXAMSTRUCTURE_BATCHDELETE + '/' + rows[0].structureId, rows).then(res => {
+            console.log('deldeldel')
             this.$message({
               type: 'success',
               message: '删除成功!'
             })
             this.questionList = []
-            this.getExamStructureKg()
             this.getExamStructureZg()
             this.getSumScore()
           }).catch(() => { })
@@ -1322,7 +1335,7 @@ export default {
     verifyScore(score) {
       if (isNaN(score) || score <= 0) {
         this.$message({
-          message: '题目的分数不能为0',
+          message: '题目的分数必须大于0, 请重新输入!',
           type: 'error'
         })
       }

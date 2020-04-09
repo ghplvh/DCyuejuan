@@ -344,6 +344,8 @@
           >
             <el-input
               v-model="examInfoForm.studentExamId"
+              type="number"
+              maxlength="8"
               placeholder="请输入考号"
             ></el-input>
           </el-form-item>
@@ -353,6 +355,7 @@
           >
             <el-input
               v-model="examInfoForm.examroomNumber"
+              maxlength="8"
               placeholder="请输入考场号"
             ></el-input>
           </el-form-item>
@@ -363,6 +366,8 @@
             <el-input
               v-model="examInfoForm.seatNumber"
               placeholder="请输入座号"
+              type="number"
+              maxlength=8
             ></el-input>
           </el-form-item>
         </el-form>
