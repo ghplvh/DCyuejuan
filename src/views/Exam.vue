@@ -331,30 +331,31 @@ export default {
       await this.axios.post(API.SCHOOL_FINDBYCOMMON, { schoolCode: this.examInfo.schoolCode }).then(res => {
         this.schoolList = res.data.data
       }).catch(() => { })
-      this.getExamAdmin()
-    },
-    // 获取考试管理员
-    async getExamAdmin () {
-      await this.axios.post(API.EXAM_FINDBYEXAMADMINCOM, { examId: this.examId }).then(res => {
-        let data = res.data.data.map(item => {
-          item.role = 1
-          return item
-        })
-        this.examAdmin = data
-      }).catch(() => { })
-      this.getExamScanner()
-    },
-    // 获取考试扫描员
-    async getExamScanner () {
-      await this.axios.post(API.EXAM_FINDBYEXAMSCANCOM, { examId: this.examId }).then(res => {
-        let data = res.data.data.map(item => {
-          item.role = 2
-          return item
-        })
-        this.examScanner = data
-      }).catch(() => { })
+      // this.getExamAdmin()
       this.getSubjectProgress()
     },
+    // 获取考试管理员
+    // async getExamAdmin () {
+    //   await this.axios.post(API.EXAM_FINDBYEXAMADMINCOM, { examId: this.examId }).then(res => {
+    //     let data = res.data.data.map(item => {
+    //       item.role = 1
+    //       return item
+    //     })
+    //     this.examAdmin = data
+    //   }).catch(() => { })
+    //   this.getExamScanner()
+    // },
+    // // 获取考试扫描员
+    // async getExamScanner () {
+    //   await this.axios.post(API.EXAM_FINDBYEXAMSCANCOM, { examId: this.examId }).then(res => {
+    //     let data = res.data.data.map(item => {
+    //       item.role = 2
+    //       return item
+    //     })
+    //     this.examScanner = data
+    //   }).catch(() => { })
+    //   this.getSubjectProgress()
+    // },
     // 查询科目进度信息和人员信息
     async getSubjectProgress () {
       this.loading = true
@@ -376,17 +377,17 @@ export default {
       await this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
         this.examSubjectList = res.data.data
       }).catch(() => { })
-      this.getSchoolTeacher()
+      // this.getSchoolTeacher()
     },
     // 获取学校所有的老师
-    async getSchoolTeacher () {
-      let data = {
-        schoolCode: this.schoolCode
-      }
-      await this.axios.post(API.TEACHER_FINDBYCOMMON, data).then(res => {
-        this.teacherList = res.data.data
-      }).catch(() => { })
-    },
+    // async getSchoolTeacher () {
+    //   let data = {
+    //     schoolCode: this.schoolCode
+    //   }
+    //   await this.axios.post(API.TEACHER_FINDBYCOMMON, data).then(res => {
+    //     this.teacherList = res.data.data
+    //   }).catch(() => { })
+    // },
     // 获取状态
     getStatus (val) {
       return val === 1 ? '已完成' : '-'
@@ -533,7 +534,7 @@ export default {
     // 翻页
     sizeChange (size) {
       this.pageSize = size
-      this.getExamAdmin()
+      // this.getExamAdmin()
     },
     prevPage (page) {
       this.currentPage = this.currentPage - 1

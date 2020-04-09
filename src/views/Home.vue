@@ -83,11 +83,11 @@
                 <el-input
                   class="search-input"
                   size="small"
-                  placeholder="请输入考试名称"
-                  suffix-icon="el-icon-search"
+                  placeholder="考试名称"
                   v-model="filterSearch"
                   @keyup.enter.native="choiceName"
-                ></el-input>
+                ><el-button slot="append" icon="el-icon-search" @click="choiceName({key: 'Enter'})"></el-button>
+                </el-input>
               </el-col>
             </el-row>
             <template v-for="exam in examList">

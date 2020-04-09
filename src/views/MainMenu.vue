@@ -81,7 +81,7 @@
             ></div>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
-              <span>{{adminInfo.teacherInfo.name || adminInfo.phone}}</span>
+              <span>{{schoolInfo.schoolName}}{{adminInfo.teacherInfo.name || adminInfo.phone}}</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -118,7 +118,7 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data() {
     return {
-      schoolInfo: ''
+      schoolInfo: {}
     }
   },
   components: {
@@ -144,6 +144,7 @@ export default {
       }
       this.axios.post(API.SCHOOL_FINDBYCOMMON, data).then(res => {
         this.schoolInfo = res.data.data[0]
+        console.log(this.schoolInfo, 'ssss')
       }).catch(() => { })
     },
     toFenxi() {

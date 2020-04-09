@@ -64,12 +64,12 @@
                   @click="addDialog.isVisible = true"
                   :loading="addDialog.isLoading"
                 >上传模板</el-button>
-                <el-button
+                <!-- <el-button
                   type="primary"
                   class="add-template"
                   @click="scanPaper()"
                   :loading="isScanPaperLoading"
-                >扫描答题卡</el-button>
+                >扫描答题卡</el-button> -->
                 <el-button
                   type="danger"
                   class="add-template"

@@ -15,7 +15,26 @@
           <!-- <el-breadcrumb-item :to="{ path: '/subjectMain/' + examId || '' + '/' + examSubjectId||''}"> -->
           <el-breadcrumb-item>
             <span>{{`${examGrade.gradeName|| ''}${examSubjectInfo.subjectName||''}(科目ID：${examSubjectId|| ''})`}}</span>
-            <el-dropdown>
+            <!-- <el-dropdown>
+              <span class="el-dropdown-link">
+                <i
+                  class="el-icon-caret-bottom el-icon--right"
+                  style="color:#409EFF;"
+                ></i>
+              </span>
+              <el-dropdown-menu slot="dropdown" @command="handleCommand">
+                <template v-for="sub in examSubjectList">
+                  <router-link
+                    :to="{ path: '/subjectMain/' + examId + '/' + sub.id}"
+                    :key="sub.id"
+                    v-if="sub.id !== examSubjectInfo.id"
+                  >
+                    <el-dropdown-item :command="sub.id">{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
+                  </router-link>
+                </template>
+              </el-dropdown-menu>
+            </el-dropdown> -->
+            <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
                 <i
                   class="el-icon-caret-bottom el-icon--right"
@@ -24,13 +43,7 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <template v-for="sub in examSubjectList">
-                  <router-link
-                    :to="{ path: '/subjectMain/' + examId + '/' + sub.id}"
-                    :key="sub.id"
-                    v-if="sub.id !== examSubjectInfo.id"
-                  >
-                    <el-dropdown-item>{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
-                  </router-link>
+                  <el-dropdown-item :command="sub.id" :key="sub.id">{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
                 </template>
               </el-dropdown-menu>
             </el-dropdown>
@@ -94,14 +107,14 @@
                       :span="3"
                       :offset="1"
                     >考生管理：</el-col>
-                    <el-col :span="15">总上传考生人数为<span class="number">{{studentCount}}</span>人</el-col>
+                    <el-col :span="15">总上传考生人数为<span class="number">{{studentCount || 0}}</span>人</el-col>
                     <el-col :span="5">
                       <div
-                        v-if="activeStep > 4"
+                        v-show="activeStep > 4"
                         class="btn fade-btn"
                       >设置考生</div>
                       <router-link
-                        v-else
+                        v-show="activeStep < 5"
                         :to="{path:'/examDetail/'+examId}"
                         class="btn deal-btn"
                       >设置考生</router-link>
@@ -186,6 +199,9 @@
                     >扫描答题卡：</el-col>
                     <el-col :span="15">需导入考生并完成模板后才可以设置</el-col>
                     <el-col :span="5">
+                      <div
+                        class="btn fade-btn"
+                      >扫描答题卡</div>
                       <router-link
                         :to="{path:`/scanPaper/${examId}/${examSubjectId}/${batchNumber}`}"
                         class="btn active-btn"
@@ -273,6 +289,14 @@ export default {
     this.getSteps()
   },
   methods: {
+    // 
+    async handleCommand(command) {
+      console.log(command, '111')
+      this.examSubjectId = command
+      await this.getExamById()
+      this.getStudentCount()
+      this.getSteps()
+    },
     // 获取考试信息
     async getExamById() {
       this.loading = true
@@ -290,9 +314,9 @@ export default {
         examSubjectId: this.examSubjectId
       }
       await this.axios.post(API.EXAMSTEPS, data).then(res => {
-        console.log(res)
         // 考试科目阶段 0创建阶段 1设置考生阶段 2设置试卷结构 3设置模板 4设置题块 5扫描答题卡 6 切图 7分配阅卷任务 
         this.activeStep = res.data.data.subjectStage
+        console.log(this.activeStep, typeof(this.activeStep))
       })
     },
     // 查询所有考试科目

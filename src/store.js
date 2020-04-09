@@ -17,6 +17,7 @@ export default new Vuex.Store({
         return
       }
       let adminInfo = JSON.parse(Base64.decode(sessionStorage.getItem('adminInfo')))
+      console.log(adminInfo)
       state.menuList = []
       adminInfo.dmlist.forEach(element => {
         state.menuList.push(element.menuUrl)
