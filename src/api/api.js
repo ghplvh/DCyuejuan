@@ -21,6 +21,8 @@ const API = {
   STUDENT_DELSTUDENT: 'web/student/delStudent',
   // 批量删除学生信息
   STUDENT_DELSTUDENTS: 'web/student/delStudents',
+  // 删除所有学生
+  DEL_ALL_STUDENTS: 'web/student/allDelStudents',
   // 查询学生信息
   STUDENT_FINDCONDITIONSTUDENT: 'web/student/findConditionStudent',
   // 查询学生信息（Person）

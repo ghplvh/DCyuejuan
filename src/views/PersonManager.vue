@@ -60,6 +60,13 @@
             @click="delSelectionStudent()"
             v-if="this.menuList.includes('studentMuchChooseDelete')"
           >多选删除</el-button>
+          <el-button
+            icon="el-icon-delete"
+            plain
+            @click="delAllStudent()"
+            v-if="this.menuList.includes('studentMuchChooseDelete')"
+          >删除所有学生</el-button>
+
         </el-row>
         <el-row class="filter-row">
           <el-col :span="2">筛选：</el-col>
@@ -1258,7 +1265,7 @@ export default {
       console.log(this.searchInputStudent)
       if (this.searchInputStudent) {
         this.loading = true
-        this.axios.post(API.STUDENT_SEARCH, { schoolCode: this.schoolNumber, name: this.searchInputStudent }).then(res=> {
+        this.axios.post(API.STUDENT_SEARCH, { schoolCode: this.schoolNumber, name: this.searchInputStudent }).then(res => {
           console.log(res)
           if (res.data.code === 0) {
             this.tableDataStudent = res.data.data
@@ -1329,6 +1336,34 @@ export default {
       }).then(() => {
         console.log(this.multiStudentSelection)
         this.axios.post(API.STUDENT_DELSTUDENTS, this.multiStudentSelection).then(res => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.getStudentsBy()
+        }).catch(() => { })
+      }).catch(() => { })
+    },
+    // 删除所有学生
+    delAllStudent() {
+      let h = this.$createElement
+      const data = {
+        gradeId: this.filterGradeStudent.id,
+        classId: this.filterClassStudent.id,
+      }
+      console.log({ delAllStudent: data })
+      this.$msgbox({
+        title: '提示',
+        message: h('p', null, [
+          h('span', null, '你确定要永久删除'),
+          h('span', { style: 'color: red' }, '这个班级下的所有'),
+          h('sapn', null, '学生信息吗？')
+        ]),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        this.axios.post(API.DEL_ALL_STUDENTS, data).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
