@@ -122,12 +122,12 @@
               size="mini"
               @click="multipleDelete()"
             >多选删除</el-button>
-            <el-button
+            <!-- <el-button
               type="text"
               icon="el-icon-download"
               size="mini"
               @click="downloadExaminee()"
-            >导出</el-button>
+            >导出</el-button> -->
           </el-col>
           <el-col
             :span="11"
@@ -704,7 +704,13 @@ export default {
             this.ExamStudentVisible = false
             this.axios.post(API.ADMIN_ADDEXAM, { examId: this.examId, id: res.data.data }).then({})
             this.getExaminee()
-          }).catch(() => { })
+          }).catch(error => { 
+            console.log(error)
+            this.$message({
+              type: 'error',
+              message: error.message
+            }) 
+          })
         } else {
           return false
         }

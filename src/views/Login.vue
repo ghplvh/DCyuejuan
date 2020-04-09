@@ -63,8 +63,10 @@ export default {
     return {
       fullscreenLoading: false,
       form: {
-        phone: '15116486236',
-        password: '486236'
+        // phone: '15116486236',
+        // password: '486236'
+        phone: '',
+        password: ''
       },
       rules: {
         phone: [

@@ -23,7 +23,7 @@
             <el-input
               size="medium"
               :maxlength="19"
-              v-model="examForm.examName"
+              v-model.trim="examForm.examName"
             ></el-input>
           </el-form-item>
           <el-form-item
