@@ -384,7 +384,12 @@
       </div>
     </el-dialog>
     <!-- 选择班级 -->
-    <el-dialog title="选择班级" :visible.sync="gradeVisible" center custom-class="grade-dialog">
+    <el-dialog
+      title="选择班级"
+      :visible.sync="gradeVisible"
+      center
+      custom-class="grade-dialog"
+    >
       <el-row class="grade-row">
         <span>选择年级：</span>
         <el-select
@@ -673,7 +678,7 @@ export default {
       }).catch(() => { })
     },
     // 根据选择的年级获取班级列表
-    getClassByGrade (gradeId) {
+    getClassByGrade(gradeId) {
       this.classCheckAll = false
       this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + gradeId).then(res => {
         this.classList = res.data.data
@@ -682,12 +687,14 @@ export default {
     // 根据学校年级班级获取学生列表
     getStudentByClass() {
       this.axios.post(API.STUDENT_GETSTUDENTSBY, {
+        pageSize: 99999,
         schoolNumber: this.examineeGrade.schoolCode,
         gradeId: this.examineeGrade.id,
         classId: this.examineeClass.id
       }).then(res => {
         this.examineeStudentList = res.data.data.list
         this.students = res.data.data.list
+        this.selectStudent = null
       }).catch(() => { })
     },
     // 提交表单单个新增考生
@@ -710,12 +717,12 @@ export default {
             this.ExamStudentVisible = false
             this.axios.post(API.ADMIN_ADDEXAM, { examId: this.examId, id: res.data.data }).then({})
             this.getExaminee()
-          }).catch(error => { 
+          }).catch(error => {
             console.log(error)
             this.$message({
               type: 'error',
               message: error.message
-            }) 
+            })
           })
         } else {
           return false
@@ -905,7 +912,7 @@ export default {
     selectClass() {
       this.gradeVisible = true
     },
-    classCheckAllChange (val = false) {
+    classCheckAllChange(val = false) {
       if (this.classList.length === 0) {
         return false
       }
