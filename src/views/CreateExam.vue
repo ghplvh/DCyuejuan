@@ -607,7 +607,12 @@ export default {
         })
         this.addSubjectVisible = false
         this.getAllSubject()
-      }).catch(() => { })
+      }).catch(err => { 
+        this.$message({
+          message: err.message,
+          type: 'error'
+        })
+      })
     }
   }
 }
