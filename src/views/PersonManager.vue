@@ -322,6 +322,7 @@
                 slot="append"
                 type="primary"
                 icon="el-icon-search"
+                @click="searchTeacher"
               ></el-button>
             </el-input>
           </el-col>
@@ -601,21 +602,21 @@
             placeholder="请输入学号"
           ></el-input>
         </el-form-item>
-        <el-form-item label="学籍号">
+        <!-- <el-form-item label="学籍号">
           <el-input
             v-model="dialogFormAdd.studentRegisterId"
             size="medium"
             placeholder="请输入学籍号"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="考号">
+        </el-form-item> -->
+        <!-- <el-form-item label="考号">
           <el-input
             v-model="dialogFormAdd.studentExamId"
             size="medium"
             placeholder="请输入考号"
           ></el-input>
-        </el-form-item>
-        <el-form-item
+        </el-form-item> -->
+        <!-- <el-form-item
           label="入学年"
           prop="studentEnrollmentYear"
         >
@@ -625,14 +626,14 @@
             maxlength="4"
             placeholder="请输入入学年"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="学部">
+        </el-form-item> -->
+        <!-- <el-form-item label="学部">
           <el-input
             v-model="dialogFormAdd.schoolDivisions"
             size="medium"
             placeholder="请输入学部"
           ></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item
           label="年级"
           prop="gradeNumber"
@@ -641,6 +642,7 @@
             v-model="dialogFormAdd.gradeNumber"
             size="medium"
             placeholder="请选择年级"
+            @change="getClassListt"
           >
             <el-option
               v-for="grade in gradeList"
@@ -654,11 +656,23 @@
           label="班级"
           prop="classNumber"
         >
-          <el-input
+          <!-- <el-input
             v-model="dialogFormAdd.classNumber"
             size="medium"
             placeholder="请输入班级"
-          ></el-input>
+          ></el-input> -->
+          <el-select
+            v-model="dialogFormAdd.classNumber"
+            size="medium"
+            placeholder="请选择班级"
+          >
+            <el-option
+              v-for="cls in classListt"
+              :key="cls.id"
+              :label="cls.className"
+              :value="cls.className"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="家长姓名">
           <el-input
@@ -1144,7 +1158,7 @@ export default {
           { required: true, message: '学生年级不能为空', trigger: ['blur', 'change'] }
         ],
         classNumber: [
-          { required: true, message: '学生班级不能为空', trigger: 'blur' }
+          { required: true, message: '学生班级不能为空', trigger: ['blur', 'change'] }
         ]
       },
       dialogVisibleEdit: false,
@@ -1195,7 +1209,8 @@ export default {
       // 班级相关
       classGradeName: '',
       className: '',
-      classList: []
+      classList: [],
+      classListt: []
     }
   },
   computed: {
@@ -1517,6 +1532,17 @@ export default {
         this.getGradeGroup()
       }).catch(() => { })
     },
+    // 添加筛选
+    getClassListt(e) {
+      console.log(e)
+      let a = this.gradeList.findIndex(item => item.gradeName === e)
+      this.axios.post(API.DCCLASS_FINDBYGRADEID + '/' + a).then(res => {
+        this.classListt = res.data.data
+        console.log(this.classListt)
+        // this.currentPage = 1
+        // this.getStudentsBy()
+      }).catch(() => { })
+    },
     // 学生筛选获取年级下的班级
     getClassByGrade() {
       if (!this.filterGradeStudent.id) {
@@ -1631,7 +1657,9 @@ export default {
                 this.dialogFormAdd.gradeId = this.gradeList[i].id
               }
             }
+            this.dialogFormAdd.classId = this.classListt[this.classListt.findIndex(item => item.className === this.dialogFormAdd.classNumber)].id
             this.axios.post(API.STUDENT_ADDSTUDENT, this.dialogFormAdd).then(res => {
+              console.log(res)
               this.$message({
                 message: '新增学生信息成功',
                 type: 'success'
@@ -1639,7 +1667,13 @@ export default {
               this.$refs[formName].resetFields()
               this.dialogVisibleAdd = false
               this.getStudentsBy()
-            }).catch(() => { })
+            }).catch(err => {
+              console.log(err)
+              this.$message({
+                message: err.message,
+                type: 'error'
+              })
+            })
           }
           if (this.dialogType === 'edit') {
             this.axios.post(API.STUDENT_UPDATESTUDENT, this.dialogFormAdd).then(res => {
@@ -1821,6 +1855,42 @@ export default {
           this.teacherAddForm.rjrs.splice(index, 1)
         }
       })
+    },
+    // 查询老师
+    searchTeacher() {
+      //searchInputTeacher
+      console.log(this.filterGradeTeacher, this.filterClassTeacher, this.searchInputTeacher)
+      const param = {
+        schoolCode: this.schoolNumber,
+        gradeName: this.filterGradeTeacher.gradeName || '',
+        className: this.filterClassTeacher.className || '',
+        teacherName: this.searchInputTeacher,
+        pageIndex: this.currentPageTeacher,
+        pageSize: this.pageSizeTeacher,
+      }
+      this.axios.post(API.TEACHER_TEACHERSBY, param).then(res => {
+        console.log(res)
+        let teacherData = res.data.data.list
+        this.dataTeacher = teacherData
+        this.tableDataTeacher = []
+        teacherData.forEach(teacher => {
+          teacher.rjrs.forEach(role => {
+            this.tableDataTeacher.push({
+              id: teacher.id,
+              name: teacher.name,
+              teacherMobile: teacher.teacherMobile,
+              teacherEmail: teacher.teacherEmail,
+              roleId: role.roleId,
+              gradeName: role.gradeName,
+              className: role.className,
+              subjectName: role.subjectName
+            })
+          })
+        })
+        this.getTableSpan()
+        this.totalTeacher = res.data.data.total
+        this.loading = false
+      }).catch(() => { })
     },
     // 编辑老师（行）信息
     editTeacherRow(row) {
