@@ -71,7 +71,7 @@
                 :label="range.id"
               >{{range.name}}</el-radio>
             </el-radio-group>
-            <div class="form-tips">统考发起学校统一设置试卷结构、模板、题块、答案、原卷；参与学校独立设置考生、扫描试卷、阅卷（仅阅本校）</div>
+            <!-- <div class="form-tips">统考发起学校统一设置试卷结构、模板、题块、答案、原卷；参与学校独立设置考生、扫描试卷、阅卷（仅阅本校）</div> -->
           </el-form-item>
           <el-form-item
             label="选择学校"
@@ -260,26 +260,26 @@ export default {
     return {
       examTypeList: [
         { id: 0, name: '普通' },
-        { id: 1, name: '月考' },
-        { id: 2, name: '期中' },
-        { id: 3, name: '期末' },
-        { id: 4, name: '竞赛' }
+        // { id: 1, name: '月考' },
+        // { id: 2, name: '期中' },
+        // { id: 3, name: '期末' },
+        // { id: 4, name: '竞赛' }
       ],
       examRangeList: [
         { id: 0, name: '校内' },
-        { id: 1, name: '联考' },
-        { id: 2, name: '统考' }
+        // { id: 1, name: '联考' },
+        // { id: 2, name: '统考' }
       ],
       examSchoolList: [
         { id: 1, name: '新邵县第一中学' }
       ],
       examModeList: [
         { id: 0, name: '行政班' },
-        { id: 1, name: '分层走班（教学班）' }
+        // { id: 1, name: '分层走班（教学班）' }
       ],
       yueJuanWayList: [
         { id: 0, name: '线上阅卷' },
-        { id: 1, name: '先阅后扫' }
+        // { id: 1, name: '先阅后扫' }
       ],
       examForm: {
         examName: '',

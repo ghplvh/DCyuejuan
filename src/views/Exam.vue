@@ -85,7 +85,7 @@
                 </el-table-column> -->
                 <el-table-column label="阅卷总进度" align="center">
                   <template slot-scope="scope">
-                    <a class="click-jump">{{scope.row.examinerVitesse}}%</a>
+                    <a class="click-jump">{{scope.row.examinerVitesse || 0}}%</a>
                   </template>
                 </el-table-column>
                 <!-- <el-table-column prop="col10" label="原卷状态" align="center">

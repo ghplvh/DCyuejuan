@@ -120,13 +120,14 @@
               placeholder="请输入姓名进行查询"
               v-model="searchInputStudent"
               size="medium"
+              @input="search"
             >
-              <el-button
+              <!-- <el-button
                 slot="append"
                 type="primary"
                 icon="el-icon-search"
                 @click="search"
-              ></el-button>
+              ></el-button> -->
             </el-input>
           </el-col>
         </el-row>
@@ -1098,6 +1099,7 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
+      timer: null,
       schoolInfo: {},
       activeName: 'student',
       studentUploadUrl: API.STUDENT_IMPORTSTUDENT,
@@ -1277,25 +1279,11 @@ export default {
       })
     },
     search() {
-      console.log(this.searchInputStudent)
-      if (this.searchInputStudent) {
-        this.loading = true
-        this.axios.post(API.STUDENT_SEARCH, { schoolCode: this.schoolNumber, name: this.searchInputStudent }).then(res => {
-          console.log(res)
-          if (res.data.code === 0) {
-            this.tableDataStudent = res.data.data
-            this.total = res.data.data.length
-            this.studentCount = res.data.data.length
-            this.loading = false
-          } else {
-            this.$message({
-              message: res.data.message,
-              type: 'error'
-            })
-            this.loading = false
-          }
-        })
-      }
+      if (this.timer) clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        this.currentPage = 1
+        this.getStudentsBy()
+      }, 500)
     },
     // 学生信息导入成功
     uploadSuccessStudent(response, file, fileList) {
@@ -1585,7 +1573,8 @@ export default {
       let data = {
         pageIndex: this.currentPage,
         pageSize: this.pageSize,
-        schoolNumber: this.schoolNumber
+        schoolNumber: this.schoolNumber,
+        studentName: this.searchInputStudent || null
       }
       if (this.filterGradeStudent.id) {
         data.gradeId = this.filterGradeStudent.id
