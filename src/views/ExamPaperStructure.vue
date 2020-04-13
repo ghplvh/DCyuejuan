@@ -324,6 +324,7 @@
                   autocomplete="off"
                   maxlength="4"
                   min="0"
+                  max="100"
                   v-model.number="kgq.score"
                   @blur="calculateKgQuestion(kgq);verifyScore(kgq.score)"
                   class="el-input__inner"
@@ -340,6 +341,7 @@
                     autocomplete="off"
                     maxlength="4"
                     min="0"
+                    max="100"
                     v-model.number="kgq.minscore"
                     @blur="calculateKgQuestion(kgq);verifyScore(kgq.minscore)"
                     class="el-input__inner"
@@ -410,6 +412,7 @@
                       autocomplete="off"
                       maxlength="4"
                       min="0"
+                      max="100"
                       v-model.number="kgqMini.score"
                       @blur="verifyScore(kgqMini.score)"
                       class="el-input__inner"
@@ -425,6 +428,7 @@
                         autocomplete="off"
                         maxlength="4"
                         min="0"
+                        max="100"
                         v-model="kgqMini.minscore"
                         @blur="verifyScore(kgqMini.minscore)"
                         class="el-input__inner"
@@ -561,6 +565,7 @@
                 autocomplete="off"
                 maxlength="4"
                 min="0"
+                max="100"
                 v-model="zgScoreCount"
                 class="el-input__inner"
               >
@@ -622,6 +627,7 @@
                     autocomplete="off"
                     maxlength="4"
                     min="0"
+                    max="100"
                     v-model="zgq.score"
                     @blur="calculateZgQuestion(zgq);verifyScore(zgq.score)"
                     class="el-input__inner"
@@ -674,6 +680,7 @@
                         autocomplete="off"
                         maxlength="4"
                         min="0"
+                        max="100"
                         v-model="zgqMini.score"
                         @blur="calculateScore();verifyScore(zgqMini.score)"
                         class="el-input__inner"
@@ -721,6 +728,7 @@
                             autocomplete="off"
                             maxlength="4"
                             min="0"
+                            max="100"
                             v-model="zgqMM.score"
                             @blur="calculateScore();verifyScore(zgqMM.score)"
                             class="el-input__inner"
@@ -766,6 +774,7 @@
                                 autocomplete="off"
                                 maxlength="4"
                                 min="0"
+                                max="100"
                                 v-model="zgqMMM.score"
                                 @blur="calculateScore();verifyScore(zgqMMM.score)"
                                 class="el-input__inner"
@@ -1333,7 +1342,7 @@ export default {
     },
     // 校验分数是否为数字
     verifyScore(score) {
-      if (isNaN(score) || score <= 0) {
+      if (isNaN(score) || score < 0) {
         this.$message({
           message: '题目的分数必须大于0, 请重新输入!',
           type: 'error'

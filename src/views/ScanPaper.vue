@@ -498,6 +498,7 @@ export default {
   },
   destroyed() {
     this.total = null
+    clearInterval(window.InitSetInterval)
   }
 } 
 </script>

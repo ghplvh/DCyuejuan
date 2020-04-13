@@ -199,13 +199,15 @@
                     >扫描答题卡：</el-col>
                     <el-col :span="15">需导入考生并完成模板后才可以设置</el-col>
                     <el-col :span="5">
-                      <div
-                        class="btn fade-btn"
-                      >扫描答题卡</div>
                       <router-link
+                        v-if="activeStep >= 4"
                         :to="{path:`/scanPaper/${examId}/${examSubjectId}/${batchNumber}`}"
                         class="btn active-btn"
                       >扫描答题卡</router-link>
+                      <div
+                        v-else
+                        class="btn fade-btn"
+                      >扫描答题卡</div>
                       <!-- <router-link
                         v-if="examSubjectInfo.templateType === 1 && studentCount > 0 && examSubjectInfo.frameType === 1"
                         v-else

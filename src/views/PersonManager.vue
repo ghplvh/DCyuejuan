@@ -161,12 +161,12 @@
             align="center"
             min-width="150px"
           ></el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             prop="studentEnrollmentYear"
             label="入学年"
             align="center"
             min-width="150px"
-          ></el-table-column>
+          ></el-table-column> -->
           <el-table-column
             prop="gradeNumber"
             label="年级"

@@ -503,6 +503,8 @@
           >
             <el-input
               v-model="examInfoForm.studentExamId"
+              type="tel"
+              maxlength="10"
               placeholder="请输入考号"
             ></el-input>
           </el-form-item>
