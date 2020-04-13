@@ -433,6 +433,7 @@
       <div slot="footer">
         <el-button
           type="primary"
+          :disabled="checkedStudentCount == 0"
           @click="addExamineeList()"
         >确定</el-button>
         <el-button @click="gradeVisible = false">取消</el-button>
@@ -928,9 +929,10 @@ export default {
       }
     },
     checkedClassChange(value = []) {
-      if (value.length === 0) {
-        return false
-      }
+      console.log(value)
+      // if (value.length === 0) {
+      //   return false
+      // }
       this.getStudentCountByClass()
       let checkedCount = value.length
       this.classCheckAll = checkedCount === this.classList.length
@@ -938,12 +940,17 @@ export default {
     },
     // 根据班级id查询总人数
     getStudentCountByClass() {
-      let ids = this.checkedClass.map(clazz => {
-        return clazz.id
-      })
+      let ids = []
+      if (this.checkedClass.length > 0) {
+        ids = this.checkedClass.map(clazz => {
+          return clazz.id
+        })
+      }
       this.axios.post(API.EXAM_FINDBYLISTCLASSID, ids).then(res => {
         this.checkedStudentCount = res.data.data
-      }).catch(() => { })
+      }).catch(() => {
+        this.checkedStudentCount = 0
+       })
     },
     quickUpload() {
       this.quickUploadVisible = true
