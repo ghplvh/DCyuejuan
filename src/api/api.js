@@ -275,6 +275,8 @@ const API = {
   ADMIN_POSTJSON: 'web/importWrongQuestions/saveObjectByFile',
   // 添加班级
   ADMIN_ADDCLASS: 'web/dcClass/addClass',
+  // 删除班级
+  DEL_CLASS: 'web/dcClass/delClassById',
   // 获取班级列表
   ADMIN_GETCLASSLIST: 'web/dcClass/getClassList',
   // 乱七八糟

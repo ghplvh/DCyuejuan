@@ -345,7 +345,7 @@
             <el-input
               v-model="examInfoForm.studentExamId"
               type="tel"
-              maxlength="10"
+              maxlength="20"
               placeholder="请输入考号"
             ></el-input>
           </el-form-item>
@@ -355,7 +355,7 @@
           >
             <el-input
               v-model="examInfoForm.examroomNumber"
-              maxlength="10"
+              maxlength="20"
               placeholder="请输入考场号"
             ></el-input>
           </el-form-item>
@@ -367,7 +367,7 @@
               v-model="examInfoForm.seatNumber"
               placeholder="请输入座号"
               type="tel"
-              maxlength="10"
+              maxlength="20"
             ></el-input>
           </el-form-item>
         </el-form>
@@ -506,6 +506,7 @@
               type="tel"
               maxlength="10"
               placeholder="请输入考号"
+              maxlength="20"
             ></el-input>
           </el-form-item>
           <!-- <el-form-item
@@ -952,7 +953,7 @@ export default {
         this.checkedStudentCount = res.data.data
       }).catch(() => {
         this.checkedStudentCount = 0
-       })
+      })
     },
     quickUpload() {
       this.quickUploadVisible = true

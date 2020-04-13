@@ -122,12 +122,12 @@
               size="medium"
               @input="search"
             >
-              <!-- <el-button
+              <el-button
                 slot="append"
                 type="primary"
                 icon="el-icon-search"
                 @click="search"
-              ></el-button> -->
+              ></el-button>
             </el-input>
           </el-col>
         </el-row>
@@ -556,14 +556,13 @@
                 type="flex"
                 justify="start"
               >
-                <el-col
-                  :span="2"
-                  class="item-body-list spanDiv"
+                <el-tag
+                  style="margin-left:10px"
                   v-for="(item,itemIndex) in classs.dcList"
                   :key="itemIndex"
-                >
-                  <span class="span">{{item.className}}班</span>
-                </el-col>
+                  closable
+                  @close="delClass(item)"
+                >{{item.className}}</el-tag>
               </el-row>
             </el-row>
           </el-row>
@@ -1545,6 +1544,23 @@ export default {
     getStudentByClass() {
       this.currentPage = 1
       this.getStudentsBy()
+    },
+    // 删除班级
+    delClass(item) {
+      console.log({ item })
+      this.$confirm('此操作将永久删除该班级, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(() => {
+        this.axios.post(API.DEL_CLASS + '/?classId=' + item.id).then((result) => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getClassList()
+        }).catch(() => { })
+      })
     },
     // 教师筛选获取年级下的班级
     getClassByGradeTeacher() {
