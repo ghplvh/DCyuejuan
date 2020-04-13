@@ -209,9 +209,16 @@
                   >暂无数据</div>
                   <el-row
                     v-else
-                    class="batchList"
                   >
-                    <el-col
+                  <el-tabs v-model="activeTab" style="width: 100%">
+                    <el-tab-pane class="batchList" label="正常试卷" name="first">
+                      <el-tag type="success" v-for="item in dtList" :key="item" @click.native="previewImage(item.answerSheetImg)">{{item.classNumber}}-{{item.studentName}}-{{item.studentExamId}}</el-tag>
+                    </el-tab-pane>
+                    <el-tab-pane label="错误试卷" name="second">
+                      <el-tag type="danger" v-for="item in dseList" :key="item" @click.native="previewImage(item.answerSheetImg)" closable @close="deleteImg(item.id)">异常卷</el-tag>
+                    </el-tab-pane>
+                  </el-tabs>
+                    <!-- <el-col
                       :span="4"
                       class="sm-pic-div"
                       v-for="image in batchList"
@@ -236,7 +243,7 @@
                           @click="previewImage(img)"
                         >
                       </div>
-                    </el-col>
+                    </el-col> -->
                   </el-row>
                 </el-card>
               </el-main>
@@ -246,17 +253,18 @@
       </el-tabs>
     </el-row>
     <el-dialog
-      title="查看模板"
+      title="查看答题卡"
       :visible.sync="previewVisible"
       width="60%"
       custom-class="preview-dialog"
     >
-      <div class="img-box">
-        <img
-          :src="prevImg"
-          alt="模板"
-        >
-      </div>
+    <el-carousel indicator-position="outside" :autoplay=false height="500px">
+      <el-carousel-item v-for="item in prevImg" :key="item">
+        <div class="img-box">
+          <img :src="item" style="background-size: cover"/>
+        </div>
+      </el-carousel-item>
+      </el-carousel>
       <div slot="footer">
         <el-button
           type="primary"
@@ -275,6 +283,7 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
+      activeTab: 'first',
       globalLoading: false,
       form: {
         examSubjectId: this.$route.params.examSubjectId,
@@ -308,7 +317,8 @@ export default {
       // 扫描仪状态
       clientStatus: true,
       scanStatus: false,
-      total: null
+      total: null,
+      prevImg: [] // 预览图
     }
   },
   computed: {
@@ -322,20 +332,24 @@ export default {
     this.getImg()
   },
   methods: {
-    UploadUrl() {
-      // return `http://47.107.116.88:10003/web/upload/uploadImgAndFileName`
-      return `http://192.168.0.176:10003/web/upload/uploadImgAndFileName`
-    },
     slicing() {
-      this.axios.post(API.ADMIN_SLICING, {
-        examId: this.examId,
-        examSubjectId: this.examSubjectId
-      }).then(res => {
-        this.$message({
-          message: '切图成功。',
-          type: 'success'
-        })
-      })
+      if (this.examSubjectInfo.examStuNum > this.total) {
+        this.$confirm('该次科目考试试卷没有全部扫描完成, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.axios.post(API.ADMIN_SLICING, {
+            examId: this.examId,
+            examSubjectId: this.examSubjectId
+          }).then(res => {
+            this.$message({
+              message: '切图成功。',
+              type: 'success'
+            })
+          })
+        }).catch(() => {})
+      }
     },
     scanLoad() {
       // 先判断客户端是否启动
@@ -403,6 +417,7 @@ export default {
     previewImage(img) {
       this.prevImg = img
       this.previewVisible = true
+      console.log(1)
     },
     // 获取考试信息
     async getExamById() {
@@ -490,7 +505,7 @@ export default {
             window.InitSetInterval = setInterval(() => {
               console.log(this.maxIndex, '-0--', this.exceptionMaxIndex)
               this.getImg(this.maxIndex, this.exceptionMaxIndex)
-            }, 2000);
+            }, 5000);
           })
         }
       })
@@ -514,6 +529,9 @@ export default {
   line-height: 30px;
 }
 #scan-paper {
+  .el-tabs .el-tabs__header {
+    padding-left: 0 !important;
+  }
   .bread-crumb {
     background-color: #ffffff;
     height: 40px;
@@ -756,22 +774,12 @@ export default {
     color: red;
   }
   .batchList {
-    padding: 20px;
     max-height: 340px;
+    padding: 20px 0;
     overflow-y: scroll;
-    .sm-pic-div {
-      display: inline-block;
-      position: relative;
-      background: #fff;
-      margin-bottom: 15px;
-      cursor: pointer;
-      padding: 5px;
-      img {
-        width: 100%;
-        border: 1px solid #c6cfd4;
-        height: 100%;
-      }
-    }
+  }
+  .el-tag{
+    margin: 0 5px 5px;
   }
   .preview-dialog {
     .img-box {

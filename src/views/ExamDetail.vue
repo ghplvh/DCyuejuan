@@ -506,7 +506,6 @@
               type="tel"
               maxlength="10"
               placeholder="请输入考号"
-              maxlength="20"
             ></el-input>
           </el-form-item>
           <!-- <el-form-item
