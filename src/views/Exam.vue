@@ -99,7 +99,7 @@
         </el-tab-pane>
       </el-tabs>
       <div class="tab-right">
-        <el-button type="text" size="mini" class="edit-exam" icon="el-icon-edit" @click="editExam()">编辑</el-button>
+        <!-- <el-button type="text" size="mini" class="edit-exam" icon="el-icon-edit" @click="editExam()">编辑</el-button> -->
         <el-button type="text" size="mini" class="delete-exam" icon="el-icon-delete" @click="delExam()">删除</el-button>
       </div>
     </div>

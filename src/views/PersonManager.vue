@@ -1473,6 +1473,10 @@ export default {
     },
     // 删除选中的老师
     delSelectionTeacher() {
+      if (this.multiTeacherSelection.length < 1) {
+        this.$message.error('您还未选择教师, 请选择后重试!');
+        return false
+      }
       this.$confirm('确定删除当前选中的所有教师信息吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1812,6 +1816,11 @@ export default {
         if (valid) {
           let form = Object.assign({}, this.teacherAddForm)
           form.schoolCode = this.schoolNumber
+          if (form.rjrs.length < 1) {
+            this.$message.error('请先给老师添加角色！')
+            return false
+          }
+          console.log(JSON.stringify(form.rjrs))
           form.rjrs.forEach(item => {
             delete item.createTime
             delete item.modifyTime

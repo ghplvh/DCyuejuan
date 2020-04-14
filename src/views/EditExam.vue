@@ -189,11 +189,11 @@
     >
       <div class="subject-grade">
         <h3>年级选择</h3>
-        <el-radio-group v-model="subjectGrade">
+        <el-radio-group v-model="subjectGrade" disabled>
           <el-radio
             v-for="grade in gradeList"
             :key="grade.id"
-            :label="grade"
+            :label="grade.id"
           >{{grade.gradeName}}</el-radio>
         </el-radio-group>
       </div>
@@ -219,7 +219,7 @@
           v-for="(subTag,index) in gradeSubjects"
           :key="index"
           @close="removeGradeSubject(index)"
-        >{{subjectGrade.gradeName + subTag.examSubjectDesc}}</el-tag>
+        >{{subTag.examSubjectDesc}}</el-tag>
       </div>
       <span slot="footer">
         <el-button
@@ -349,6 +349,7 @@ export default {
         this.examInfo = res.data.data[0]
         this.examForm = res.data.data[0]
         this.examForm.examRange = parseInt(res.data.data[0].examRange)
+        this.subjectGrade = res.data.data[0].gradeId
         this.getExamGrade()
       }).catch(() => { this.loading = false })
       await this.getGradeList()
@@ -375,7 +376,7 @@ export default {
     async getGradeList() {
       await this.axios.post(`${API.GRADE_FINDBYGRADES}/${this.schoolCode}`).then(res => {
         this.gradeList = res.data.data
-        this.subjectGrade = res.data.data && res.data.data[0]
+        console.log(this.gradeList)
       }).catch(() => { })
     },
     // 标签关闭事件
@@ -474,8 +475,9 @@ export default {
           // delete this.examForm.modifyTime
           delete this.examForm.classCount
           delete this.examForm.establishName
+          console.log(this.subjectGrade)
           this.examForm.id = this.examId
-          this.examForm.gradeId = this.examInfo.gradeId
+          this.examForm.gradeId = this.examForm.gradeId || this.examInfo.gradeId
           this.examForm.subjectId = subjectIds.join(',')
           this.axios.post(API.EXAM_UPDATEBYID, this.examForm).then(res => {
             this.$message({
