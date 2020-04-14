@@ -151,6 +151,8 @@ const API = {
   EXAMSTRUCTURE_UPDATEBATCHANSWER: 'web/examStructure/UpdateBatchAnswer',
   // 修改客观题
   EXAMSTRUCTURE_UPDATEBATCHKE: 'web/examStructure/updateBatchKe',
+  // 修改客观题2020-04-14 18:20:39
+  EXAMSTRUCTURE_UPDATEBATCHOBJ: 'web/examStructure/updateBatchObj',
   // 修改主观题
   EXAMSTRUCTURE_UPDATEBATCHZHU: 'web/examStructure/updateBatchZhu',
   // 设置步长分
@@ -287,7 +289,8 @@ const API = {
   EXAMSTEPS: 'web/exam/getExamSubjectDetail',
   // 删除答题卡图片
   DELETEIMG: 'web/importWrongQuestions/delExceptionById',
-
+  // 根据科目id和类型id查询试卷结构
+  GET_EXMA_STRUCTURELIST: 'web/examStructure/getExamStructureList'
 }
 Object.keys(API).map(key => {
   API[key] = IP.EXAM_IP + API[key]

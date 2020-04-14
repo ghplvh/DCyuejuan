@@ -43,7 +43,10 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <template v-for="sub in examSubjectList">
-                  <el-dropdown-item :command="sub.id" :key="sub.id">{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
+                  <el-dropdown-item
+                    :command="sub.id"
+                    :key="sub.id"
+                  >{{examGrade.gradeName + sub.subjectName}}</el-dropdown-item>
                 </template>
               </el-dropdown-menu>
             </el-dropdown>
@@ -129,12 +132,13 @@
                       :span="3"
                       :offset="1"
                     >题目设置：</el-col>
-                    <el-col
-                      :span="15"
-                    >设置该科目的试卷结构和答案;</el-col>
+                    <el-col :span="15">设置该科目的试卷结构和答案;</el-col>
                     <el-col :span="5">
-                      <div
+                      <!-- <div
                         v-if="activeStep > 4"
+                        class="btn fade-btn" -->
+                      <div
+                        v-if="false"
                         class="btn fade-btn"
                       >设置试卷结构</div>
                       <router-link
@@ -199,9 +203,7 @@
                     >扫描答题卡：</el-col>
                     <el-col :span="15">需导入考生并完成模板后才可以设置</el-col>
                     <el-col :span="5">
-                      <div
-                        class="btn fade-btn"
-                      >扫描答题卡</div>
+                      <div class="btn fade-btn">扫描答题卡</div>
                       <router-link
                         :to="{path:`/scanPaper/${examId}/${examSubjectId}/${batchNumber}`}"
                         class="btn active-btn"
@@ -316,7 +318,7 @@ export default {
       await this.axios.post(API.EXAMSTEPS, data).then(res => {
         // 考试科目阶段 0创建阶段 1设置考生阶段 2设置试卷结构 3设置模板 4设置题块 5扫描答题卡 6 切图 7分配阅卷任务 
         this.activeStep = res.data.data.subjectStage
-        console.log(this.activeStep, typeof(this.activeStep))
+        console.log(this.activeStep, typeof (this.activeStep))
       })
     },
     // 查询所有考试科目
