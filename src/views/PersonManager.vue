@@ -1473,16 +1473,21 @@ export default {
     },
     // 删除选中的老师
     delSelectionTeacher() {
+      console.log(this.multiTeacherSelection)
       if (this.multiTeacherSelection.length < 1) {
         this.$message.error('您还未选择教师, 请选择后重试!');
         return false
       }
+      const param = JSON.parse(JSON.stringify(this.multiTeacherSelection))
+      param.forEach(item => {
+        item.schoolCode = this.$store.state.adminInfo.teacherInfo.schoolCode
+      })
       this.$confirm('确定删除当前选中的所有教师信息吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'error'
       }).then(() => {
-        this.axios.post(API.TEACHER_DELTEACHERS, { schoolCode: this.$store.state.adminInfo.teacherInfo.schoolCode, ...this.multiTeacherSelection }).then(res => {
+        this.axios.post(API.TEACHER_DELTEACHERS, param).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
