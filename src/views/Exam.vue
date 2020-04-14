@@ -89,11 +89,6 @@
                     <a class="click-jump" v-else>-</a>
                   </template>
                 </el-table-column>
-                <!-- <el-table-column prop="col10" label="原卷状态" align="center">
-                  <template slot-scope="scope">
-                    <a class="click-jump">{{scope.row.col10 ? scope.row.col10 : '未上传原卷'}}</a>
-                  </template>
-                </el-table-column> -->
               </el-table>
             </div>
             <div class="exam-annotation">
@@ -102,63 +97,10 @@
             </div>
           </div>
         </el-tab-pane>
-        <!-- <el-tab-pane label="人员信息" name="person">
-          <el-row type="flex" align="middle">
-            <el-col :span="20" class="exam-title">{{examInfo.examName}}</el-col>
-            <el-col :span="2" :offset="2">
-              <el-button class="desc" type="text" size="mini" icon="el-icon-info">人员信息说明</el-button>
-            </el-col>
-          </el-row>
-          <el-row class="exam-meta" type="flex" align="middle">
-            <el-col :span="5">
-              <span class="el-icon-time">考试时间：{{examInfo.examDateFrom}}&nbsp;至&nbsp;{{examInfo.examDateTo}}</span>
-            </el-col>
-            <el-col :span="4">
-              <span class="el-icon-setting setter">创建老师：</span>
-            </el-col>
-            <el-col :span="4">
-              <span class="el-icon-info setter">考试类型：{{getExamTypeInfo()}}</span>
-            </el-col>
-          </el-row>
-          <el-row class="exam-filter" type="flex" align="middle" justify="space-between">
-            <el-col :span="14">
-              <span>学校：</span>
-              <el-select v-model="filterSchool" size="small" class="school-select"></el-select>
-              <span class="role-title">角色：</span>
-              <el-select v-model="filterRole" size="small" class="role-select">
-                <el-option v-for="role in roles" :key="role.id" :label="role.name" :value="role.id"></el-option>
-              </el-select>
-              <el-input size="small" class="search-input" suffix-icon="el-icon-search" placeholder="请输入内容"></el-input>
-            </el-col>
-            <el-col class="right-col" :span="7" :offset="3">
-              <el-button type="primary" size="mini" plain icon="el-icon-setting" @click="toExamDetail()">考生信息管理</el-button>
-              <el-button type="primary" size="mini" plain icon="el-icon-download" @click="showAddDialog()">添加考试人员</el-button>
-            </el-col>
-          </el-row>
-          <el-row class="exam-table">
-            <el-table :data="personInfoData" v-loading="loading" border>
-              <el-table-column prop="name" label="姓名" align="center"></el-table-column>
-              <el-table-column prop="phone" label="电话" align="center"></el-table-column>
-              <el-table-column prop="schoolName" label="学校" align="center"></el-table-column>
-              <el-table-column label="角色" align="center">
-                <template slot-scope="scope">{{getRoleName(scope.row.role)}}</template>
-              </el-table-column>
-              <el-table-column label="科目" align="center"></el-table-column>
-              <el-table-column label="操作" align="center">
-                <template slot-scope="scope">
-                  <el-button type="text" size="mini" @click="editPersonRow(scope.row)">编辑</el-button>
-                  <el-button type="text" class="delete-exam" size="mini" @click="deletePersonRow(scope.row)">删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-row>
-          <el-pagination background @size-change="sizeChange" @current-change="currentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="personInfoData.length"></el-pagination>
-        </el-tab-pane> -->
       </el-tabs>
       <div class="tab-right">
-        <el-button type="text" size="mini" class="edit-exam" icon="el-icon-edit" @click="editExam()">编辑</el-button>
+        <!-- <el-button type="text" size="mini" class="edit-exam" icon="el-icon-edit" @click="editExam()">编辑</el-button> -->
         <el-button type="text" size="mini" class="delete-exam" icon="el-icon-delete" @click="delExam()">删除</el-button>
-        <!-- <el-button type="text" size="mini" class="view-exam" icon="el-icon-view">查看动态</el-button> -->
       </div>
     </div>
     <el-dialog title="添加考试人员" :visible.sync="addVisible" width="600px" center custom-class="add-dialog">

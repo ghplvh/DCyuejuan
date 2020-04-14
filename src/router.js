@@ -56,8 +56,6 @@ const Manager = r => require.ensure([], () => r(require('@/views/Manager')), 'Ma
 const jobDistribute = r => require.ensure([], () => r(require('@/views/jobDistribute')), 'jobDistribute')
 // 设置Banner
 // const Banner = r => require.ensure([], () => r(require('@/views/Banner')), 'Banner')
-// 测试题库
-const test = r => require.ensure([], () => r(require('@/views/test')), 'test')
 // 用户修改密码
 const UpdatePassword = r => require.ensure([], () => r(require('@/views/UpdatePassword')), 'UpdatePassword')
 // 阅卷进度
@@ -286,15 +284,7 @@ const router = new VueRouter({
       },
       component: QuestionBank
     }]
-  }, {
-    path: '/test',
-    name: 'test',
-    meta: {
-      title: '题库'
-    },
-    component: test
-  }
-  ]
+  }]
 })
 router.beforeEach((to, from, next) => {
 

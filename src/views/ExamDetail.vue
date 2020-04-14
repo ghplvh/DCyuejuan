@@ -87,7 +87,7 @@
               size="medium"
               v-model="filterInput"
               class="filter-condition"
-              placeholder="请输入姓名、学号"
+              placeholder="请输入姓名"
             >
               <el-button
                 slot="append"
@@ -344,8 +344,7 @@
           >
             <el-input
               v-model="examInfoForm.studentExamId"
-              type="tel"
-              maxlength="20"
+              maxlength="10"
               placeholder="请输入考号"
             ></el-input>
           </el-form-item>
@@ -355,7 +354,7 @@
           >
             <el-input
               v-model="examInfoForm.examroomNumber"
-              maxlength="20"
+              maxlength="10"
               placeholder="请输入考场号"
             ></el-input>
           </el-form-item>
@@ -366,8 +365,8 @@
             <el-input
               v-model="examInfoForm.seatNumber"
               placeholder="请输入座号"
-              type="tel"
-              maxlength="20"
+              onkeyup="this.value=this.value.replace(/[^\d.]/g,'');"
+              maxlength="10"
             ></el-input>
           </el-form-item>
         </el-form>
@@ -503,8 +502,8 @@
           >
             <el-input
               v-model="examInfoForm.studentExamId"
+              maxlength="10"
               placeholder="请输入考号"
-              maxlength="20"
             ></el-input>
           </el-form-item>
           <!-- <el-form-item
@@ -580,7 +579,7 @@ export default {
       },
       examInfoRules: {
         studentExamId: [
-          { required: true, message: '请填写考号', trigger: 'blur' }
+          { type: 'number', message: '考号应为数字', trigger: 'blur' }
         ]
       },
       gradeVisible: false,
