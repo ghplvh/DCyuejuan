@@ -1,6 +1,5 @@
 <template>
   <el-row id="exam-paper-structure">
-    <!-- <bread-crumb></bread-crumb> -->
     <el-row
       class="bread-crumb"
       type="flex"
@@ -35,15 +34,7 @@
           <el-breadcrumb-item>设置试卷结构</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <!-- <el-col
-        :span="3"
-        class="operation-video"
-      >
-        <router-link
-          to=""
-          target="_blank"
-        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
-      </el-col> -->
+
     </el-row>
     <el-row>
       <el-row
@@ -98,19 +89,12 @@
               icon="el-icon-plus"
               @click="addKgQuestion()"
             >新增客观题</el-button>
-            <!-- <router-link :to="{path: '/settingAnswer/'+ examId + '/' + examSubjectId }">
-              <el-button
-                type="text"
-                icon="el-icon-edit"
-              >设置答案</el-button>
-            </router-link> -->
-            <!-- <el-button type="text" icon="el-icon-plus" @click="subjectSettingReuse()">科目设置复用</el-button> -->
+
           </el-col>
           <el-col
             :span="3"
             class="right"
           >
-            <!-- <el-checkbox v-model="isAB" disabled>AB卷两套答案</el-checkbox> -->
           </el-col>
         </el-row>
         <el-table
@@ -131,30 +115,60 @@
             align="center"
           >
             <template slot-scope="scope">
-              <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
-                {{scope.row.score}}
-              </div>
-              <div v-else>
-                <div class="el-input el-input--mini">
-                  <input
-                    type="number"
-                    autocomplete="off"
-                    maxlength="4"
-                    min="0"
-                    v-model.number="scope.row.score"
-                    class="el-input__inner"
-                  >
+              <template v-if="scope.row.topicType !=='2'">
+                <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
+                  {{scope.row.score}}
                 </div>
-              </div>
+                <div v-else>
+                  <div class="el-input el-input--mini">
+                    <input
+                      type="number"
+                      autocomplete="off"
+                      maxlength="4"
+                      min="0"
+                      v-model.number="scope.row.score"
+                      class="el-input__inner"
+                    >
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
+                  <h4>正常得分：{{scope.row.score}}</h4>
+                  <h4>少选得分：{{scope.row.minscore}}</h4>
+                </div>
+                <div v-else>
+                  <div class="el-input el-input--mini">
+                    <el-input
+                      type="number"
+                      autocomplete="off"
+                      maxlength="4"
+                      min="0"
+                      v-model.number="scope.row.score"
+                    > <template slot="prepend">正常</template>
+                    </el-input>
+                    <el-input
+                      title="少选"
+                      type="number"
+                      autocomplete="off"
+                      maxlength="4"
+                      min="0"
+                      v-model.number="scope.row.minscore"
+                    > <template slot="prepend">少选</template>
+                    </el-input>
+                  </div>
+                </div>
+              </template>
             </template>
           </el-table-column>
+
           <el-table-column
             prop="optionCount"
             label="选项数"
             align="center"
           >
             <template slot-scope="scope">
-              <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
+              <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1 || scope.row.topicType === '3'">
                 {{scope.row.optionCount}}
               </div>
               <div v-else>
@@ -277,14 +291,7 @@
               icon="el-icon-plus"
               @click="addZgQuestion()"
             >新增主观题</el-button>
-            <!-- <el-button type="text" icon="el-icon-edit">设置附加题</el-button> -->
-            <!-- <router-link :to="{path: '/settingAnswer/' + examId + '/' + examSubjectId, query: {tabname: 'subAnswer'}}">
-              <el-button
-                type="text"
-                icon="el-icon-tickets"
-              >上传主观题答案</el-button>
-            </router-link> -->
-            <!-- <el-button type="text" icon="el-icon-plus" @click="subjectSettingReuse()">科目设置复用</el-button> -->
+
           </el-col>
           <el-col
             :span="3"
@@ -375,7 +382,7 @@
       >
         <el-col :span="2"><span>大题号</span></el-col>
         <el-col :span="22">
-          <!-- <el-select size="mini" v-model="kgBigQuestionNo" value-key="id" @focus="currentBigNo = kgBigQuestionNo" @change="bigNoChange"> -->
+
           <el-select
             size="mini"
             v-model="kgBigQuestionNo"
@@ -657,7 +664,7 @@
         >
           <el-col :span="2">大题号</el-col>
           <el-col :span="3">
-            <!-- <el-select size="mini" v-model="zgBigQuestionNo" value-key="id" @focus="currentBigNo = zgBigQuestionNo" @change="bigNoChange"> -->
+
             <el-select
               size="mini"
               v-model="zgBigQuestionNo"
@@ -811,7 +818,7 @@
                         class="el-input__inner"
                       >
                     </div>
-                    <!-- <el-input v-model="zgqMini.score" size="mini" @blur="calculateScore()"></el-input> -->
+
                   </el-col>
                   <el-col :span="1">分</el-col>
                   <el-col :span="3">
@@ -859,7 +866,7 @@
                             class="el-input__inner"
                           >
                         </div>
-                        <!-- <el-input v-model="zgqMM.score" size="mini" @blur="calculateScore()"></el-input> -->
+
                       </el-col>
                       <el-col :span="1">分</el-col>
                       <el-col :span="3">
@@ -905,7 +912,7 @@
                                 class="el-input__inner"
                               >
                             </div>
-                            <!-- <el-input v-model="zgqMMM.score" size="mini" @blur="calculateScore()"></el-input> -->
+
                           </el-col>
                           <el-col :span="1">分</el-col>
                           <el-col
@@ -1003,12 +1010,10 @@
   </el-row>
 </template>
 <script>
-// import BreadCrumb from '../components/BreadCrumb'
 import API from '../api/api.js'
 import Utils from '../utils/Utils.js'
 import { mapState } from 'vuex'
 import R from 'ramda'
-// import TreeUtil from '../utils/TreeUtil.js'
 export default {
   data() {
     return {
@@ -1081,33 +1086,26 @@ export default {
     Rsort(x, y) {
       return R.sort(x, y)
     },
-    // 切换tab
     checkTab(tabRef, index) {
       let tabDom = this.$refs[tabRef]
       this.activeBarWidth = tabDom.clientWidth
       this.activeBarTranslateX = tabDom.offsetLeft
       this.activeTab = index
     },
-    // 获取考试信息
     getExamById() {
       this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
         this.getGradeById()
         this.questionList = []
-        // this.getExamStructure(0)
-        // this.getExamStructure(1)
+
         this.getExamStructureKg()
         this.getExamStructureZg()
         this.getSumScore()
       }).catch(() => { })
     },
-    // 查询所有考试科目
     getExamSubject() {
       this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
-        // this.examSubjectList = res.data.data
-        // this.examSubjectInfo = this.examSubjectList.find(item => {
-        //   return item.id === this.examSubjectId
-        // })
+
         this.examSubjectList = res.data.data
         this.examSubjectInfo = this.examSubjectList.filter(item => {
           return Number(item.id) === Number(this.examSubjectId)
@@ -1140,7 +1138,6 @@ export default {
           return i
         })
       }
-      // this.loading = true
       return await this.axios.post(API.GET_EXMA_STRUCTURELIST, {
         examSubjectId: this.examSubjectId,
         questionType
@@ -1277,12 +1274,18 @@ export default {
     async confirmEdit(row, actionType) {
       let source = [this.kgTableData, this.zgTableData][actionType]
       const id = row.section.sectionTopId
-      const list = source.filter(i => i.section.sectionTopId === id).map(i => {
-        if (i.topicType === '2') {
-          return { ...i, answer: i.answer.join('') }
-        }
-        return i
-      })
+      const list = source.filter(i => i.section.sectionTopId === id)
+        // answer拍回字符串
+        .map(i => {
+          if (i.topicType === '2') {
+            // 选项数减少时，剔除超过范围答案
+            const answer = i.answer.filter(j => (parseInt(j) <= parseInt(i.optionCount)))
+            i.answer = answer
+            return { ...i, answer: answer.join('') }
+          }
+          return i
+        })
+
       await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHOBJ, list).then(res => {
         this.$message({
           message: '修改客观题成功',
@@ -1544,22 +1547,7 @@ export default {
           }
         }
       }
-      // 计算答案是否在范围内ASCII码
-      // if (kgqMini.optionCount > 0 && questionType !== '判断题') {
-      //   let strArr = ans.split('')
-      //   for (let i = 0; i < strArr.length; i++) {
-      //     let startCodeA = 'A'.charCodeAt()
-      //     let endCodeA = startCodeA + kgqMini.optionCount - 1
-      //     let charCode = strArr[i].toUpperCase().charCodeAt()
-      //     if (charCode < startCodeA || charCode > endCodeA) {
-      //       this.$message({
-      //         message: '请输入A-' + String.fromCharCode(endCodeA) + '之间的字母，不区分大小写',
-      //         type: 'error'
-      //       })
-      //       kgqMini.answer = this.saveAnswerTemp
-      //     }
-      //   }
-      // }
+
     },
     // 删除问题
     deleteQuestion(index) {
@@ -1850,12 +1838,7 @@ export default {
         }
       })
       if (hasEmptyMini) {
-        // this.$message({
-        //   message: '小题不能为空',
-        //   type: 'error'
-        // })
-        // this.buttonLoading = false
-        // return false
+
       }
       if (this.dialogType === 'add') {
         await this.axios.post(API.EXAMSTRUCTURE_ADDEXAMS, data).then(res => {

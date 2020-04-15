@@ -332,7 +332,6 @@
         <el-form
           :model="examInfoForm"
           ref="examInfoForm"
-          :rules="examInfoRules"
           :inline="true"
           label-width="61px"
           size="medium"
@@ -342,32 +341,37 @@
             label="考号:"
             prop="studentExamId"
           >
-            <el-input
+            <input
               v-model="examInfoForm.studentExamId"
               maxlength="10"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              class="el-input__inner"
               placeholder="请输入考号"
-            ></el-input>
+            />
           </el-form-item>
           <el-form-item
             label="考场:"
             prop="examroomNumber"
           >
-            <el-input
+            <input
               v-model="examInfoForm.examroomNumber"
               maxlength="10"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              class="el-input__inner"
               placeholder="请输入考场号"
-            ></el-input>
+            />
           </el-form-item>
           <el-form-item
             label="座号:"
             prop="seatNumber"
           >
-            <el-input
+            <input
               v-model="examInfoForm.seatNumber"
-              placeholder="请输入座号"
-              onkeyup="this.value=this.value.replace(/[^\d.]/g,'');"
               maxlength="10"
-            ></el-input>
+              oninput="value=value.replace(/[^\d]/g,'')"
+              class="el-input__inner"
+              placeholder="请输入座号"
+            />
           </el-form-item>
         </el-form>
       </div>
@@ -577,11 +581,7 @@ export default {
         examroomNumber: '',
         seatNumber: ''
       },
-      examInfoRules: {
-        studentExamId: [
-          { type: 'number', message: '考号应为数字', trigger: 'blur' }
-        ]
-      },
+
       gradeVisible: false,
       classIsIndeterminate: true,
       classCheckAll: false,
