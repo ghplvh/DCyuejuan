@@ -89,7 +89,6 @@
               icon="el-icon-plus"
               @click="addKgQuestion()"
             >新增客观题</el-button>
-
           </el-col>
           <el-col
             :span="3"
@@ -108,6 +107,9 @@
             label="题号"
             align="left"
           >
+            <template slot-scope="scope">
+              {{'&nbsp;&nbsp;&nbsp;'.repeat(scope.row.level-1)}}{{scope.row.tnumber}}
+            </template>
           </el-table-column>
           <el-table-column
             prop="score"
@@ -308,14 +310,21 @@
             prop="tnumber"
             label="题号"
             align="left"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{'&nbsp;&nbsp;&nbsp;'.repeat(scope.row.level-1)}}{{scope.row.tnumber}}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="score"
             label="分数"
             align="center"
           >
             <template slot-scope="scope">
-              <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
+              <div v-if="!scope.row.section.isBottomLevel">
+                {{scope.row.score}}
+              </div>
+              <div v-else-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
                 {{scope.row.score}}
               </div>
               <div v-else>
@@ -325,6 +334,7 @@
                     autocomplete="off"
                     maxlength="4"
                     min="0"
+                    @change="reCalScore(scope.row,1)"
                     v-model.number="scope.row.score"
                     class="el-input__inner"
                   >
@@ -1126,17 +1136,58 @@ export default {
         const topList = list.filter(i => i.id === i.structureId).map(i => ({ ...i, level: 0 }))
         // 非最顶层
         const normalList = list.filter(i => i.id !== i.structureId)
-        // 拍成二维数组，添加level字段表示真实层级
-        const findChilds = (parentsList, resource) => parentsList.map(now => [now, ...findChilds(resource.filter(i => i.structureId === now.id).map(i => ({ ...i, level: now.level + 1 })), resource)])
-        const sections = topList.map(now => R.flatten(findChilds(normalList.filter(i => i.structureId === now.id).map(i => ({ ...i, level: now.level + 1 })), normalList)))
+        // 递归查询子代方法，且拍成二维数组，添加level字段表示真实层级
+        const findChilds = (parentsList, resource) => parentsList
+          .map(now => [
+            now,
+            // 递归调用，找下一层
+            ...findChilds(resource.filter(i => i.structureId === now.id)
+              // 添加字段level表示层级
+              .map(i => ({ ...i, level: now.level + 1 })), resource)
+          ])
+        // 开始安排
+        const sections = topList
+          // 根据最顶层列表分组进行子代查询
+          .map(now =>
+            // 去掉多余层级[]
+            R.flatten(
+              //递归查询子代
+              findChilds(
+                normalList
+                  .filter(i => i.structureId === now.id)
+                  .map(i => ({ ...i, level: now.level + 1 })),
+                normalList
+              )
+            )
+          )
         // 拍成一维数组，添加分组依赖，rowspan依赖，顶层父元素sectionTopId
-        const result = sections.map((section, sectionIdx) => section.map((i, idx) => ({ ...i, section: { sectionIdx, idx, sectionLen: section.length, sectionTopId: topList[sectionIdx].id } })))
-        return R.flatten(result).map(i => {
-          if (i.topicType === '2') {
-            return { ...i, answer: (i.answer || '').split('') }
-          }
-          return i
-        })
+        const result = sections
+          .map((toSection, toSectionIdx) =>
+            toSection
+              // 添加section字段，用于
+              .map((i, idx) =>
+                ({
+                  ...i,
+                  section: { toSectionIdx, idx, sectionLen: toSection.length, sectionTopId: topList[toSectionIdx].id }
+                })
+              )
+          )
+        return R.flatten(result)
+          // 多选题答案 字符串=>数组
+          .map(i => {
+            if (i.topicType === '2') {
+              return { ...i, answer: (i.answer || '').split('') }
+            }
+            return i
+          })
+          // 添加isBottomLevel字段用于鉴别是否是最低层级，非最低层级的分数由子层级计算而来，且不允许直接修改
+          .map(i => {
+            if (normalList.findIndex(j => j.structureId === i.id) > -1) {
+              return { ...i, section: { ...i.section, isBottomLevel: false } }
+            } else {
+              return { ...i, section: { ...i.section, isBottomLevel: true } }
+            }
+          })
       }
       return await this.axios.post(API.GET_EXMA_STRUCTURELIST, {
         examSubjectId: this.examSubjectId,
@@ -1297,7 +1348,6 @@ export default {
     // 取消修改
     cancelEdit(row, action, actionType) {
       let source = [this.kgTableData, this.zgTableData][actionType]
-
       const list = this.tableEditable.find(i => i[0].section.sectionTopId === row.section.sectionTopId)
       // 回滚编辑过数据
       if (action === 'cancel') {
@@ -1308,6 +1358,24 @@ export default {
       }
       // 弹出取消了的编辑
       this.tableEditable = this.tableEditable.filter(i => i[0].section.sectionTopId !== row.section.sectionTopId)
+    },
+    reCalScore(row, actionType) {
+      let source = [this.kgTableData, this.zgTableData][actionType]
+      let list = source.filter(i => i.section.sectionTopId === row.section.sectionTopId)
+      const cal = (row) => {
+        let t = list.filter(i => i.structureId === row.id)
+        if (t.length === 0) {
+
+          return parseInt(row.score)
+        } else {
+          row.score = t.reduce((total, v) => {
+            total += parseInt(cal(v))
+            return total
+          }, 0)
+          return row.score
+        }
+      }
+      cal({ id: row.section.sectionTopId })
     },
     // 删除行
     async deleteRow(row, type = 0) {

@@ -134,13 +134,15 @@
                     >题目设置：</el-col>
                     <el-col :span="15">设置该科目的试卷结构和答案;</el-col>
                     <el-col :span="5">
-                      <!-- <div
-                        v-if="activeStep > 4"
-                        class="btn fade-btn" -->
                       <div
+                        v-if="activeStep > 4"
+                        class="btn fade-btn"
+                      >
+                        <!-- <div
                         v-if="false"
                         class="btn fade-btn"
-                      >设置试卷结构</div>
+                      > -->
+                        设置试卷结构</div>
                       <router-link
                         v-else
                         :to="{path:'/examPaperStructure/'+examId+'/'+examSubjectId}"
