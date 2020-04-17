@@ -1,6 +1,5 @@
 <template>
   <el-row id="exam-paper-structure">
-    <!-- <bread-crumb></bread-crumb> -->
     <el-row
       class="bread-crumb"
       type="flex"
@@ -35,15 +34,7 @@
           <el-breadcrumb-item>设置试卷结构</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
-      <!-- <el-col
-        :span="3"
-        class="operation-video"
-      >
-        <router-link
-          to=""
-          target="_blank"
-        ><i class="el-icon-caret-right"></i><span>操作视频</span></router-link>
-      </el-col> -->
+
     </el-row>
     <el-row>
       <el-row
@@ -98,20 +89,11 @@
               icon="el-icon-plus"
               @click="addKgQuestion()"
             >新增客观题</el-button>
-      
-            <router-link :to="{path: '/settingAnswer/'+ examId + '/' + examSubjectId }">
-              <el-button
-                type="text"
-                icon="el-icon-edit"
-              >设置答案</el-button>
-            </router-link>
-            <!-- <el-button type="text" icon="el-icon-plus" @click="subjectSettingReuse()">科目设置复用</el-button> -->
           </el-col>
           <el-col
             :span="3"
             class="right"
           >
-            <!-- <el-checkbox v-model="isAB" disabled>AB卷两套答案</el-checkbox> -->
           </el-col>
         </el-row>
         <el-table
@@ -124,17 +106,89 @@
             prop="tnumber"
             label="题号"
             align="left"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{'&nbsp;&nbsp;&nbsp;'.repeat(scope.row.level-1)}}{{scope.row.tnumber}}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="score"
             label="分数"
             align="center"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              <template v-if="scope.row.topicType !=='2'">
+                <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
+                  {{scope.row.score}}
+                </div>
+                <div v-else>
+                  <div class="el-input el-input--mini">
+                    <input
+                      type="number"
+                      autocomplete="off"
+                      maxlength="4"
+                      min="0"
+                      v-model.number="scope.row.score"
+                      class="el-input__inner"
+                    >
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
+                  <h4>正常得分：{{scope.row.score}}</h4>
+                  <h4>少选得分：{{scope.row.minscore}}</h4>
+                </div>
+                <div v-else>
+                  <div class="el-input el-input--mini">
+                    <el-input
+                      type="number"
+                      autocomplete="off"
+                      maxlength="4"
+                      min="0"
+                      v-model.number="scope.row.score"
+                    > <template slot="prepend">正常</template>
+                    </el-input>
+                    <el-input
+                      title="少选"
+                      type="number"
+                      autocomplete="off"
+                      maxlength="4"
+                      min="0"
+                      v-model.number="scope.row.minscore"
+                    > <template slot="prepend">少选</template>
+                    </el-input>
+                  </div>
+                </div>
+              </template>
+            </template>
+          </el-table-column>
+
           <el-table-column
             prop="optionCount"
             label="选项数"
             align="center"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1 || scope.row.topicType === '3'">
+                {{scope.row.optionCount}}
+              </div>
+              <div v-else>
+                <div class="el-input el-input--mini">
+                  <el-radio-group
+                    v-model="scope.row.optionCount"
+                    size="small"
+                  >
+                    <el-radio-button
+                      :label="item"
+                      v-for="(item, index) in [1,2,3,4,5,6,7]"
+                      :key="index"
+                    >{{item}}</el-radio-button>
+                  </el-radio-group>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             label="题型"
             align="center"
@@ -145,7 +199,53 @@
             prop="answer"
             label="答案"
             align="center"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              <div v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
+                <template v-if="scope.row.topicType ==='3'">
+                  {{scope.row.answer?{t:'对',f:'错'}[scope.row.answer]:'-'}}
+                </template>
+                <template v-if="scope.row.topicType ==='1'">
+                  {{scope.row.answer?['A','B','C','D','E','F','G'][scope.row.answer-1]:'-'}}
+                </template>
+                <template v-if="scope.row.topicType ==='2'">
+                  {{scope.row.answer.length>0?Rsort((a,b)=>(parseInt(a)-parseInt(b)),scope.row.answer).map(i=>['A','B','C','D','E','F','G'][(i-1)]).join(','):'-'}}
+                </template>
+              </div>
+              <template v-else>
+                <el-radio-group
+                  v-model="scope.row.answer"
+                  size="small"
+                  v-if="scope.row.topicType ==='3'"
+                >
+                  <el-radio-button label="t">对</el-radio-button>
+                  <el-radio-button label="f">错</el-radio-button>
+                </el-radio-group>
+                <el-radio-group
+                  v-model="scope.row.answer"
+                  size="small"
+                  v-if="scope.row.topicType ==='1'"
+                >
+                  <el-radio-button
+                    v-for="(item, index) in parseInt(scope.row.optionCount)"
+                    :key="index"
+                    :label="item"
+                  >{{['A','B','C','D','E','F','G'][item-1]}}</el-radio-button>
+                </el-radio-group>
+                <el-checkbox-group
+                  size="small"
+                  v-model="scope.row.answer"
+                  v-if="scope.row.topicType ==='2'"
+                >
+                  <el-checkbox-button
+                    v-for="item in parseInt(scope.row.optionCount)"
+                    :label="item+''"
+                    :key="item"
+                  >{{['A','B','C','D','E','F','G'][item-1]}}</el-checkbox-button>
+                </el-checkbox-group>
+              </template>
+            </template>
+          </el-table-column>
           <el-table-column
             label="操作"
             align="center"
@@ -153,8 +253,20 @@
             <template slot-scope="scope">
               <el-button
                 type="text"
-                @click="editRow(scope.row)"
-              >修改</el-button>
+                @click="editRow(scope.row,0)"
+                v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1"
+              >可编辑</el-button>
+              <template v-else>
+                <el-button
+                  type="text"
+                  @click="confirmEdit(scope.row,0)"
+                >确认</el-button>
+                <el-button
+                  type="text"
+                  @click="cancelEdit(scope.row,'cancel',0)"
+                >取消</el-button>
+              </template>
+
               <el-button
                 type="text"
                 @click="deleteRow(scope.row,0)"
@@ -181,14 +293,7 @@
               icon="el-icon-plus"
               @click="addZgQuestion()"
             >新增主观题</el-button>
-            <!-- <el-button type="text" icon="el-icon-edit">设置附加题</el-button> -->
-            <!-- <router-link :to="{path: '/settingAnswer/' + examId + '/' + examSubjectId, query: {tabname: 'subAnswer'}}">
-              <el-button
-                type="text"
-                icon="el-icon-tickets"
-              >上传主观题答案</el-button>
-            </router-link> -->
-            <!-- <el-button type="text" icon="el-icon-plus" @click="subjectSettingReuse()">科目设置复用</el-button> -->
+
           </el-col>
           <el-col
             :span="3"
@@ -205,12 +310,38 @@
             prop="tnumber"
             label="题号"
             align="left"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{'&nbsp;&nbsp;&nbsp;'.repeat(scope.row.level-1)}}{{scope.row.tnumber}}
+            </template>
+          </el-table-column>
           <el-table-column
             prop="score"
             label="分数"
             align="center"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              <div v-if="!scope.row.section.isBottomLevel">
+                {{scope.row.score}}
+              </div>
+              <div v-else-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1">
+                {{scope.row.score}}
+              </div>
+              <div v-else>
+                <div class="el-input el-input--mini">
+                  <input
+                    type="number"
+                    autocomplete="off"
+                    maxlength="4"
+                    min="0"
+                    @change="reCalScore(scope.row,1)"
+                    v-model.number="scope.row.score"
+                    class="el-input__inner"
+                  >
+                </div>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column
             label="是否附加题"
             align="center"
@@ -224,8 +355,19 @@
             <template slot-scope="scope">
               <el-button
                 type="text"
-                @click="editRowZg(scope.row)"
-              >修改</el-button>
+                @click="editRow(scope.row,1)"
+                v-if="tableEditable.findIndex(i=>i[0].section.sectionTopId ===scope.row.section.sectionTopId) === -1"
+              >可编辑</el-button>
+              <template v-else>
+                <el-button
+                  type="text"
+                  @click="confirmEdit(scope.row,1)"
+                >确认</el-button>
+                <el-button
+                  type="text"
+                  @click="cancelEdit(scope.row,'cancel',1)"
+                >取消</el-button>
+              </template>
               <el-button
                 type="text"
                 @click="deleteRow(scope.row,1)"
@@ -250,7 +392,7 @@
       >
         <el-col :span="2"><span>大题号</span></el-col>
         <el-col :span="22">
-          <!-- <el-select size="mini" v-model="kgBigQuestionNo" value-key="id" @focus="currentBigNo = kgBigQuestionNo" @change="bigNoChange"> -->
+
           <el-select
             size="mini"
             v-model="kgBigQuestionNo"
@@ -532,7 +674,7 @@
         >
           <el-col :span="2">大题号</el-col>
           <el-col :span="3">
-            <!-- <el-select size="mini" v-model="zgBigQuestionNo" value-key="id" @focus="currentBigNo = zgBigQuestionNo" @change="bigNoChange"> -->
+
             <el-select
               size="mini"
               v-model="zgBigQuestionNo"
@@ -686,7 +828,7 @@
                         class="el-input__inner"
                       >
                     </div>
-                    <!-- <el-input v-model="zgqMini.score" size="mini" @blur="calculateScore()"></el-input> -->
+
                   </el-col>
                   <el-col :span="1">分</el-col>
                   <el-col :span="3">
@@ -734,7 +876,7 @@
                             class="el-input__inner"
                           >
                         </div>
-                        <!-- <el-input v-model="zgqMM.score" size="mini" @blur="calculateScore()"></el-input> -->
+
                       </el-col>
                       <el-col :span="1">分</el-col>
                       <el-col :span="3">
@@ -780,7 +922,7 @@
                                 class="el-input__inner"
                               >
                             </div>
-                            <!-- <el-input v-model="zgqMMM.score" size="mini" @blur="calculateScore()"></el-input> -->
+
                           </el-col>
                           <el-col :span="1">分</el-col>
                           <el-col
@@ -813,15 +955,75 @@
         >确定</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      :title="zgTitle"
+      v-if="false"
+      :visible.sync="addZgVisible"
+      width="900px"
+      custom-class="add-zg-dialog question-dialog"
+    >
+      <el-card>
+        <el-row
+          type="flex"
+          align="middle"
+        >
+          <el-col :span="2">大题号</el-col>
+          <el-col :span="3">
+            <el-select
+              size="mini"
+              v-model="zgBigQuestionNo"
+              value-key="id"
+              @focus="currentBigNo = zgBigQuestionNo"
+            >
+              <el-option
+                v-for="(item,bqIndex) in bigQuestionNoList"
+                :key="bqIndex"
+                :value="item"
+                :label="item.bigNo"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="1"></el-col>
+          <el-col :span="1">总分</el-col>
+          <el-col
+            :span="1"
+            v-if="zgQuestionList.length > 0"
+          >
+            <span>{{zgScoreCount}}</span>
+          </el-col>
+          <el-col
+            :span="2"
+            v-else
+          >
+            <div class="el-input el-input--mini">
+              <input
+                type="number"
+                autocomplete="off"
+                maxlength="4"
+                min="0"
+                v-model="zgScoreCount"
+                class="el-input__inner"
+              >
+            </div>
+          </el-col>
+          <el-col :span="1.5">&nbsp;分&nbsp;</el-col>
+          <el-col :span="2">
+            <el-button
+              type="text"
+              @click="addMiniQuestion()"
+              v-if="zgQuestionList.length === 0"
+            >添加小题</el-button>
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-dialog>
   </el-row>
 </template>
 <script>
-// import BreadCrumb from '../components/BreadCrumb'
 import API from '../api/api.js'
 import Utils from '../utils/Utils.js'
 import { mapState } from 'vuex'
-
-// import TreeUtil from '../utils/TreeUtil.js'
+import R from 'ramda'
 export default {
   data() {
     return {
@@ -874,7 +1076,8 @@ export default {
       zgQuestionTypeList: ['普通题', '选做题'],
       zgQuestionList: [],
       scoreList: [],
-      lastTid: 0
+      lastTid: 0,
+      tableEditable: [],
     }
   },
   computed: {
@@ -890,31 +1093,29 @@ export default {
     this.getExamSubject()
   },
   methods: {
-    // 切换tab
+    Rsort(x, y) {
+      return R.sort(x, y)
+    },
     checkTab(tabRef, index) {
       let tabDom = this.$refs[tabRef]
       this.activeBarWidth = tabDom.clientWidth
       this.activeBarTranslateX = tabDom.offsetLeft
       this.activeTab = index
     },
-    // 获取考试信息
     getExamById() {
       this.axios.post(API.EXAM_FINDBYID + '/' + this.examId).then(res => {
         this.examInfo = res.data.data[0]
         this.getGradeById()
         this.questionList = []
+
         this.getExamStructureKg()
         this.getExamStructureZg()
         this.getSumScore()
       }).catch(() => { })
     },
-    // 查询所有考试科目
     getExamSubject() {
       this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
-        // this.examSubjectList = res.data.data
-        // this.examSubjectInfo = this.examSubjectList.find(item => {
-        //   return item.id === this.examSubjectId
-        // })
+
         this.examSubjectList = res.data.data
         this.examSubjectInfo = this.examSubjectList.filter(item => {
           return Number(item.id) === Number(this.examSubjectId)
@@ -928,64 +1129,82 @@ export default {
       }).catch(() => { })
     },
     // 查询试卷结构(科目id/题型类型(0客观题，1主观题)
-    getExamStructureKg() {
-      this.loading = true
-      this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 0, {}).then(res => {
-        let list = res.data.data
-        let data = []
-        list.forEach(item => {
-          this.questionList.push(item)
-          item.oneDcExamStructureDtoList.forEach(question => {
-            data.push(question)
+    async getExamStructure(questionType) {
+      // 格式化试卷结构数据
+      const formatExamStructure = (list) => {
+        // 最顶层
+        const topList = (list || []).filter(i => i.id === i.structureId).map(i => ({ ...i, level: 0 }))
+        // 非最顶层
+        const normalList = (list || []).filter(i => i.id !== i.structureId)
+        // 递归查询子代方法，且拍成二维数组，添加level字段表示真实层级
+        const findChilds = (parentsList, resource) => parentsList
+          .map(now => [
+            now,
+            // 递归调用，找下一层
+            ...findChilds(resource.filter(i => i.structureId === now.id)
+              // 添加字段level表示层级
+              .map(i => ({ ...i, level: now.level + 1 })), resource)
+          ])
+        // 开始安排
+        const sections = topList
+          // 根据最顶层列表分组进行子代查询
+          .map(now =>
+            // 去掉多余层级[]
+            R.flatten(
+              //递归查询子代
+              findChilds(
+                normalList
+                  .filter(i => i.structureId === now.id)
+                  .map(i => ({ ...i, level: now.level + 1 })),
+                normalList
+              )
+            )
+          )
+        // 拍成一维数组，添加分组依赖，rowspan依赖，顶层父元素sectionTopId
+        const result = sections
+          .map((toSection, toSectionIdx) =>
+            toSection
+              // 添加section字段，用于
+              .map((i, idx) =>
+                ({
+                  ...i,
+                  section: { toSectionIdx, idx, sectionLen: toSection.length, sectionTopId: topList[toSectionIdx].id }
+                })
+              )
+          )
+        return R.flatten(result)
+          // 多选题答案 字符串=>数组
+          .map(i => {
+            if (i.topicType === '2') {
+              return { ...i, answer: (i.answer || '').split('') }
+            }
+            return i
           })
-        })
-        data.sort((a, b) => { return a.tid - b.tid })
-        this.kgTableData = data
-        this.getTableSpan()
+          // 添加isBottomLevel字段用于鉴别是否是最低层级，非最低层级的分数由子层级计算而来，且不允许直接修改
+          .map(i => {
+            if (normalList.findIndex(j => j.structureId === i.id) > -1) {
+              return { ...i, section: { ...i.section, isBottomLevel: false } }
+            } else {
+              return { ...i, section: { ...i.section, isBottomLevel: true } }
+            }
+          })
+      }
+      return await this.axios.post(API.GET_EXMA_STRUCTURELIST, {
+        examSubjectId: this.examSubjectId,
+        questionType
+      }).then(res => {
+        const list = res.data.data
+        const result = formatExamStructure(list)
+        return result
         this.loading = false
       }).catch(() => { this.loading = false })
     },
-    getExamStructureZg() {
-      console.log('getgetgetZG')
-      this.loading = true
-      this.axios.post(API.EXAMSTRUCTURE_QUERYEXAMSTRUCTURE + '/' + this.examSubjectId + '/' + 1, {}).then(res => {
-        let list = res.data.data
-        if (list.length === 0) {
-          this.zgTableData = []
-          this.loading = false
-        } else {
-          let data = []
-          this.lastTid = list[list.length - 1].tid
-          list.forEach(item => {
-            this.questionList.push(item)
-            if (!item.oneDcExamStructureDtoList || item.oneDcExamStructureDtoList.length === 0) {
-              item.ssid = item.id
-              data.push(item)
-            } else {
-              item.oneDcExamStructureDtoList.forEach(question => {
-                question.ssid = item.id
-                data.push(question)
-                if (question.twoStructureList.length > 0) {
-                  question.twoStructureList.forEach(tq => {
-                    tq.ssid = item.id
-                    data.push(tq)
-                    if (tq.threeStructureList.length > 0) {
-                      tq.threeStructureList.forEach(thq => {
-                        thq.ssid = item.id
-                        data.push(thq)
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
-          data.sort((a, b) => { return a.tid - b.tid })
-          this.zgTableData = data
-          this.getTableSpanZg()
-          this.loading = false
-        }
-      }).catch(() => { this.loading = false })
+    // 查询试卷结构(科目id/题型类型(0客观题，1主观题)
+    async getExamStructureKg() {
+      this.kgTableData = await this.getExamStructure(0)
+    },
+    async getExamStructureZg() {
+      this.zgTableData = await this.getExamStructure(1)
     },
     // 查询试卷总分
     getSumScore() {
@@ -1086,102 +1305,77 @@ export default {
     },
     // 客观题表格跨行
     kgSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if ([5].includes(columnIndex)) {
-        if (rowIndex === this.tableSpan[row.structureId][0]) {
-          return { rowspan: this.tableSpan[row.structureId].length, colspan: 1 }
-        } else {
-          return { rowspan: 0, colspan: 0 }
-        }
+      if (columnIndex === 5) {
+        return row.section.idx === 0 ? { rowspan: row.section.sectionLen, colspan: 1 } : { rowspan: 0, colspan: 0 }
       }
     },
-    // 主观题表格跨行
     zgSpanMethod({ row, column, rowIndex, columnIndex }) {
-      if ([3].includes(columnIndex)) {
-        if (rowIndex === this.tableSpanZg[row.ssid][0]) {
-          return { rowspan: this.tableSpanZg[row.ssid].length, colspan: 1 }
-        } else {
-          return { rowspan: 0, colspan: 0 }
-        }
+      if (columnIndex === 3) {
+        return row.section.idx === 0 ? { rowspan: row.section.sectionLen, colspan: 1 } : { rowspan: 0, colspan: 0 }
       }
     },
-    // 编辑客观题行
-    editRow(row) {
-      let rows = {}
-      this.kgBigQuestionNo = { id: this.getNumberByTnumber(row.tnumber.split('.')[0]), bigNo: row.tnumber.split('.')[0] }
-      this.kgTableData.filter(item => {
-        return item.structureId === row.structureId
-      }).forEach(qu => {
-        if (rows[qu.topicType]) {
-          rows[qu.topicType].push(qu)
-        } else {
-          rows[qu.topicType] = []
-          rows[qu.topicType].push(qu)
-        }
-      })
-      this.kgQuestionList = []
-      Object.keys(rows).forEach(key => {
-        let item = rows[key]
-        this.editId = item[0].structureId
-        this.kgQuestionList.push({
-          questionType: parseInt(item[0].topicType),
-          startNo: item[0].tnumber.split('.')[1],
-          endNo: item[item.length - 1].tnumber.split('.')[1],
-          optionCount: item[0].optionCount,
-          score: item[0].score,
-          miniQuestionList: item
-        })
-      })
-      this.kgTitle = '修改客观题'
-      this.dialogType = 'edit'
-      this.addKgVisible = true
+    // 修改表格行
+    editRow(row, actionType) {
+      let source = [this.kgTableData, this.zgTableData][actionType]
+      const data = R.clone(source.filter(i => i.section.sectionTopId === row.section.sectionTopId))
+      // 添加至可编辑列表
+      this.tableEditable.push(data)
     },
-    // 编辑主观题行
-    editRowZg(row) {
-      let rows = {}
-      this.zgBigQuestionNo = { id: this.getNumberByTnumber(row.tnumber.split('.')[0]), bigNo: row.tnumber.split('.')[0] }
-      this.zgTableData.filter(item => {
-        return item.ssid === row.ssid
-      }).forEach(qu => {
-        if (rows[qu.ssid]) {
-          rows[qu.ssid].push(qu)
+    // 确认修改
+    async confirmEdit(row, actionType) {
+      let source = [this.kgTableData, this.zgTableData][actionType]
+      const id = row.section.sectionTopId
+      const list = source.filter(i => i.section.sectionTopId === id)
+        // answer拍回字符串
+        .map(i => {
+          if (i.topicType === '2') {
+            // 选项数减少时，剔除超过范围答案
+            const answer = i.answer.filter(j => (parseInt(j) <= parseInt(i.optionCount)))
+            i.answer = answer
+            return { ...i, answer: answer.join('') }
+          }
+          return i
+        })
+
+      await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHOBJ, list).then(res => {
+        this.$message({
+          message: '修改客观题成功',
+          type: 'success'
+        })
+      }).catch(() => { })
+      this.cancelEdit(row, '', actionType)
+    },
+    // 取消修改
+    cancelEdit(row, action, actionType) {
+      let source = [this.kgTableData, this.zgTableData][actionType]
+      const list = this.tableEditable.find(i => i[0].section.sectionTopId === row.section.sectionTopId)
+      // 回滚编辑过数据
+      if (action === 'cancel') {
+        list.forEach(before => {
+          let nowIndex = source.findIndex(now => before.id === now.id)
+          source[nowIndex] = before
+        })
+      }
+      // 弹出取消了的编辑
+      this.tableEditable = this.tableEditable.filter(i => i[0].section.sectionTopId !== row.section.sectionTopId)
+    },
+    reCalScore(row, actionType) {
+      let source = [this.kgTableData, this.zgTableData][actionType]
+      let list = source.filter(i => i.section.sectionTopId === row.section.sectionTopId)
+      const cal = (row) => {
+        let t = list.filter(i => i.structureId === row.id)
+        if (t.length === 0) {
+
+          return parseInt(row.score)
         } else {
-          rows[qu.ssid] = []
-          rows[qu.ssid].push(qu)
+          row.score = t.reduce((total, v) => {
+            total += parseInt(cal(v))
+            return total
+          }, 0)
+          return row.score
         }
-      })
-      this.zgQuestionList = []
-      Object.keys(rows).forEach(key => {
-        let item = rows[key]
-        this.editId = item[0].structureId
-        this.zgQuestionList.push({
-          questionType: '普通题',
-          startNo: item[0].tnumber.split('.')[1],
-          endNo: item[item.length - 1].tnumber.split('.')[1],
-          optionCount: item[0].optionCount,
-          score: item[0].score,
-          miniQuestionList: item.filter(tq => {
-            delete tq.twoStructureList
-            return parseInt(tq.numberType) === 1
-          })
-        })
-        this.zgQuestionList.forEach(bq => {
-          bq.miniQuestionList.forEach(mq => {
-            let list = item.filter(tq => {
-              return parseInt(tq.numberType) === 2 && tq.structureId === mq.id
-            })
-            mq.miniQuestionList = list
-            mq.miniQuestionList.forEach(mmq => {
-              let list = item.filter(tq => {
-                return parseInt(tq.numberType) === 3 && tq.structureId === mmq.id
-              })
-              mmq.miniQuestionList = list
-            })
-          })
-        })
-      })
-      this.zgTitle = '修改主观题'
-      this.dialogType = 'edit'
-      this.addZgVisible = true
+      }
+      cal({ id: row.section.sectionTopId })
     },
     // 删除行
     async deleteRow(row, type = 0) {
@@ -1207,7 +1401,40 @@ export default {
             return item.ssid === row.ssid
           })
           this.axios.post(API.EXAMSTRUCTURE_BATCHDELETE + '/' + rows[0].structureId, rows).then(res => {
-            console.log('deldeldel')
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.questionList = []
+            this.getExamStructureZg()
+            this.getSumScore()
+          }).catch(() => { })
+        }
+      }).catch(() => { })
+    },
+    async deleteRow2(row, type = 0) {
+      let bigNo = row.tnumber.split('.')[0]
+      await this.$confirm('确定删除' + bigNo + '大题吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        if (type === 0) {
+          this.axios.post(API.EXAMSTRUCTURE_DELETEBYPRIMARYKEY + '/' + row.structureId).then(res => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.questionList = []
+            this.getExamById()
+          }).catch(() => { })
+        }
+        if (type === 1) {
+          this.zgBigQuestionNo = { id: this.getNumberByTnumber(row.tnumber.split('.')[0]), bigNo: row.tnumber.split('.')[0] }
+          let rows = this.zgTableData.filter(item => {
+            return item.ssid === row.ssid
+          })
+          this.axios.post(API.EXAMSTRUCTURE_BATCHDELETE + '/' + rows[0].structureId, rows).then(res => {
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -1250,20 +1477,6 @@ export default {
       this.dialogType = 'add'
       this.addKgVisible = true
     },
-   
-    bigNoChange(val) {
-      let qu = this.questionList.find(question => {
-        return val.bigNo === question.tnumber
-      })
-      if (qu) {
-        this.$message({
-          message: '大题号不能重复',
-          type: 'error'
-        })
-        this.kgBigQuestionNo = this.currentBigNo
-        this.zgBigQuestionNo = this.currentBigNo
-      }
-    },
     // 大题新增小题
     addQuestion() {
       this.kgQuestionList.push({
@@ -1302,10 +1515,12 @@ export default {
           optionCount: question.optionCount ? question.optionCount : 4
         })
       }
+      console.log({ kg: question.miniQuestionList })
     },
     // 校验题号
     verifyQuestionNo(questionList, index) {
       let miniQ = questionList[index]
+      console.log({ miniQ })
       if (isNaN(miniQ.startNo) || isNaN(miniQ.endNo)) {
         this.$message({
           message: '题号格式填写错误',
@@ -1388,22 +1603,7 @@ export default {
           }
         }
       }
-      // 计算答案是否在范围内ASCII码
-      if (kgqMini.optionCount > 0 && questionType !== '判断题') {
-        let strArr = ans.split('')
-        for (let i = 0; i < strArr.length; i++) {
-          let startCodeA = 'A'.charCodeAt()
-          let endCodeA = startCodeA + kgqMini.optionCount - 1
-          let charCode = strArr[i].toUpperCase().charCodeAt()
-          if (charCode < startCodeA || charCode > endCodeA) {
-            this.$message({
-              message: '请输入A-' + String.fromCharCode(endCodeA) + '之间的字母，不区分大小写',
-              type: 'error'
-            })
-            kgqMini.answer = this.saveAnswerTemp
-          }
-        }
-      }
+
     },
     // 删除问题
     deleteQuestion(index) {
@@ -1474,7 +1674,7 @@ export default {
         return false
       }
       if (this.dialogType === 'add') {
-      
+
         await this.axios.post(API.EXAMSTRUCTURE_ADDEXAMSTRUCTURE, data).then(res => {
           this.$message({
             message: '新增客观题成功',
@@ -1488,7 +1688,7 @@ export default {
         }).catch(() => { })
       }
       if (this.dialogType === 'edit') {
-       
+
         await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHKE + '/' + this.editId, data).then(res => {
           this.$message({
             message: '修改客观题成功',
@@ -1552,7 +1752,7 @@ export default {
       if (!question.startNo || !question.endNo) {
         return
       }
-      for (let i = question.startNo; i <= question.endNo; i++) {
+      for (let i = parseInt(question.startNo); i <= parseInt(question.endNo); i++) {
         question.miniQuestionList.push({ tnumber: this.zgBigQuestionNo.bigNo + '.' + i, score: question.score, miniQuestionList: [] })
       }
       this.zgQuestionList.forEach(item => {
@@ -1694,16 +1894,11 @@ export default {
         }
       })
       if (hasEmptyMini) {
-        // this.$message({
-        //   message: '小题不能为空',
-        //   type: 'error'
-        // })
-        // this.buttonLoading = false
-        // return false
+
       }
       if (this.dialogType === 'add') {
         await this.axios.post(API.EXAMSTRUCTURE_ADDEXAMS, data).then(res => {
-      
+
           this.$message({
             message: '新增主观题成功',
             type: 'success'
@@ -1716,7 +1911,7 @@ export default {
         }).catch(() => { })
       }
       if (this.dialogType === 'edit') {
-     
+
         await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHZHU + '/' + this.editId, data).then(res => {
           this.$message({
             message: '修改主观题成功',

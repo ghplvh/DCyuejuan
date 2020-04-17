@@ -151,6 +151,8 @@ const API = {
   EXAMSTRUCTURE_UPDATEBATCHANSWER: 'web/examStructure/UpdateBatchAnswer',
   // 修改客观题
   EXAMSTRUCTURE_UPDATEBATCHKE: 'web/examStructure/updateBatchKe',
+  // 修改客观题2020-04-14 18:20:39
+  EXAMSTRUCTURE_UPDATEBATCHOBJ: 'web/examStructure/updateBatchObj',
   // 修改主观题
   EXAMSTRUCTURE_UPDATEBATCHZHU: 'web/examStructure/updateBatchZhu',
   // 设置步长分
@@ -268,9 +270,11 @@ const API = {
   // 手动添加选择题答案
   ADMIN_TOP: 'web/examStructure/insertTopicGetscore',
   // 导出学生模板
-  ADMIN_STUDENTDOWNLOAD: 'web/student/downloadTemplate',
+  // ADMIN_STUDENTDOWNLOAD: 'web/student/downloadTemplate',
+  ADMIN_STUDENTDOWNLOAD: 'studentTemplate.xls',
   // 导出教师模板
-  ADMIN_TEACHERDOWNLOAD: 'web/teacher/downloadTemplate',
+  // ADMIN_TEACHERDOWNLOAD: 'web/teacher/downloadTemplate',
+  ADMIN_TEACHERDOWNLOAD: 'teacherTemplate.xls',
   // 传json数据给后台
   ADMIN_POSTJSON: 'web/importWrongQuestions/saveObjectByFile',
   // 添加班级
@@ -287,7 +291,8 @@ const API = {
   EXAMSTEPS: 'web/exam/getExamSubjectDetail',
   // 删除答题卡图片
   DELETEIMG: 'web/importWrongQuestions/delExceptionById',
-
+  // 根据科目id和类型id查询试卷结构
+  GET_EXMA_STRUCTURELIST: 'web/examStructure/getExamStructureList'
 }
 Object.keys(API).map(key => {
   API[key] = IP.EXAM_IP + API[key]

@@ -315,7 +315,7 @@
             class="search-box"
           >
             <el-input
-              placeholder="请输入姓名/联系电话"
+              placeholder="请输入姓名"
               v-model="searchInputTeacher"
               size="medium"
             >
@@ -586,54 +586,29 @@
           label="姓名"
           prop="studentName"
         >
-          <el-input
-            v-model="dialogFormAdd.studentName"
-            size="medium"
-            placeholder="请输入姓名"
-          ></el-input>
+          <div class="el-input el-input--medium el-input--suffix">
+            <input
+              v-model="dialogFormAdd.studentName"
+              maxlength="10"
+              class="el-input__inner"
+              placeholder="请输入考号"
+            />
+          </div>
         </el-form-item>
         <el-form-item
           label="学号"
           prop="studentId"
         >
-          <el-input
-            v-model="dialogFormAdd.studentId"
-            size="medium"
-            placeholder="请输入学号"
-          ></el-input>
+          <div class="el-input el-input--medium el-input--suffix">
+            <input
+              v-model="dialogFormAdd.studentId"
+              maxlength="10"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              class="el-input__inner"
+              placeholder="请输入考号"
+            />
+          </div>
         </el-form-item>
-        <!-- <el-form-item label="学籍号">
-          <el-input
-            v-model="dialogFormAdd.studentRegisterId"
-            size="medium"
-            placeholder="请输入学籍号"
-          ></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="考号">
-          <el-input
-            v-model="dialogFormAdd.studentExamId"
-            size="medium"
-            placeholder="请输入考号"
-          ></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item
-          label="入学年"
-          prop="studentEnrollmentYear"
-        >
-          <el-input
-            v-model="dialogFormAdd.studentEnrollmentYear"
-            size="medium"
-            maxlength="4"
-            placeholder="请输入入学年"
-          ></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="学部">
-          <el-input
-            v-model="dialogFormAdd.schoolDivisions"
-            size="medium"
-            placeholder="请输入学部"
-          ></el-input>
-        </el-form-item> -->
         <el-form-item
           label="年级"
           prop="gradeNumber"
@@ -736,6 +711,7 @@
         >
           <el-input
             v-model="teacherAddForm.name"
+            maxlength="10"
             size="medium"
             placeholder="请输入姓名"
           ></el-input>
@@ -792,7 +768,10 @@
           :rules="[{required: true, message: '角色不能为空', trigger: ['blur', 'change']}]"
           prop="roleId"
         >
-          <el-radio-group v-model="roleAddForm.roleId">
+          <el-radio-group
+            @change="roleAddLoading=true"
+            v-model="roleAddForm.roleId"
+          >
             <template v-for="rl in roles">
               <el-radio
                 v-if="rl.id <= 7"
@@ -801,10 +780,12 @@
               >{{rl.roleName}}</el-radio>
             </template>
           </el-radio-group>
-          <i
-            class="el-icon-circle-plus"
+          <el-button
+            type="primary"
             @click="addRole()"
-          ></i>
+            size="mini"
+            style="position:absolute;display:inline;right:-20px;"
+          >添加</el-button>
         </el-form-item>
         <!--  -->
         <el-form-item
@@ -874,146 +855,12 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <!-- <el-form
-        :model="addTeacherForm"
-        :rules="addTeacherFormRules"
-        ref="addTeacherForm"
-        label-width="110px"
-      >
-        <el-form-item
-          label="姓名"
-          prop="name"
-        >
-          <el-input
-            v-model="addTeacherForm.name"
-            size="medium"
-            placeholder="请输入姓名"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="电话"
-          prop="teacherMobile"
-        >
-          <el-input
-            v-model="addTeacherForm.teacherMobile"
-            size="medium"
-            placeholder="请输入电话"
-            maxlength="11"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="邮箱"
-          prop="teacherEmail"
-          :rules="[{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]"
-        >
-          <el-input
-            v-model="addTeacherForm.teacherEmail"
-            size="medium"
-            placeholder="请输入邮箱"
-          ></el-input>
-        </el-form-item>
-        <template v-for="(role,index) in addTeacherForm.rjrs">
-          <el-form-item
-            :key="index+'role'"
-            label="角色"
-            :prop="'rjrs.' + index + '.roleId'"
-            :rules="[{required: true, message: '角色'+(index+1)+'不能为空', trigger: ['blur', 'change']}]"
-          >
-            <el-radio-group v-model="role.roleId">
-              <template v-for="rl in roles">
-                <el-radio
-                  v-if="rl.id <= 7"
-                  :key="rl.id"
-                  :label="rl.id"
-                >{{rl.roleName}}</el-radio>
-              </template>
-            </el-radio-group>
-            <i
-              class="el-icon-circle-plus"
-              @click="addRole()"
-            ></i>
-            <i
-              class="el-icon-remove"
-              v-if="index > 0"
-              @click="removeRole(index)"
-            ></i>
-          </el-form-item>
-          <el-form-item
-            v-if="role.roleId > 3"
-            :key="index+'grade'"
-            label-width="165px"
-            label="年级"
-            :prop="'rjrs.' + index + '.gradeName'"
-            :rules="[{required: true, message: '角色'+(index+1)+'的年级不能为空', trigger: ['blur', 'change']}]"
-          >
-            <el-select
-              v-model="role.gradeName"
-              value-key="id"
-              size="medium"
-              class="grade-select"
-              @change="getGradeClass(index)"
-            >
-              <el-option
-                v-for="grade in gradeList"
-                :key="grade.id"
-                :label="grade.gradeName"
-                :value="grade"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            v-if="role.roleId > 5"
-            :key="index+'roleClass'"
-            label-width="165px"
-            label="班级"
-            :prop="'rjrs.' + index + '.className'"
-            :rules="[{required: true, message: '角色'+(index+1)+'的班级不能为空', trigger: ['blur', 'change']}]"
-          >
-            <span
-              style="color:red;"
-              v-if="!role.gradeName"
-            >请先选择年级</span>
-            <el-checkbox-group
-              v-model="role.className"
-              class="role-class"
-              v-else
-            >
-              <el-checkbox
-                v-for="roleClass in teacherClassList[index]"
-                :key="roleClass.id"
-                :label="roleClass.className"
-              >{{roleClass.className}}</el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item
-            v-if="role.roleId === 7 || role.roleId === 5"
-            :key="index+'subject'"
-            label-width="165px"
-            label="学科"
-            :prop="'rjrs.' + index + '.subjectName'"
-            :rules="[{required: true, message: '角色'+(index+1)+'的学科不能为空', trigger: ['blur', 'change']}]"
-          >
-            <el-select
-              v-model="role.subjectName"
-              size="medium"
-              class="grade-select"
-            >
-              <el-option
-                v-for="sub in subjectList"
-                :key="sub.id"
-                :label="sub.examSubjectDesc"
-                :value="sub.examSubjectDesc"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </template>
-      </el-form> -->
       <span slot="footer">
         <el-button
           type="primary"
           size="medium"
           @click="submitAddTeacherForm"
-        >添加</el-button>
+        >确认</el-button>
         <el-button
           size="medium"
           @click="dialogVisibleTeacher = false"
@@ -1211,7 +1058,8 @@ export default {
       classGradeName: '',
       className: '',
       classList: [],
-      classListt: []
+      classListt: [],
+      roleAddLoading: false
     }
   },
   computed: {
@@ -1811,6 +1659,7 @@ export default {
     },
     // 显示添加老师弹窗
     addTeacher() {
+      // 清空教师角色
       this.dialogTitleTeacher = '添加老师'
       this.dialogVisibleTeacher = true
       this.dialogType = 'add'
@@ -1825,33 +1674,74 @@ export default {
             this.$message.error('请先给老师添加角色！')
             return false
           }
-          console.log(JSON.stringify(form.rjrs))
-          form.rjrs.forEach(item => {
-            delete item.createTime
-            delete item.modifyTime
-            item.userId = form.id
-            item.gradeName = item.gradeName ? item.gradeName.gradeName : ''
-            item.className = item.className.length > 0 ? item.className.join(',') : ''
-          })
-          if (this.dialogType === 'add') {
-            this.axios.post(API.TEACHER_ADDTEACHER, form).then(res => {
-              this.$message({
-                message: '新增教师信息成功',
-                type: 'success'
+          if (this.roleAddLoading) {
+            this.$confirm('选中的角色未添加，是否继续提交', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              console.log(JSON.stringify(form.rjrs))
+              form.rjrs.forEach(item => {
+                console.log({ t: Object.prototype.toString((item.className || '')) })
+                delete item.createTime
+                delete item.modifyTime
+                item.userId = form.id
+                item.gradeName = item.gradeName ? item.gradeName.gradeName : ''
+                item.className = item.className.length > 0 ? item.className.join(',') : ''
               })
-              this.dialogVisibleTeacher = false
-              this.getTeachersBy()
-            }).catch(() => { })
-          }
-          if (this.dialogType === 'edit') {
-            this.axios.post(API.TEACHER_UPDATETEACHER, form).then(res => {
-              this.$message({
-                message: '修改教师信息成功',
-                type: 'success'
-              })
-              this.dialogVisibleTeacher = false
-              this.getTeachersBy()
-            }).catch(() => { })
+              if (this.dialogType === 'add') {
+                this.axios.post(API.TEACHER_ADDTEACHER, form).then(res => {
+                  this.$message({
+                    message: '新增教师信息成功',
+                    type: 'success'
+                  })
+                  this.dialogVisibleTeacher = false
+                  this.getTeachersBy()
+                }).catch(() => { })
+              }
+              if (this.dialogType === 'edit') {
+                this.axios.post(API.TEACHER_UPDATETEACHER, form).then(res => {
+                  this.$message({
+                    message: '修改教师信息成功',
+                    type: 'success'
+                  })
+                  this.dialogVisibleTeacher = false
+                  this.getTeachersBy()
+                }).catch(() => { })
+              }
+            }).catch(() => {
+              return
+            });
+          } else {
+            console.log(JSON.stringify(form.rjrs))
+            form.rjrs.forEach(item => {
+              const isArr = Object.prototype.toString.apply((item.className || '')) === "[object Array]"
+              delete item.createTime
+              delete item.modifyTime
+              item.userId = form.id
+              item.gradeName = item.gradeName ? item.gradeName : ''
+              item.className = (isArr && item.className.length > 0) ? item.className.join(',') : ''
+            })
+            if (this.dialogType === 'add') {
+              this.axios.post(API.TEACHER_ADDTEACHER, form).then(res => {
+                this.$message({
+                  message: '新增教师信息成功',
+                  type: 'success'
+                })
+                this.dialogVisibleTeacher = false
+                this.getTeachersBy()
+              }).catch(() => { })
+            }
+            if (this.dialogType === 'edit') {
+              this.axios.post(API.TEACHER_UPDATETEACHER, form).then(res => {
+                this.$message({
+                  message: '修改教师信息成功',
+                  type: 'success'
+                })
+                this.dialogVisibleTeacher = false
+                this.getTeachersBy()
+              }).catch(() => { })
+            }
           }
         } else {
           return false
@@ -1862,6 +1752,7 @@ export default {
     addRole() {
       this.$refs['roleAddForm'].validate((valid) => {
         if (!valid) return
+        this.roleAddLoading = false
         // fromEntries & entries are used to clone obj
         this.teacherAddForm.rjrs = [...this.teacherAddForm.rjrs, Object.fromEntries(Object.entries(this.roleAddForm))]
         this.$refs['roleAddForm'].resetFields()
@@ -1881,8 +1772,8 @@ export default {
       console.log(this.filterGradeTeacher, this.filterClassTeacher, this.searchInputTeacher)
       const param = {
         schoolCode: this.schoolNumber,
-        gradeName: this.filterGradeTeacher.gradeName || '',
-        className: this.filterClassTeacher.className || '',
+        gradeName: this.filterGradeTeacher.gradeName || null,
+        className: this.filterClassTeacher.className || null,
         teacherName: this.searchInputTeacher,
         pageIndex: this.currentPageTeacher,
         pageSize: this.pageSizeTeacher,
@@ -1960,6 +1851,11 @@ export default {
     // 显示添加年级组弹窗
     addGradeGroup() {
       this.dialogType = 'add'
+      this.addGradeGroupForm = {
+        schoolCode: '',
+        gradeGroupName: '',
+        grades: ['']
+      }
       this.dialogGradeGroupVisible = true
     },
     // 添加年级
@@ -2012,7 +1908,14 @@ export default {
     },
     // 下载模版
     downloadMobanStudent() {
-      this.axios.post(API.ADMIN_STUDENTDOWNLOAD, {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
+      this.axios.get(API.ADMIN_STUDENTDOWNLOAD, {
+        headers: {
+          'content-type': 'application/vnd.ms-excel;charset=utf-8',
+          'accept-Encoding': 'deflate',
+        }, responseType: 'arraybuffer'
+      }).then(res => {
+        // this.axios.post('studentTemplate.xls', {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
+        console.log({ res: res.data })
         const url = window.URL.createObjectURL(new Blob([res.data]))
         const link = document.createElement('a')
         link.style.display = 'none'
@@ -2023,7 +1926,12 @@ export default {
       })
     },
     downloadMobanTeacher() {
-      this.axios.post(API.ADMIN_TEACHERDOWNLOAD, {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
+      this.axios.get(API.ADMIN_TEACHERDOWNLOAD, {
+        headers: {
+          'content-type': 'application/vnd.ms-excel;charset=utf-8',
+          'accept-Encoding': 'deflate',
+        }, responseType: 'arraybuffer'
+      }).then(res => {
         const url = window.URL.createObjectURL(new Blob([res.data]))
         const link = document.createElement('a')
         link.style.display = 'none'
