@@ -266,7 +266,6 @@
                   @click="cancelEdit(scope.row,'cancel',0)"
                 >取消</el-button>
               </template>
-
               <el-button
                 type="text"
                 @click="deleteRow(scope.row,0)"
@@ -1379,71 +1378,20 @@ export default {
     },
     // 删除行
     async deleteRow(row, type = 0) {
-      let bigNo = row.tnumber.split('.')[0]
-      await this.$confirm('确定删除' + bigNo + '大题吗？', '提示', {
+      await this.$confirm('确定删除次块题吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        if (type === 0) {
-          this.axios.post(API.EXAMSTRUCTURE_DELETEBYPRIMARYKEY + '/' + row.structureId).then(res => {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.questionList = []
-            this.getExamById()
-          }).catch(() => { })
-        }
-        if (type === 1) {
-          this.zgBigQuestionNo = { id: this.getNumberByTnumber(row.tnumber.split('.')[0]), bigNo: row.tnumber.split('.')[0] }
-          let rows = this.zgTableData.filter(item => {
-            return item.ssid === row.ssid
+        this.axios.post(API.DEL_SUB + '/' + row.section.sectionTopId).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
           })
-          this.axios.post(API.EXAMSTRUCTURE_BATCHDELETE + '/' + rows[0].structureId, rows).then(res => {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.questionList = []
-            this.getExamStructureZg()
-            this.getSumScore()
-          }).catch(() => { })
-        }
-      }).catch(() => { })
-    },
-    async deleteRow2(row, type = 0) {
-      let bigNo = row.tnumber.split('.')[0]
-      await this.$confirm('确定删除' + bigNo + '大题吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        if (type === 0) {
-          this.axios.post(API.EXAMSTRUCTURE_DELETEBYPRIMARYKEY + '/' + row.structureId).then(res => {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.questionList = []
-            this.getExamById()
-          }).catch(() => { })
-        }
-        if (type === 1) {
-          this.zgBigQuestionNo = { id: this.getNumberByTnumber(row.tnumber.split('.')[0]), bigNo: row.tnumber.split('.')[0] }
-          let rows = this.zgTableData.filter(item => {
-            return item.ssid === row.ssid
-          })
-          this.axios.post(API.EXAMSTRUCTURE_BATCHDELETE + '/' + rows[0].structureId, rows).then(res => {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.questionList = []
-            this.getExamStructureZg()
-            this.getSumScore()
-          }).catch(() => { })
-        }
+          this.questionList = []
+          this.getExamById()
+        }).catch(() => { })
+
       }).catch(() => { })
     },
     /* ----------------新增客观题开始---------------- */

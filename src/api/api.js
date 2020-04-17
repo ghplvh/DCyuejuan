@@ -155,6 +155,8 @@ const API = {
   EXAMSTRUCTURE_UPDATEBATCHOBJ: 'web/examStructure/updateBatchObj',
   // 修改主观题
   EXAMSTRUCTURE_UPDATEBATCHZHU: 'web/examStructure/updateBatchZhu',
+  // 删除
+  DEL_SUB:'web/examStructure/deleteSubByPrimaryKey',
   // 设置步长分
   EXAMSTRUCTURE_UPDATEBYSTEPSIZE: 'web/examStructure/updateByStepSize',
   // 删除主观题
