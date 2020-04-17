@@ -586,54 +586,29 @@
           label="姓名"
           prop="studentName"
         >
-          <el-input
-            v-model="dialogFormAdd.studentName"
-            size="medium"
-            placeholder="请输入姓名"
-          ></el-input>
+          <div class="el-input el-input--medium el-input--suffix">
+            <input
+              v-model="dialogFormAdd.studentName"
+              maxlength="10"
+              class="el-input__inner"
+              placeholder="请输入考号"
+            />
+          </div>
         </el-form-item>
         <el-form-item
           label="学号"
           prop="studentId"
         >
-          <el-input
-            v-model="dialogFormAdd.studentId"
-            size="medium"
-            placeholder="请输入学号"
-          ></el-input>
+          <div class="el-input el-input--medium el-input--suffix">
+            <input
+              v-model="dialogFormAdd.studentId"
+              maxlength="10"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              class="el-input__inner"
+              placeholder="请输入考号"
+            />
+          </div>
         </el-form-item>
-        <!-- <el-form-item label="学籍号">
-          <el-input
-            v-model="dialogFormAdd.studentRegisterId"
-            size="medium"
-            placeholder="请输入学籍号"
-          ></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="考号">
-          <el-input
-            v-model="dialogFormAdd.studentExamId"
-            size="medium"
-            placeholder="请输入考号"
-          ></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item
-          label="入学年"
-          prop="studentEnrollmentYear"
-        >
-          <el-input
-            v-model="dialogFormAdd.studentEnrollmentYear"
-            size="medium"
-            maxlength="4"
-            placeholder="请输入入学年"
-          ></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="学部">
-          <el-input
-            v-model="dialogFormAdd.schoolDivisions"
-            size="medium"
-            placeholder="请输入学部"
-          ></el-input>
-        </el-form-item> -->
         <el-form-item
           label="年级"
           prop="gradeNumber"
@@ -1876,6 +1851,11 @@ export default {
     // 显示添加年级组弹窗
     addGradeGroup() {
       this.dialogType = 'add'
+      this.addGradeGroupForm = {
+        schoolCode: '',
+        gradeGroupName: '',
+        grades: ['']
+      }
       this.dialogGradeGroupVisible = true
     },
     // 添加年级
@@ -1928,7 +1908,14 @@ export default {
     },
     // 下载模版
     downloadMobanStudent() {
-      this.axios.post(API.ADMIN_STUDENTDOWNLOAD, {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
+      this.axios.get(API.ADMIN_STUDENTDOWNLOAD, {
+        headers: {
+          'content-type': 'application/vnd.ms-excel;charset=utf-8',
+          'accept-Encoding': 'deflate',
+        }, responseType: 'arraybuffer'
+      }).then(res => {
+        // this.axios.post('studentTemplate.xls', {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
+        console.log({ res: res.data })
         const url = window.URL.createObjectURL(new Blob([res.data]))
         const link = document.createElement('a')
         link.style.display = 'none'
@@ -1939,7 +1926,12 @@ export default {
       })
     },
     downloadMobanTeacher() {
-      this.axios.post(API.ADMIN_TEACHERDOWNLOAD, {}, { responseType: 'arraybuffer' }, { headers: { 'content-type': 'application/vnd.ms-excel;charset=utf-8' } }).then(res => {
+      this.axios.get(API.ADMIN_TEACHERDOWNLOAD, {
+        headers: {
+          'content-type': 'application/vnd.ms-excel;charset=utf-8',
+          'accept-Encoding': 'deflate',
+        }, responseType: 'arraybuffer'
+      }).then(res => {
         const url = window.URL.createObjectURL(new Blob([res.data]))
         const link = document.createElement('a')
         link.style.display = 'none'

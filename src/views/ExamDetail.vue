@@ -504,11 +504,13 @@
             label="考号:"
             prop="studentExamId"
           >
-            <el-input
+            <input
               v-model="examInfoForm.studentExamId"
               maxlength="10"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              class="el-input__inner"
               placeholder="请输入考号"
-            ></el-input>
+            />
           </el-form-item>
           <!-- <el-form-item
             label="考场:"

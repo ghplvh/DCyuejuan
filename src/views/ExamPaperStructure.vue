@@ -1133,9 +1133,9 @@ export default {
       // 格式化试卷结构数据
       const formatExamStructure = (list) => {
         // 最顶层
-        const topList = list.filter(i => i.id === i.structureId).map(i => ({ ...i, level: 0 }))
+        const topList = (list || []).filter(i => i.id === i.structureId).map(i => ({ ...i, level: 0 }))
         // 非最顶层
-        const normalList = list.filter(i => i.id !== i.structureId)
+        const normalList = (list || []).filter(i => i.id !== i.structureId)
         // 递归查询子代方法，且拍成二维数组，添加level字段表示真实层级
         const findChilds = (parentsList, resource) => parentsList
           .map(now => [
@@ -1477,20 +1477,6 @@ export default {
       this.dialogType = 'add'
       this.addKgVisible = true
     },
-
-    bigNoChange(val) {
-      let qu = this.questionList.find(question => {
-        return val.bigNo === question.tnumber
-      })
-      if (qu) {
-        this.$message({
-          message: '大题号不能重复',
-          type: 'error'
-        })
-        this.kgBigQuestionNo = this.currentBigNo
-        this.zgBigQuestionNo = this.currentBigNo
-      }
-    },
     // 大题新增小题
     addQuestion() {
       this.kgQuestionList.push({
@@ -1529,10 +1515,12 @@ export default {
           optionCount: question.optionCount ? question.optionCount : 4
         })
       }
+      console.log({ kg: question.miniQuestionList })
     },
     // 校验题号
     verifyQuestionNo(questionList, index) {
       let miniQ = questionList[index]
+      console.log({ miniQ })
       if (isNaN(miniQ.startNo) || isNaN(miniQ.endNo)) {
         this.$message({
           message: '题号格式填写错误',
@@ -1764,7 +1752,7 @@ export default {
       if (!question.startNo || !question.endNo) {
         return
       }
-      for (let i = question.startNo; i <= question.endNo; i++) {
+      for (let i = parseInt(question.startNo); i <= parseInt(question.endNo); i++) {
         question.miniQuestionList.push({ tnumber: this.zgBigQuestionNo.bigNo + '.' + i, score: question.score, miniQuestionList: [] })
       }
       this.zgQuestionList.forEach(item => {

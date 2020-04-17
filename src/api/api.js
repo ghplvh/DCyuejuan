@@ -270,9 +270,11 @@ const API = {
   // 手动添加选择题答案
   ADMIN_TOP: 'web/examStructure/insertTopicGetscore',
   // 导出学生模板
-  ADMIN_STUDENTDOWNLOAD: 'web/student/downloadTemplate',
+  // ADMIN_STUDENTDOWNLOAD: 'web/student/downloadTemplate',
+  ADMIN_STUDENTDOWNLOAD: 'studentTemplate.xls',
   // 导出教师模板
-  ADMIN_TEACHERDOWNLOAD: 'web/teacher/downloadTemplate',
+  // ADMIN_TEACHERDOWNLOAD: 'web/teacher/downloadTemplate',
+  ADMIN_TEACHERDOWNLOAD: 'teacherTemplate.xls',
   // 传json数据给后台
   ADMIN_POSTJSON: 'web/importWrongQuestions/saveObjectByFile',
   // 添加班级
