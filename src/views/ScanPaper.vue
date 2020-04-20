@@ -182,13 +182,11 @@
                             <div>切图完成后分配阅卷任务</div>
                           </el-row>
                           <el-row class="desc-row-1">
-                            <router-link :to="{path:'/jobDistribute/'+examId+'/'+examSubjectId}">
-                              <el-button
-                                type="primary"
-                                size="small"
-                              >分配阅卷</el-button>
-                            </router-link>
-
+                            <el-button
+                              type="primary"
+                              size="small"
+                              @click="jobDistribute(examId, examSubjectId)"
+                            >分配阅卷</el-button>
                           </el-row>
                         </div>
                       </el-step>
@@ -202,6 +200,7 @@
                 >
                   <div slot="header">
                     <span>扫描结果：总人数{{maxIndex + exceptionMaxIndex}}：正常<span style="color: #67C23A;">{{maxIndex}}</span>,异常<span style="color: #F56C6C;">{{exceptionMaxIndex}}</span></span>
+                    <span style="float: right;" v-if="scanImgStatus"><span style="font-size:12px; color:#8d8d8d">正在处理&nbsp;</span><i class="el-icon-loading"></i></span>
                   </div>
                   <div
                     v-if="batchList.length === 0"
@@ -318,6 +317,7 @@ export default {
       clientStatus: true,
       scanStatus: false,
       total: null,
+      scanImgStatus: false,
       prevImg: [] // 预览图
     }
   },
@@ -332,24 +332,48 @@ export default {
     this.getImg()
   },
   methods: {
-    slicing() {
-      if (this.examSubjectInfo.examStuNum > this.total) {
-        this.$confirm('该次科目考试试卷没有全部扫描完成, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.axios.post(API.ADMIN_SLICING, {
-            examId: this.examId,
-            examSubjectId: this.examSubjectId
-          }).then(res => {
+    // jobDistribute
+    jobDistribute(examId, examSubjectId) {
+      this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
+        console.log(res)
+        if (Number(res.data.data[0].subjectStage) !== 6 && Number(res.data.data[0].subjectStage) !== 7) {
             this.$message({
-              message: '切图成功。',
-              type: 'success'
+              message: '切图还未完成, 暂不能分配阅卷',
+              type: 'warning'
             })
-          })
-        }).catch(() => {})
-      }
+        } else {
+          this.$router.push(`/jobDistribute/${examId}/${examSubjectId}`)
+        }
+      })
+    },
+    slicing() {
+      this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
+        console.log(res)
+        if (Number(res.data.data[0].subjectStage) === 10) {
+            this.$message({
+              message: '正在切图中, 请稍候。',
+              type: 'warning'
+            })
+        } else {
+          if (this.examSubjectInfo.examStuNum > this.total) {
+            this.$confirm('该次科目考试试卷没有全部扫描完成, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.axios.post(API.ADMIN_SLICING, {
+                examId: this.examId,
+                examSubjectId: this.examSubjectId
+              }).then(res => {
+                this.$message({
+                  message: '正在切图中, 请稍候。',
+                  type: 'success'
+                })
+              })
+            }).catch(() => {})
+          }
+        }
+      })
     },
     scanLoad() {
       // 先判断客户端是否启动
@@ -373,6 +397,7 @@ export default {
         maxIndex,
         exceptionMaxIndex
       }
+      this.scanImgStatus = true
       this.axios.post(API.GETEXCEPTIONLIST, data).then(res => {
         const response = res.data.data
         this.total = response.total
@@ -384,18 +409,23 @@ export default {
           response.dseList = []
         }
         this.dtList = this.dtList.concat(response.dtList)
+        console.log(response.dseList)
         this.dseList = this.dseList.concat(response.dseList)
         this.maxIndex = this.maxIndex + response.dtList.length
-        this.exceptionMaxIndex = this.exceptionMaxIndex + this.dseList.length
+        this.exceptionMaxIndex = this.exceptionMaxIndex + response.dseList.length
         console.log(this.maxIndex, '正常----------异常', this.exceptionMaxIndex)
-        let batchList = response.dseList.concat(response.dtList)
-        batchList?.forEach(element => {
+        let batchList = (response.dseList.concat(response.dtList) || []).map(element => {
           element.answerSheetImg = element.answerSheetImg.split(',')
-        });
+          return element
+        })
+        // batchList?.forEach(element => {
+        //   element.answerSheetImg = element.answerSheetImg.split(',')
+        // });
         this.batchList = this.batchList.concat(batchList)
         console.log(this.batchList.length, '================', this.total)
         if (this.batchList.length === this.total) {
           console.log('nononono')
+          this.scanImgStatus = false
           clearInterval(window.InitSetInterval)
         }
         setTimeout(() => {
@@ -468,6 +498,7 @@ export default {
       // this.globalLoading = true
       await this.scanLoad()
       // 判断客户端是否正常
+      console.log(this.clientStatus, this.scanStatus)
       if (!this.clientStatus) {
         this.$message({
           message: '请先打开客户端！',
@@ -780,6 +811,7 @@ export default {
   }
   .el-tag{
     margin: 0 5px 5px;
+    min-width: 150px;
   }
   .preview-dialog {
     .img-box {

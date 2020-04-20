@@ -85,7 +85,7 @@
                 </el-table-column> -->
                 <el-table-column label="阅卷总进度" align="center">
                   <template slot-scope="scope">
-                    <a class="click-jump" v-if="scope.row.examinerVitesse">{{scope.row.examinerVitesse}%</a>
+                    <a class="click-jump" v-if="scope.row.examinerVitesse">{{scope.row.examinerVitesse}}%</a>
                     <a class="click-jump" v-else>-</a>
                   </template>
                 </el-table-column>

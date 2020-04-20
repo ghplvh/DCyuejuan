@@ -1835,7 +1835,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.axios.post(API.TEACHER_DELTEACHER, { id: row.id, schoolCode: this.schoolCode }).then(res => {
+        this.axios.post(API.TEACHER_DELTEACHER, { id: row.id, schoolCode: this.schoolNumber }).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success'
