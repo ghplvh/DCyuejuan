@@ -138,10 +138,6 @@
                         v-if="activeStep > 4"
                         class="btn fade-btn"
                       >
-                        <!-- <div
-                        v-if="false"
-                        class="btn fade-btn"
-                      > -->
                         设置试卷结构</div>
                       <router-link
                         v-else

@@ -335,7 +335,6 @@ export default {
     // jobDistribute
     jobDistribute(examId, examSubjectId) {
       this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
-        console.log(res)
         if (Number(res.data.data[0].subjectStage) !== 6 && Number(res.data.data[0].subjectStage) !== 7) {
             this.$message({
               message: '切图还未完成, 暂不能分配阅卷',
@@ -348,14 +347,18 @@ export default {
     },
     slicing() {
       this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
-        console.log(res)
         if (Number(res.data.data[0].subjectStage) === 10) {
             this.$message({
               message: '正在切图中, 请稍候。',
               type: 'warning'
             })
+        } else if (Number(res.data.data[0].subjectStage === 6 )) {
+            this.$message({
+              message: '切图已完成，请继续操作。',
+              type: 'success'
+            })
         } else {
-          if (this.examSubjectInfo.examStuNum > this.total) {
+          if (this.examSubjectInfo.examStuNum > Number(this.maxIndex + this.exceptionMaxIndex)) {
             this.$confirm('该次科目考试试卷没有全部扫描完成, 是否继续?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
@@ -382,26 +385,22 @@ export default {
         method: 'post',
         data: { 'querystatus': '' }
       }).then(res => {
-        console.log(res.data.scanner)
         this.scanStatus = res.data.scanner
       }).catch(error => {
-        console.log(error)
         this.clientStatus = false
       })
     },
     // 获取试卷图片
     getImg(maxIndex = 0, exceptionMaxIndex = 0) {
-      console.log(maxIndex, exceptionMaxIndex)
+      this.scanImgStatus = true
       const data = {
         examSubjectId: this.$route.params.examSubjectId,
         maxIndex,
         exceptionMaxIndex
       }
-      this.scanImgStatus = true
       this.axios.post(API.GETEXCEPTIONLIST, data).then(res => {
         const response = res.data.data
         this.total = response.total
-        console.log(this.total)
         if (!response.dtList) {
           response.dtList = []
         }
@@ -409,26 +408,20 @@ export default {
           response.dseList = []
         }
         this.dtList = this.dtList.concat(response.dtList)
-        console.log(response.dseList)
         this.dseList = this.dseList.concat(response.dseList)
         this.maxIndex = this.maxIndex + response.dtList.length
         this.exceptionMaxIndex = this.exceptionMaxIndex + response.dseList.length
-        console.log(this.maxIndex, '正常----------异常', this.exceptionMaxIndex)
         let batchList = (response.dseList.concat(response.dtList) || []).map(element => {
           element.answerSheetImg = element.answerSheetImg.split(',')
           return element
         })
-        // batchList?.forEach(element => {
-        //   element.answerSheetImg = element.answerSheetImg.split(',')
-        // });
         this.batchList = this.batchList.concat(batchList)
-        console.log(this.batchList.length, '================', this.total)
-        if (this.batchList.length === this.total) {
-          console.log('nononono')
+        if (this.total === 0) {
           this.scanImgStatus = false
           clearInterval(window.InitSetInterval)
         }
         setTimeout(() => {
+          this.scanImgStatus = false
           this.globalLoading = false
         }, 2000)
       })
@@ -436,7 +429,6 @@ export default {
     // 删除图片
     async deleteImg(id) {
       await this.axios.post(API.DELETEIMG + '?id=' + id).then(res => {
-        console.log(res)
         if (res.data.code === 0) {
           this.dseList.splice(this.dseList.findIndex(item => item.id === id), 1)
           this.batchList.splice(this.batchList.findIndex(item => item.id === id), 1)
@@ -447,7 +439,6 @@ export default {
     previewImage(img) {
       this.prevImg = img
       this.previewVisible = true
-      console.log(1)
     },
     // 获取考试信息
     async getExamById() {
@@ -498,7 +489,6 @@ export default {
       // this.globalLoading = true
       await this.scanLoad()
       // 判断客户端是否正常
-      console.log(this.clientStatus, this.scanStatus)
       if (!this.clientStatus) {
         this.$message({
           message: '请先打开客户端！',
@@ -518,8 +508,8 @@ export default {
         examId,
         examSubjectId
       }
+      this.axios.post(API.UPDATE_TOTAL, {examSubjectId: examSubjectId})
       await this.axios.post(API.EXAMTEMPLATE_FINDBYANSWER, params).then(res => {
-        console.log(res)
         if (res.data.data.length > 0) {
           let data = {
             'cnlocation': JSON.parse(res.data.data[0].cnlocation),
@@ -534,7 +524,6 @@ export default {
             data: data
           }).then(res => {
             window.InitSetInterval = setInterval(() => {
-              console.log(this.maxIndex, '-0--', this.exceptionMaxIndex)
               this.getImg(this.maxIndex, this.exceptionMaxIndex)
             }, 5000);
           })
@@ -599,9 +588,16 @@ export default {
     .el-tabs__header {
       background-color: #ffffff;
       padding-left: 30px;
+      .el-tabs__active-bar {
+        margin-left: 20px;
+      }
+      #tab-1 {
+        margin-left: 20px;
+      }
       .el-tabs__item {
         height: 50px;
         line-height: 50px;
+        // margin-left: 20px;
       }
       .el-tabs__nav-wrap {
         &::after {

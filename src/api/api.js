@@ -294,7 +294,9 @@ const API = {
   // 删除答题卡图片
   DELETEIMG: 'web/importWrongQuestions/delExceptionById',
   // 根据科目id和类型id查询试卷结构
-  GET_EXMA_STRUCTURELIST: 'web/examStructure/getExamStructureList'
+  GET_EXMA_STRUCTURELIST: 'web/examStructure/getExamStructureList',
+  // 更新扫描答题卡total
+  UPDATE_TOTAL: 'web/importWrongQuestions/updateSubjectTotal'
 }
 Object.keys(API).map(key => {
   API[key] = IP.EXAM_IP + API[key]
