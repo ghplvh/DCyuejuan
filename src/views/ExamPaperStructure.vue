@@ -1331,7 +1331,7 @@ export default {
       // Fuck 123ABC sb前任写成123
       const toABC = str => {
         const ABC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-        return (str || '').split('').map(i => ABC[parseInt(i - 1)]).join('')
+        return ((str + '') || '').split('').map(i => ABC[parseInt(i - 1)]).join('')
       }
       let source = [this.kgTableData, this.zgTableData][actionType]
       const id = row.section.sectionTopId
