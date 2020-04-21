@@ -1120,6 +1120,7 @@ export default {
     },
     // 导入失败
     uploadError(err, file, fileList) {
+      this.loading = false
       this.$message({
         message: err,
         type: 'error'

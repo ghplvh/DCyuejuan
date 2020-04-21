@@ -1129,6 +1129,11 @@ export default {
     },
     // 查询试卷结构(科目id/题型类型(0客观题，1主观题)
     async getExamStructure(questionType) {
+      // Fuck 123ABC sb前任写成123
+      const to123 = str => {
+        const ABC = { 'A': 1, 'B': 2, 'C': 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8 }
+        return (str || '').split('').map(i => ABC[i]).join('')
+      }
       // 格式化试卷结构数据
       const formatExamStructure = (list) => {
         // 最顶层
@@ -1173,6 +1178,7 @@ export default {
           )
         return R.flatten(result)
           // 多选题答案 字符串=>数组
+          .map(i => ({ ...i, answer: to123(i.answer) }))
           .map(i => {
             if (i.topicType === '2') {
               return { ...i, answer: (i.answer || '').split('') }
@@ -1322,6 +1328,11 @@ export default {
     },
     // 确认修改
     async confirmEdit(row, actionType) {
+      // Fuck 123ABC sb前任写成123
+      const toABC = str => {
+        const ABC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+        return (str || '').split('').map(i => ABC[parseInt(i - 1)]).join('')
+      }
       let source = [this.kgTableData, this.zgTableData][actionType]
       const id = row.section.sectionTopId
       const list = source.filter(i => i.section.sectionTopId === id)
@@ -1335,7 +1346,7 @@ export default {
           }
           return i
         })
-
+        .map(i => ({ ...i, answer: toABC(i.answer) }))
       await this.axios.post(API.EXAMSTRUCTURE_UPDATEBATCHOBJ, list).then(res => {
         this.$message({
           message: '修改客观题成功',
