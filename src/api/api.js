@@ -296,7 +296,9 @@ const API = {
   // 根据科目id和类型id查询试卷结构
   GET_EXMA_STRUCTURELIST: 'web/examStructure/getExamStructureList',
   // 更新扫描答题卡total
-  UPDATE_TOTAL: 'web/importWrongQuestions/updateSubjectTotal'
+  UPDATE_TOTAL: 'web/importWrongQuestions/updateSubjectTotal',
+  // 获取科目信息
+  GET_SUBJECT: 'web/examSubject/getExamSubjectById'
 }
 Object.keys(API).map(key => {
   API[key] = IP.EXAM_IP + API[key]

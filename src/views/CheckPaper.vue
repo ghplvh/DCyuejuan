@@ -64,7 +64,7 @@
         <el-row class="stepper">
           <el-col :span="6" class="laber" :offset="1">打分：</el-col>
           <el-col :span="6">
-            <el-input v-model="finalScore" placeholder="0" size="mini"></el-input>
+            <el-input v-model="finalScore" placeholder="0" size="mini" type="number" min="0" :max="score" @focus="()=>finalScore = ''" @input="scoreInput"></el-input>
           </el-col>
           <el-col :span="3" :offset="1">
             <el-button icon="el-icon-check" size="mini" @click="sure"></el-button>
@@ -166,6 +166,12 @@ export default {
     })
   },
   methods: {
+    scoreInput(value) {
+      console.log(value)
+      if (value > this.score) {
+        this.finalScore = this.score
+      }
+    },
     // 获取待阅试卷信息
     getExaminePaper () {
       this.loading = true
@@ -178,6 +184,7 @@ export default {
       this.axios.post(API2.APPEXAMEXAMINE_GETNOEXAMINENUMBYBLOCKID, data).then(res => {
         let data = res.data.data
         this.score = data[0].score
+        console.log(this.score, '....')
         this.getQuick(1)
         this.paperList = data.map(item => {
           item.images = item.examAnswersheet.split(',')

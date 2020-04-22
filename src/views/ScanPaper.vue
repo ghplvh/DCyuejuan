@@ -334,29 +334,47 @@ export default {
   methods: {
     // jobDistribute
     jobDistribute(examId, examSubjectId) {
-      this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
-        if (Number(res.data.data[0].subjectStage) !== 6 && Number(res.data.data[0].subjectStage) !== 7) {
+      this.axios.get(`${API.GET_SUBJECT}?id=${this.examSubjectId}`).then(res => {
+        console.log(res)
+        if (Number(res.data.data.subjectStage) === 10 || Number(res.data.data.subjectStage) < 6 ) {
             this.$message({
               message: '切图还未完成, 暂不能分配阅卷',
               type: 'warning'
             })
-        } else {
+        } else if (Number(res.data.data.subjectStage) === 8 || Number(res.data.data.subjectStage) === 9) {
+            this.$message({
+              message: '该考试科目已发布成绩,不可再修改阅卷任务！',
+              type: 'warning'
+            })
+            this.active = 3
+        }else {
+          this.active = 3
           this.$router.push(`/jobDistribute/${examId}/${examSubjectId}`)
         }
       })
     },
     slicing() {
-      this.axios.post(API.EXAM_EXAMSUBJECT, { examId: this.examId }).then(res => {
-        if (Number(res.data.data[0].subjectStage) === 10) {
-            this.$message({
-              message: '正在切图中, 请稍候。',
-              type: 'warning'
-            })
-        } else if (Number(res.data.data[0].subjectStage === 6 )) {
-            this.$message({
-              message: '切图已完成，请继续操作。',
-              type: 'success'
-            })
+      this.axios.get(`${API.GET_SUBJECT}?id=${this.examSubjectId}`).then(res => {
+        const subjectStage = Number(res.data.data.subjectStage)
+        // 
+        if (subjectStage === 10 ) {
+          this.$message({
+            message: '正在切图中, 请稍候。',
+            type: 'warning'
+          })
+          this.active = 2
+        } else if (subjectStage === 6 || subjectStage > 5) {
+          this.active = 2
+          this.$message({
+            message: '切图已完成，请继续操作。',
+            type: 'success'
+          })
+        } else if (subjectStage < 5) {
+          this.active = 1
+          this.$message({
+            message: '请先扫描答题卡。',
+            type: 'success'
+          })
         } else {
           if (this.examSubjectInfo.examStuNum > Number(this.maxIndex + this.exceptionMaxIndex)) {
             this.$confirm('该次科目考试试卷没有全部扫描完成, 是否继续?', '提示', {
@@ -372,8 +390,20 @@ export default {
                   message: '正在切图中, 请稍候。',
                   type: 'success'
                 })
+                this.active = 2
               })
             }).catch(() => {})
+          } else {
+            this.axios.post(API.ADMIN_SLICING, {
+              examId: this.examId,
+              examSubjectId: this.examSubjectId
+            }).then(res => {
+              this.$message({
+                message: '正在切图中, 请稍候。',
+                type: 'success'
+              })
+              this.active = 2
+            })
           }
         }
       })
@@ -467,6 +497,11 @@ export default {
             return item
           }
         })[0]
+        if (this.examSubjectInfo.subjectStage === 10) {
+          this.active = 2
+        } else if (this.examSubjectInfo.subjectStage > 6) {
+          this.active = 3
+        }
       }).catch(() => { this.loading = false })
     },
     // 获取考试的年级
@@ -487,6 +522,7 @@ export default {
     },
     async scanBegin() {
       // this.globalLoading = true
+      // 判断当前考试的状态
       await this.scanLoad()
       // 判断客户端是否正常
       if (!this.clientStatus) {

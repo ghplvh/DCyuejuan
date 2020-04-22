@@ -162,6 +162,16 @@
       </el-row>
       <el-row class="class-row">
         <el-col :span="3" class="titlespan">
+          <span>发布中科目：</span>
+        </el-col>
+        <el-col :span="21">
+          <el-checkbox-group>
+            <el-checkbox v-for="clazz in publiseArray" :label="clazz.subjectName" :key="clazz.examSubjectId" disabled checked>{{clazz.subjectName}}</el-checkbox>
+          </el-checkbox-group>
+        </el-col>
+      </el-row>
+      <el-row class="class-row">
+        <el-col :span="3" class="titlespan">
           <span>已发布科目：</span>
         </el-col>
         <el-col :span="21">
@@ -499,20 +509,24 @@ export default {
     },
     // 点击发布成绩
     publish () {
-      this.gradeVisible = true
       this.axios.post(`${API.ADMIN_GETPUBLISHSUBJECTLIST}${this.examId}`).then(res => {
         this.subjectList = res.data.data
         let trueArray = []
+        let publiseArray = []
         let falseArray = []
         for (let i = 0; i < this.subjectList.length; i++) {
           if (this.subjectList[i].publish) {
             trueArray.push(this.subjectList[i])
-          } else {
+          } else if(this.subjectList[i].subjectStage === 8 ){
             falseArray.push(this.subjectList[i])
+          } else if(this.subjectList[i].subjectStage === 9 ) {
+            publiseArray.push(this.subjectList[i])
           }
         }
         this.trueArray = trueArray
+        this.publiseArray = publiseArray
         this.falseArray = falseArray
+        this.gradeVisible = true
       })
     },
     checkedClassChange (value) {
