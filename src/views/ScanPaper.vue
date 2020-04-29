@@ -446,7 +446,7 @@ export default {
           return element
         })
         this.batchList = this.batchList.concat(batchList)
-        if (this.total === 0) {
+        if (Number(response.total === 0)) {
           this.scanImgStatus = false
           clearInterval(window.InitSetInterval)
         }

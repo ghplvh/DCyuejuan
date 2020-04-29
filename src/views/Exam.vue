@@ -184,7 +184,7 @@
         <font color="red">注: 选择班级导入时，将会替换原考生表中的信息。</font>
       </el-row> -->
       <div slot="footer">
-        <el-button type="primary" @click="publishExam()">确定</el-button>
+        <el-button type="primary" @click="publishExam()" :loading="publishExamData">确定</el-button>
         <el-button @click="gradeVisible = false">取消</el-button>
       </div>
     </el-dialog>
@@ -248,7 +248,8 @@ export default {
       subjectList: [],
       trueArray: [],
       falseArray: [],
-      checkedClass: []
+      checkedClass: [],
+      publishExamData: false
     }
   },
   computed: {
@@ -517,7 +518,7 @@ export default {
         for (let i = 0; i < this.subjectList.length; i++) {
           if (this.subjectList[i].publish) {
             trueArray.push(this.subjectList[i])
-          } else if(this.subjectList[i].subjectStage === 8 ){
+          } else if(this.subjectList[i].subjectStage === 7 ){
             falseArray.push(this.subjectList[i])
           } else if(this.subjectList[i].subjectStage === 9 ) {
             publiseArray.push(this.subjectList[i])
@@ -532,16 +533,22 @@ export default {
     checkedClassChange (value) {
     },
     publishExam () {
+      if (this.checkedClass.length === 0) {
+        this.$message.error('请先选择科目！')
+        return false
+      }
       let param = {
         examSubjectIds: this.checkedClass,
         examId: this.examId,
         schoolCode: this.schoolCode
       }
+      this.publishExamData = true
       this.axios.post(API2.ADMIN_PUBLISHGRADEBYEXAMSUBJECTID, param).then(res => {
         this.$message({
           message: '发布成功',
           type: 'success'
         })
+        this.publishExamData = false
         this.gradeVisible = false
         this.getExamInfo()
       })
