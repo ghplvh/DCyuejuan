@@ -40,7 +40,7 @@ const BlockStyle = r => require.ensure([], () => r(require('@/views/BlockStyle')
 // 考试分析
 const ExamAnalyze = r => require.ensure([], () => r(require('@/views/ExamAnalyze')), 'ExamAnalyze')
 // 答题卡模板
-// const AnswerSheet = r => require.ensure([], () => r(require('@/views/AnswerSheet')), 'AnswerSheet')
+const AnswerSheet = r => require.ensure([], () => r(require('@/views/AnswerSheet')), 'AnswerSheet')
 // 设置模板
 const SetTemplate = r => require.ensure([], () => r(require('@/views/SetTemplate')), 'SetTemplate')
 // 扫描答题卡
@@ -248,14 +248,14 @@ const router = new VueRouter({
     },
     component: ExamAnalyze
   },
-  // {
-  //   path: '/answerSheet',
-  //   name: 'answerSheet',
-  //   meta: {
-  //     title: '制作答题卡'
-  //   },
-  //   component: AnswerSheet
-  // },
+  {
+    path: '/answerSheet',
+    name: 'answerSheet',
+    meta: {
+      title: '制作答题卡'
+    },
+    component: AnswerSheet
+  },
   {
     path: '/setTemplate/:examId/:examSubjectId',
     name: 'setTemplate',
